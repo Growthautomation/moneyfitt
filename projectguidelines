@@ -1,0 +1,4 @@
+This is the project overview for the financial advisor mathcing project.
+
+This is a Next.js project
+Right now we are prototyping so there is not backend, always use local temporary storage that resets on restart.
