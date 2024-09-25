@@ -2,16 +2,16 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import useSuperbase from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/client';
 import Image from 'next/image';
 
 const Auth = () => {
-  const superbase = useSuperbase();
+  const superbase = createClient();
   const handleGoogleSignIn = () => {
     superbase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: 'http://localhost:3000/auth/callback'
+            redirectTo: '/callback'
         }
     })
   };

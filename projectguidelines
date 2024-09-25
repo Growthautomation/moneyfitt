@@ -2,3 +2,68 @@ This is the project overview for the financial advisor mathcing project.
 
 This is a Next.js project
 Right now we are prototyping so there is not backend, always use local temporary storage that resets on restart.
+We are only creating the front end look and functionalityfor now
+
+Main features are
+- User Onboarding via a series of questions
+- Homepage that shows advisor profile cards, 3 of them
+- Homepage that has relevant articles
+- Homepage that shows the summary of convesations with the 3 advisors
+- Chat page that shows the conversation with 1 advisor
+- Chat page that shows the indepth advisor profile
+- User can swap an advisor via a swap button on the profile, they can do this 3 times per day, they system will find another advisor, the advisor card will show loading then the new advisor will show.
+
+Flow is Onboarding -> Homepage -> ChatPage -> Homepage
+
+After onboarding user can go between homepage and chatpage only
+
+Afterleaving chatpage, the conversation summary shown on the homepage will be updated.
+
+Here are the brand guidelines
+
+Primary Colours
+#5C59E4
+#222222
+#FFFFFF
+
+Secondary Colours
+#2E2C72
+#4543AB
+#8583EB
+#D6D5F8
+
+
+Status Colours
+    Alerts
+    #C9E440
+    #EEBA35
+    #EB5853
+
+    neutral
+    #9CABC2
+    #ECF0F3
+
+
+
+Do not use colours other
+than the primary & selected
+secondary colours
+Do not mismatch the colours
+(logo shouldn’t have more than
+1 colour, other than the only
+coloured icon defined)
+
+< Do not change the layout or
+orientation of the logo & text
+< Do not mismatch icon-only &
+text-only logos
+
+Fira Sans Bold
+^ Titles, stress texts, highlights, quotes, etc.
+
+Fira Sans Regular
+^ All other uses
+
+Fira Sans Italic
+^ Disclaimer, use sparringly
+
