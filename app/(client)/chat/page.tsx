@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { Chatbot } from '@/app/components/Chatbot'
+import { Chatbot } from '@/components/Chatbot'
 import { AdvisorProfile } from '@/components/advisor-profile'
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from 'lucide-react'
