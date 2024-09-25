@@ -1,37 +1,45 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
-import { Chatbot } from '@/components/Chatbot'
+import Chat from '@/components/chat'
 import { AdvisorProfile } from '@/components/advisor-profile'
+import { RedirectButton } from '@/components/redirect-btn';
 import { Button } from "@/components/ui/button"
+import { createClient } from '@/lib/supabase/server';
 import { ArrowLeft } from 'lucide-react'
+import { redirect } from 'next/navigation';
 
-export default function ChatPage() {
-  const router = useRouter()
+interface ChatProps {
+    params: {
+      id: string;
+    };
+  }
+
+export default async function ChatPage({params}: ChatProps) {
+  const supabase = createClient();
+
   const advisor = {
     name: "Sarah Johnson",
     title: "Senior Financial Advisor",
     avatarSrc: "/lib/images/profile1.png",
     initials: "SJ",
     description: "Experienced financial advisor specializing in retirement planning and investment strategies.",
-    // ... other advisor details
   }
 
-  const handleBackToHomepage = () => {
-    router.push('/homepage')
+  const { data: { user }} = await supabase.auth.getUser();
+
+  if (!user) {
+    return redirect("/onboarding");
   }
 
   return (
     <main className="container mx-auto px-4 py-8">
       <div className="flex items-center mb-4">
-        <Button
+        <RedirectButton
           variant="ghost"
           size="icon"
-          className="mr-2"
-          onClick={handleBackToHomepage}
+          className="mr-2 bg-white text-black hover:text-white"
+          href="/home"
         >
           <ArrowLeft className="h-6 w-6" />
-        </Button>
+        </RedirectButton>
         <h1 className="text-2xl font-bold">Chat with {advisor.name}</h1>
       </div>
       <div className="flex flex-row gap-8">
@@ -39,7 +47,7 @@ export default function ChatPage() {
           <AdvisorProfile />
         </div>
         <div className="w-[40%] sticky top-8">
-          <Chatbot advisor={advisor} />
+          <Chat advisor={advisor} user={user} />
         </div>
       </div>
     </main>

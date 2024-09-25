@@ -1,19 +1,32 @@
-'use client'
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CheckCircle2 } from "lucide-react";
+import { RedirectButton } from "./redirect-btn";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { CheckCircle2 } from "lucide-react"
-import { useRouter } from 'next/navigation'
+interface AdvisorProfileCardProps {
+  advisor: {
+    name: string;
+    title: string;
+    avatarSrc: string;
+    initials: string;
+    description: string;
+  };
+  redirectTo: string;
+}
 
-export function AdvisorProfileCard({ advisor }) {
-  const router = useRouter()
-
-  const handleStartChat = () => {
-    router.push('/chat') // Assuming '/chat' is the route for the chatbot
-  }
-
+export function AdvisorProfileCard({
+  advisor,
+  redirectTo,
+}: AdvisorProfileCardProps) {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
@@ -46,11 +59,16 @@ export function AdvisorProfileCard({ advisor }) {
             </div>
             <div className="flex items-center">
               <CheckCircle2 className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-              <span className="text-sm">Matched with your preferred gender</span>
+              <span className="text-sm">
+                Matched with your preferred gender
+              </span>
             </div>
             <div className="flex items-center">
               <CheckCircle2 className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-              <span className="text-sm">Shares interests in Health & Wellness and Family-Oriented Planning</span>
+              <span className="text-sm">
+                Shares interests in Health & Wellness and Family-Oriented
+                Planning
+              </span>
             </div>
           </div>
         </div>
@@ -60,8 +78,10 @@ export function AdvisorProfileCard({ advisor }) {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full" onClick={handleStartChat}>View Profile</Button>
+        <RedirectButton className="w-full" href={redirectTo}>
+          View Profile
+        </RedirectButton>
       </CardFooter>
     </Card>
-  )
+  );
 }
