@@ -150,7 +150,8 @@ export default function Chat({
         .pipe(filter((message) => message.sender === recipentId))
         .subscribe({
           next: (payload) => {
-            setStreamingMessages((prev) => [...prev, payload]);
+            payload.sender === recipentId &&
+              setStreamingMessages((prev) => [...prev, payload]);
           },
           error: (error) => {
             console.error("Error in chat context subscription:", error);
@@ -161,7 +162,7 @@ export default function Chat({
         subscription.unsubscribe();
       };
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [obs]);
 
   useEffect(() => {
@@ -200,9 +201,7 @@ export default function Chat({
                     <Bot className="w-4 h-4" />
                   )}
                   <span className="text-xs font-semibold">
-                    {message.sender !== recipentId
-                      ? "You"
-                      : recipentName}
+                    {message.sender !== recipentId ? "You" : recipentName}
                   </span>
                   <span className="text-xs ml-2 text-gray-500">
                     {new Date(message.created_at).toLocaleTimeString()}
