@@ -22,19 +22,24 @@ export default async function ChatPage({ params }: ChatProps) {
     return redirect("/sign-in");
   }
 
-  const { data: messages, error } = await supabase.from("messages").select();
-  if (error) {
-    return "An error occurred" + error.message;
-  }
-
   const { data: advisor, error: advisorError } = await supabase
     .from("advisor")
     .select("*")
     .eq("id", params.id)
     .single();
 
-  if(advisorError) {
+  if (advisorError) {
     return "An error occurred" + advisorError.message;
+  }
+
+  const { data: messages, error } = await supabase
+    .from("messages")
+    .select()
+    .or(
+      `and(sender.eq.${user.id},recipient.eq.${advisor.id}),and(sender.eq.${advisor.id},recipient.eq.${user.id})`
+    );
+  if (error) {
+    return "An error occurred" + error.message;
   }
 
   return (
