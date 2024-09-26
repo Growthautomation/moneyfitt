@@ -1,4 +1,4 @@
-import { QuestionFlow } from "@/types/onboarding";
+import { QuestionFlow, Question } from "@/types/onboarding";
 
 export const onboardingQuestions: QuestionFlow = [
     {
@@ -6,14 +6,58 @@ export const onboardingQuestions: QuestionFlow = [
       category: "Personal Information",
       question: "What is your age group?",
       options: ["18-25", "26-35", "36-45", "46-55", "56+"],
-      type: "single"
+      type: "single",
+      next: (answer) => {
+        if (answer[0] === "18-25") return "studentStatus";
+        if (answer[0] === "56+") return "retirementPlans";
+        return "gender";
+      }
+    },
+    {
+      key: "studentStatus",
+      category: "Personal Information",
+      question: "Are you currently a student?",
+      options: ["Yes", "No"],
+      type: "single",
+      next: (answer) => {
+        if (answer[0] === "Yes") return "studentFinances";
+        return "gender";
+      }
+    },
+    {
+      key: "studentFinances",
+      category: "Financial Status",
+      question: "How are you primarily financing your education?",
+      options: ["Scholarships", "Student loans", "Part-time job", "Family support"],
+      type: "single",
+      next: "gender"
+    },
+    {
+      key: "retirementPlans",
+      category: "Retirement",
+      question: "Are you currently retired?",
+      options: ["Yes", "No", "Planning to retire soon"],
+      type: "single",
+      next: (answer) => {
+        if (answer[0] === "Yes") return "retirementIncome";
+        return "gender";
+      }
+    },
+    {
+      key: "retirementIncome",
+      category: "Retirement",
+      question: "What are your primary sources of retirement income?",
+      options: ["Pension", "Social Security", "Investments", "Savings", "Part-time work"],
+      type: "multiple",
+      next: "gender"
     },
     {
       key: "gender",
       category: "Personal Information",
       question: "How do you identify?",
       options: ["Male", "Female", "Non-binary", "Prefer not to say"],
-      type: "single"
+      type: "single",
+      next: "financialGoals"
     },
     {
       key: "financialGoals",
@@ -48,6 +92,19 @@ export const onboardingQuestions: QuestionFlow = [
       category: "Financial Status",
       question: "How would you describe your current financial situation?",
       options: ["Just starting out", "Growing my wealth", "Managing significant wealth", "Preparing for retirement", "In retirement"],
-      type: "single"
+      type: "single",
+      next: null // This is the last question
     }
-  ]
+  ];
+
+// Helper function to find the next question
+export function findNextQuestion(currentKey: string, answer: string[]): Question | null {
+  const currentQuestion = onboardingQuestions.find(q => q.key === currentKey);
+  if (!currentQuestion) return null;
+
+  const nextKey = typeof currentQuestion.next === 'function' 
+    ? currentQuestion.next(answer) 
+    : currentQuestion.next;
+
+  return nextKey ? onboardingQuestions.find(q => q.key === nextKey) || null : null;
+}
