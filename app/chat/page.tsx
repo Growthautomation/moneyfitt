@@ -5,9 +5,19 @@ import { Chatbot } from '@/app/components/Chatbot'
 import { AdvisorProfile } from '@/components/advisor-profile'
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 export default function ChatPage() {
   const router = useRouter()
+  const [userData, setUserData] = useState({})
+
+  useEffect(() => {
+    const storedResponses = localStorage.getItem('onboardingResponses')
+    if (storedResponses) {
+      setUserData(JSON.parse(storedResponses))
+    }
+  }, [])
+
   const advisor = {
     name: "Sarah Johnson",
     title: "Senior Financial Advisor",
@@ -36,10 +46,10 @@ export default function ChatPage() {
       </div>
       <div className="flex flex-row gap-8">
         <div className="w-[60%]">
-          <AdvisorProfile />
+          <AdvisorProfile advisor={advisor} />
         </div>
         <div className="w-[40%] sticky top-8">
-          <Chatbot advisor={advisor} />
+          <Chatbot advisor={advisor} userData={userData} />
         </div>
       </div>
     </main>

@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { QuestionFlow } from "@/types/onboarding";
-import { useSessionStorage } from "usehooks-ts";
 
 interface OnboardingQuestionsProps {
   onComplete: (values: Record<string, string[]>) => void;
@@ -16,42 +15,49 @@ export function OnboardingFormComponent({
   onComplete,
   questions,
 }: OnboardingQuestionsProps) {
+  const [answers, setAnswers] = useState<Record<string, string[]>>({});
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useSessionStorage('answers', {})
+
+  useEffect(() => {
+    // Load answers from localStorage on component mount
+    const storedAnswers = localStorage.getItem('onboardingResponses');
+    if (storedAnswers) {
+      setAnswers(JSON.parse(storedAnswers));
+    }
+  }, []);
 
   const handleOptionClick = (key: string, option: string) => {
-    if (questions[currentQuestion].type === "single") {
-      setAnswers({ ...answers, [key]: [option] });
-    } else {
-      const currentAnswers = answers[key] || [];
-      if (currentAnswers.includes(option)) {
-        setAnswers({
-          ...answers,
-          [key]: currentAnswers.filter((a) => a !== option),
-        });
+    setAnswers(prevAnswers => {
+      const newAnswers = { ...prevAnswers };
+      if (questions[currentQuestion].type === "single") {
+        newAnswers[key] = [option];
       } else {
-        setAnswers({
-          ...answers,
-          [key]: [...currentAnswers, option],
-        });
+        const currentAnswers = newAnswers[key] || [];
+        if (currentAnswers.includes(option)) {
+          newAnswers[key] = currentAnswers.filter((a) => a !== option);
+        } else {
+          newAnswers[key] = [...currentAnswers, option];
+        }
       }
-    }
+      return newAnswers;
+    });
   };
 
   const handleNext = () => {
     if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
+      setCurrentQuestion(prev => prev + 1);
+      localStorage.setItem('onboardingResponses', JSON.stringify(answers));
     }
   };
 
   const handleBack = () => {
     if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
+      setCurrentQuestion(prev => prev - 1);
     }
   };
 
   const handleComplete = () => {
-    // You might want to add some validation here
+    localStorage.setItem('onboardingResponses', JSON.stringify(answers));
     onComplete(answers);
   };
 

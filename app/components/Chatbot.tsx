@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { SendIcon, EditIcon, UserCircle, Bot, ArrowLeft } from 'lucide-react'
+import { SendIcon, EditIcon, UserCircle, Bot } from 'lucide-react'
 
 interface Message {
   id: number;
@@ -15,22 +15,18 @@ interface Message {
   timestamp: Date;
 }
 
-export function Chatbot({ advisor }) {
-  const router = useRouter()
+export function Chatbot({ advisor, userData }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [editableBubbles, setEditableBubbles] = useState([
-    'What financial products are suitable for me?',
-    'How can I start investing in Singapore?',
-    'Tell me about insurance options in Singapore.'
-  ]);
+  const [editableBubbles, setEditableBubbles] = useState(['', '', '']);
   const [isLoadingPrompts, setIsLoadingPrompts] = useState(false);
 
-  const generatePrompts = useCallback(async () => {
+  const generateSuggestions = useCallback(async () => {
+    console.log('API Call: generateSuggestions');
     setIsLoadingPrompts(true);
-    setEditableBubbles(['', '', '']); // Clear prompts while loading
+    setError(null);
 
     try {
       const response = await fetch('/api/chat', {
@@ -38,7 +34,11 @@ export function Chatbot({ advisor }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ messages, generatePrompts: true }),
+        body: JSON.stringify({ 
+          route: 'generate-chat-bubbles',
+          userData,
+          conversationHistory: messages.map(m => `${m.sender}: ${m.text}`).join('\n')
+        }),
       });
 
       if (!response.ok) {
@@ -46,25 +46,32 @@ export function Chatbot({ advisor }) {
       }
 
       const data = await response.json();
-      setEditableBubbles(data.suggestedPrompts || ['', '', '']);
+      
+      // Split the result into an array of suggestions
+      const suggestions = data.result.split('||').map(s => s.trim());
+      setEditableBubbles(suggestions);
     } catch (error) {
-      console.error('Error in generatePrompts:', error);
+      console.error('Error in generateSuggestions:', error);
+      setError('Failed to get suggestions. Please try again.');
       setEditableBubbles(['Error loading prompts', 'Please try again', '']);
     } finally {
       setIsLoadingPrompts(false);
     }
-  }, [messages, setEditableBubbles]); // Include both messages and setEditableBubbles as dependencies
+  }, [messages, userData]);
 
-  const sendMessage = useCallback(async (text: string) => {
+  const getAdvisorResponse = useCallback(async (text: string) => {
+    console.log('API Call: getAdvisorResponse');
     setIsLoading(true);
     setError(null);
+
     const newMessage: Message = {
       id: Date.now(),
       text,
       sender: 'user',
       timestamp: new Date()
     };
-    setMessages(prevMessages => [...prevMessages, newMessage]);
+    const newMessages = [...messages, newMessage];
+    setMessages(newMessages);
     setInput('');
 
     try {
@@ -73,7 +80,11 @@ export function Chatbot({ advisor }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ messages: [...messages, newMessage] }),
+        body: JSON.stringify({ 
+          route: 'mimic-advisor',
+          userData,
+          conversationHistory: newMessages.map(m => `${m.sender}: ${m.text}`).join('\n')
+        }),
       });
 
       if (!response.ok) {
@@ -81,38 +92,41 @@ export function Chatbot({ advisor }) {
       }
 
       const data = await response.json();
+
       const advisorMessage: Message = {
         id: Date.now(),
-        text: data.message,
+        text: data.result,
         sender: 'advisor',
         timestamp: new Date()
       };
-      setMessages(prevMessages => [...prevMessages, advisorMessage]);
-      
-      // After receiving the advisor's response, generate new prompts
-      generatePrompts();
+      setMessages([...newMessages, advisorMessage]);
+
+      // Generate new suggestions after advisor's response
+      generateSuggestions();
     } catch (error) {
-      console.error('Error in sendMessage:', error);
-      setError('Failed to get advisor response. Please try again.');
+      console.error('Error in getAdvisorResponse:', error);
+      setError('Failed to get response. Please try again.');
     } finally {
       setIsLoading(false);
     }
-  }, [generatePrompts, messages, setMessages, setInput, setIsLoading, setError]); // Add all state setters as dependencies
+  }, [messages, userData, generateSuggestions]);
 
   useEffect(() => {
     // Generate initial prompts when the component mounts
-    generatePrompts();
-  }, [generatePrompts]);
+    if (messages.length === 0) {
+      generateSuggestions();
+    }
+  }, [generateSuggestions, messages]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (input.trim() && !isLoading) {
-      sendMessage(input.trim());
+      getAdvisorResponse(input.trim());
     }
   }
 
   const handleBubbleClick = (text: string) => {
-    sendMessage(text);
+    getAdvisorResponse(text);
   }
 
   const handleBubbleEdit = (index: number, newText: string) => {
@@ -140,7 +154,7 @@ export function Chatbot({ advisor }) {
                   {message.sender === 'user' ? 'You' : 'Financial Advisor'}
                 </span>
                 <span className="text-xs ml-2 text-gray-500">
-                  {message.timestamp ? message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Time not available'}
+                  {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>
               <div className="flex">

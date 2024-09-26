@@ -1,4 +1,5 @@
 import '@/styles/globals.css'
+import { LocalStorageCleaner } from '@/components/LocalStorageCleaner'
 
 export const metadata = {
   title: 'Next.js',
@@ -12,7 +13,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <LocalStorageCleaner />
+        {children}
+      </body>
     </html>
-  )
+  );
 }
