@@ -40,7 +40,7 @@ export default async function HomePageRoute() {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return redirect("/onboarding");
+    return redirect("/sign-in");
   }
 
   return (

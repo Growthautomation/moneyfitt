@@ -1,0 +1,36 @@
+import { signOutAction } from "@/lib/actions/user";
+import { SubmitButton } from "./submit-btn";
+import { createClient } from "@/lib/supabase/server";
+import { RedirectButton } from "./redirect-btn";
+
+export default async function Header() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return (
+    <header className="border-b">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {user ? (
+          <div className="flex items-center justify-end h-16">
+            <form>
+              <SubmitButton
+                pendingText="Signing out..."
+                formAction={signOutAction}
+                variant="outline"
+              >
+                Logout
+              </SubmitButton>
+            </form>
+          </div>
+        ) : (
+          <div className="flex items-center justify-end h-16">
+            <RedirectButton className="bg-white text-black hover:bg-gray-100" href="/agent/sign-in" variant="outline">
+              Agent Sign In
+            </RedirectButton>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+}

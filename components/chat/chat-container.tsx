@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 
 import { SendIcon, EditIcon, UserCircle, Bot, ArrowLeft } from "lucide-react";
 import { User } from "@supabase/supabase-js";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/client";
 import ChatContainer from "./chat-container";
 import { SubmitButton } from "../submit-btn";
 import { sendMessage } from "@/lib/actions/chat";

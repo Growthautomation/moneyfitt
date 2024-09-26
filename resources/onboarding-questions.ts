@@ -2,6 +2,13 @@ import { QuestionFlow } from "@/types/onboarding";
 
 export const onboardingQuestions: QuestionFlow = [
     {
+      key: "isAdvisor",
+      category: "Personal Information",
+      question: "Are you an advisor?",
+      options: ["Yes", "No"],
+      type: "single"
+    },
+    {
       key: "age",
       category: "Personal Information",
       question: "What is your age group?",

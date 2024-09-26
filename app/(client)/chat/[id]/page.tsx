@@ -29,7 +29,7 @@ export default async function ChatPage({ params }: ChatProps) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return redirect("/onboarding");
+    return redirect("/sign-in");
   }
 
   const { data: messages, error } = await supabase.from("messages").select();
