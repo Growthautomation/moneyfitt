@@ -22,7 +22,7 @@ export const sendMessage = async (recipient: string, formData: FormData) => {
       message,
       recipient,
       sender: user.id,
-    }).select();
+    }).select().single();
 
     if (error) {
       throw error;

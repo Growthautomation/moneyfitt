@@ -1,9 +1,10 @@
-import Chat from "@/components/chat/chat-container";
 import { AdvisorProfile } from "@/components/advisor-profile";
 import { RedirectButton } from "@/components/redirect-btn";
+import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import { ArrowLeft } from "lucide-react";
 import { redirect } from "next/navigation";
+import Chat from "@/components/chat";
 
 interface ChatProps {
   params: {
@@ -14,16 +15,6 @@ interface ChatProps {
 export default async function ChatPage({ params }: ChatProps) {
   const supabase = createClient();
 
-  const advisor = {
-    id: params.id,
-    name: "Sarah Johnson",
-    title: "Senior Financial Advisor",
-    avatarSrc: "/lib/images/profile1.png",
-    initials: "SJ",
-    description:
-      "Experienced financial advisor specializing in retirement planning and investment strategies.",
-  };
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -32,9 +23,25 @@ export default async function ChatPage({ params }: ChatProps) {
     return redirect("/onboarding");
   }
 
-  const { data: messages, error } = await supabase.from("messages").select();
+  const {
+    data: { user: advisor }, error: adv
+  } = await supabase.auth.admin.getUserById(params.id);
+
+  if (!advisor) {
+    console.log(adv)
+    return "Advisor not found";
+  }
+
+  const { data: messages, error } = await supabase
+    .from("messages")
+    .select()
+    .or(
+      `recipient.eq.${advisor.id},recipient.eq.${user.id},sender.eq.${user.id},sender.eq.${advisor.id}`
+    )
+    .order("created_at", { ascending: false })
+    .limit(50);
   if (error) {
-    return "An error occurred" + error.message;
+    return "cannot retrieve messages" + error.message;
   }
 
   return (
@@ -48,18 +55,14 @@ export default async function ChatPage({ params }: ChatProps) {
         >
           <ArrowLeft className="h-6 w-6" />
         </RedirectButton>
-        <h1 className="text-2xl font-bold">Chat with {advisor.name}</h1>
+        <h1 className="text-2xl font-bold">Chat with {advisor.email}</h1>
       </div>
       <div className="flex flex-row gap-8">
         <div className="w-[60%]">
           <AdvisorProfile />
         </div>
         <div className="w-[40%] sticky top-8">
-          <Chat
-            messages={messages}
-            recipentId={advisor.id}
-            recipentName={advisor.name}
-          />
+          <Chat messages={messages} recipiant={advisor} user={user} />
         </div>
       </div>
     </main>

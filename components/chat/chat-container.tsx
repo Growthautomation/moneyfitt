@@ -1,34 +1,40 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+"use client";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-import { SendIcon, EditIcon, UserCircle, Bot, ArrowLeft } from 'lucide-react'
-import { User } from '@supabase/supabase-js'
-import { createClient } from '@/lib/supabase/server'
-import ChatContainer from './chat-container'
-import { SubmitButton } from './submit-btn'
-import { sendMessage } from '@/lib/actions/chat'
-import { useFormState } from "react-dom"
-import ChatInput from "./chat-input"
-
+import { SendIcon, EditIcon, UserCircle, Bot, ArrowLeft } from "lucide-react";
+import { User } from "@supabase/supabase-js";
+import { createClient } from "@/lib/supabase/server";
+import ChatContainer from "./chat-container";
+import { SubmitButton } from "../submit-btn";
+import { sendMessage } from "@/lib/actions/chat";
+import { useFormState } from "react-dom";
+import ChatInput from "./chat-input";
+import { useEffect, useRef, useState } from "react";
+import { ScrollArea } from "../ui/scroll-area";
+import { Message } from "@/types/chat";
+import { useChatContext } from "./chat-context";
+import { filter } from "rxjs/operators";
+import clsx from "clsx";
 
 interface ChatProps {
-  advisor: {
-    name: string;
-    title: string;
-    avatarSrc: string;
-    initials: string;
-    description: string;
-  };
-  user: User
+  recipentId: string;
+  recipentName: string;
+  messages: Message[];
 }
 
-export default async function Chat({ advisor }: ChatProps) {
-  const supabase = createClient();
-  const { data: message, error } = await supabase.from("messages").select()
-  if (error) {
-    return "An error occurred" + error.message
-  }
+export default function Chat({
+  recipentId,
+  recipentName,
+  messages,
+}: ChatProps) {
   // const router = useRouter()
   // const [messages, setMessages] = useState<Message[]>([]);
   // const [input, setInput] = useState('');
@@ -101,7 +107,7 @@ export default async function Chat({ advisor }: ChatProps) {
   //       timestamp: new Date()
   //     };
   //     setMessages(prevMessages => [...prevMessages, advisorMessage]);
-      
+
   //     // After receiving the advisor's response, generate new prompts
   //     generatePrompts();
   //   } catch (error) {
@@ -134,16 +140,99 @@ export default async function Chat({ advisor }: ChatProps) {
   //   setEditableBubbles(newBubbles);
   // }
 
+  const [streamingMessages, setStreamingMessages] = useState(messages);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const { obs } = useChatContext();
+
+  useEffect(() => {
+    if (obs) {
+      const subscription = obs
+        .pipe(filter((message) => message.sender === recipentId))
+        .subscribe({
+          next: (payload) => {
+            setStreamingMessages((prev) => [...prev, payload]);
+          },
+          error: (error) => {
+            console.error("Error in chat context subscription:", error);
+          },
+        });
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [obs]);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      const scrollContainer = scrollRef.current.querySelector(
+        "[data-radix-scroll-area-viewport]"
+      );
+      if (scrollContainer instanceof HTMLElement) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      }
+    }
+  }, [streamingMessages]);
+
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Chat with {advisor.name}</CardTitle>
+        <CardTitle>Chat with {recipentName}</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChatContainer messages={message} />
+        <ScrollArea ref={scrollRef} className="h-[400px] pr-4">
+          {streamingMessages.map((message) => (
+            <div key={message.id} className="mb-4">
+              <div
+                className={clsx("flex", {
+                  "justify-end": message.sender !== recipentId,
+                })}
+              >
+                <div
+                  className={clsx("flex items-center gap-1 mb-1", {
+                    "flex-row-reverse": message.sender !== recipentId,
+                  })}
+                >
+                  {message.sender !== recipentId ? (
+                    <UserCircle className="w-4 h-4" />
+                  ) : (
+                    <Bot className="w-4 h-4" />
+                  )}
+                  <span className="text-xs font-semibold">
+                    {message.sender !== recipentId
+                      ? "You"
+                      : "Financial Advisor"}
+                  </span>
+                  <span className="text-xs ml-2 text-gray-500">
+                    {new Date(message.created_at).toLocaleTimeString()}
+                  </span>
+                </div>
+              </div>
+              <div
+                className={clsx("flex", {
+                  "justify-end": message.sender !== recipentId,
+                })}
+              >
+                <span
+                  className={`inline-block p-2 rounded-lg ${
+                    message.sender === "user"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground"
+                  }`}
+                >
+                  {message.message}
+                </span>
+              </div>
+            </div>
+          ))}
+        </ScrollArea>
       </CardContent>
       <CardFooter className="flex flex-col items-center">
-        <ChatInput recipient={advisor.name} />
+        <ChatInput
+          recipientId={recipentId}
+          onSuccess={(msg) => setStreamingMessages((prev) => [...prev, msg])}
+        />
         {/* {error && <p className="text-red-500 mb-2">{error}</p>}
         <div className="grid grid-cols-3 gap-2 mb-4 w-full">
           {editableBubbles.map((bubble, index) => (
@@ -176,8 +265,7 @@ export default async function Chat({ advisor }: ChatProps) {
             </div>
           ))}
         </div> */}
-        
       </CardFooter>
     </Card>
-  )
+  );
 }

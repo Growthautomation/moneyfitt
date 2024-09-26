@@ -24,6 +24,7 @@
     "openai": "^4.58.1",
     "react": "^18.2.0",
     "react-dom": "18.2.0",
+    "rxjs": "^7.8.1",
     "shadcn-ui": "^0.9.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",

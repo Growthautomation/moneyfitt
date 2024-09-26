@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 const advisors = [
   {
-    id: "b0631cd8-ab49-4a1c-8b98-a63236dc68a4",
+    id: 1,
     name: "Sarah Johnson",
     title: "Financial Advisor",
     avatarSrc: "/lib/images/profile1.png",
@@ -16,7 +16,7 @@ const advisors = [
       "Experienced financial advisor specializing in retirement planning and investment strategies.",
   },
   {
-    id: "b0631cd8-ab49-4a1c-8b98-a63236dc68a4",
+    id: 2,
     name: "John Smith",
     title: "Investment Specialist",
     avatarSrc: "/lib/images/profile3.png",
@@ -25,7 +25,7 @@ const advisors = [
       "Expert in creating diversified investment portfolios tailored to individual goals.",
   },
   {
-    id: "b0631cd8-ab49-4a1c-8b98-a63236dc68a4",
+    id: 3,
     name: "Emily Chen",
     title: "Retirement Planner",
     avatarSrc: "/lib/images/profile2.png",
