@@ -1,6 +1,7 @@
 import ChatContextProvider from "@/components/chat/chat-context";
 import { createClient } from "@/lib/supabase/server";
 import "@/styles/globals.css";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const metadata = {
@@ -20,6 +21,23 @@ export default async function ClientLayout({
   if (!user) {
     return redirect("/sign-in");
   }
+
+  const { data, error } = await supabase
+    .from("client")
+    .select()
+    .eq("id", user.id);
+
+  if (error) {
+    console.log(error);
+    return "An error occurred" + error.message;
+  }
+
+  const headersList = headers();
+  const path = headersList.get("x-current-path") || "";
+  if (data.length == 0 && path !== "/onboarding") {
+    return redirect("/onboarding");
+  }
+
   return (
     <ChatContextProvider userId={user?.id}>{children}</ChatContextProvider>
   );

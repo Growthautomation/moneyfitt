@@ -8,9 +8,11 @@ export const updateSession = async (request: NextRequest) => {
   // Feel free to remove once you have Supabase connected.
   try {
     // Create an unmodified response
+    const headers = new Headers(request.headers);
+    headers.set("x-current-path", request.nextUrl.pathname);
     let response = NextResponse.next({
       request: {
-        headers: request.headers,
+        headers: headers,
       },
     });
 
