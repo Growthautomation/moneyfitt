@@ -2,109 +2,131 @@ import { QuestionFlow, Question } from "@/types/onboarding";
 
 export const onboardingQuestions: QuestionFlow = [
     {
+      key: "introQuestion",
+      category: "Let's Get MoneyFitt",
+      question: "Financial Planning can be difficult to navigate. Let's start by understanding whether you know your needs.",
+      options: [
+        "I know what area I want support with or product I need",
+        "Help me identify where I need professional support"
+      ],
+      type: "single",
+      next: "age" // This will lead to the existing age question
+    },
+    {
       key: "age",
       category: "Personal Information",
       question: "What is your age group?",
-      options: ["18-25", "26-35", "36-45", "46-55", "56+"],
+      options: ["18-25", "26-34", "36-59", "55-64", "65+"],
       type: "single",
-      next: (answer) => {
-        if (answer[0] === "18-25") return "studentStatus";
-        if (answer[0] === "56+") return "retirementPlans";
-        return "gender";
-      }
+      next: "emergencySavings"
     },
+    
     {
-      key: "studentStatus",
-      category: "Personal Information",
-      question: "Are you currently a student?",
+      key: "emergencySavings",
+      category: "Financial Status",
+      question: "Do you have 3 to 6 months worth of take home income saved?",
       options: ["Yes", "No"],
       type: "single",
-      next: (answer) => {
-        if (answer[0] === "Yes") return "studentFinances";
-        return "gender";
+      next: "insuranceCoverage"
+    },
+    {
+      key: "insuranceCoverage",
+      category: "Insurance",
+      question: "Do you have Death & Total Permanent Disability insurance coverage worth 9x annual income?",
+      options: ["Yes", "No"],
+      type: "single",
+      next: "criticalIllnessInsurance"
+    },
+    {
+      key: "criticalIllnessInsurance",
+      category: "Insurance",
+      question: "Do you have Critical Illness insurance coverage worth 4x annual income?",
+      options: ["Yes", "No"],
+      type: "single",
+      next: "insuranceAllocation"
+    },
+    {
+      key: "insuranceAllocation",
+      category: "Insurance",
+      question: "Are you allocating 15% of your take-home pay on insurance?",
+      options: ["Yes", "No"],
+      type: "single",
+      next: (answers) => {
+        console.log("Insurance allocation answers:", answers);
+        const age = answers?.age?.[0];
+        console.log("Age from answers:", age);
+        if (age === "18-25") return "investmentAllocation";
+        if (age === "26-34" || age === "36-59") return "incomeInvestmentPercentage";
+        return "financialGoals"; // Changed from "retirementPlans" to "financialGoals"
       }
     },
     {
-      key: "studentFinances",
-      category: "Financial Status",
-      question: "How are you primarily financing your education?",
-      options: ["Scholarships", "Student loans", "Part-time job", "Family support"],
+      key: "investmentAllocation",
+      category: "Investments",
+      question: "Are you investing 15%+ of your income (after CPF deductions) investing towards financial goals?",
+      options: ["Yes", "No"],
       type: "single",
-      next: "gender"
-    },
-    {
-      key: "retirementPlans",
-      category: "Retirement",
-      question: "Are you currently retired?",
-      options: ["Yes", "No", "Planning to retire soon"],
-      type: "single",
-      next: (answer) => {
-        if (answer[0] === "Yes") return "retirementIncome";
-        return "gender";
+      next: (answers) => {
+        if (answers.investmentAllocation?.[0] === "Yes") {
+          return "optimizePortfolio";
+        }
+        return "lowInvestmentReason";
       }
     },
     {
-      key: "retirementIncome",
-      category: "Retirement",
-      question: "What are your primary sources of retirement income?",
-      options: ["Pension", "Social Security", "Investments", "Savings", "Part-time work"],
-      type: "multiple",
-      next: "gender"
+      key: "lowInvestmentReason",
+      category: "Investment Challenges",
+      question: "What's the main reason you're not investing 15%+ of your income?",
+      options: [
+        "I don't understand investing - match me with an expert to learn more",
+        "I understand investing but I am not budgeting well enough to allocate that %",
+        "Too busy building an emergency fund",
+        "Prioritising debt management"
+      ],
+      type: "single",
+      next: "financialGoals"
     },
     {
-      key: "gender",
-      category: "Personal Information",
-      question: "How do you identify?",
-      options: ["Male", "Female", "Non-binary", "Prefer not to say"],
+      key: "optimizePortfolio",
+      category: "Investment Optimization",
+      question: "Well done! Would you like professional support to optimise your portfolio?",
+      options: ["Yes", "No"],
+      type: "single",
+      next: "financialGoals"
+    },
+
+    // 26-34 & 36-59
+    {
+      key: "incomeInvestmentPercentage",
+      category: "Investments",
+      question: "How much of your income (after CPF deductions) are you investing towards financial goals?",
+      options: ["0%", "1-5%", "5-10%", "10-15%", "15%+"],
       type: "single",
       next: "financialGoals"
     },
     {
       key: "financialGoals",
-      category: "Financial Goals and Preferences",
-      question: "What are your primary financial goals? (Select all that apply)",
-      options: ["Saving for a home", "Retirement planning", "Investment growth", "Education planning", "Debt management", "Tax optimization", "Other"],
-      type: "multiple"
+      category: "Financial Goals",
+      question: "What are your primary financial goals?",
+      options: [
+        "Saving for retirement",
+        "Buying a home",
+        "Starting a business",
+        "Funding education",
+        "Building wealth"
+      ],
+      type: "multiple",
+      next: null // This will be the last question
     },
     {
-      key: "financialServices",
-      category: "Financial Goals and Preferences",
-      question: "Which types of financial services are you interested in? (Select all that apply)",
-      options: ["Insurance", "Investments", "Estate planning", "Financial planning", "Business advisory", "Tax planning"],
-      type: "multiple"
-    },
-    {
-      key: "lifestyleValues",
-      category: "Lifestyle and Values",
-      question: "Which of these lifestyle attributes resonate with you most? (Select all that apply)",
-      options: ["Health and wellness", "Travel", "Family-oriented", "Career-driven", "Social and community engagement", "Entrepreneurial spirit"],
-      type: "multiple"
-    },
-    {
-      key: "hobbies",
-      category: "Hobbies and Interests",
-      question: "What are your hobbies and interests? (Select all that apply)",
-      options: ["Sports and fitness", "Arts and culture", "Reading and writing", "Traveling", "Cooking and food", "Technology and gaming", "Volunteering"],
-      type: "multiple"
-    },
-    {
-      key: "financialStatus",
-      category: "Financial Status",
-      question: "How would you describe your current financial situation?",
-      options: ["Just starting out", "Growing my wealth", "Managing significant wealth", "Preparing for retirement", "In retirement"],
+      key: "optionalQuestion",
+      category: "Optional Information",
+      question: "This question is optional. You can skip it if you want.",
+      options: ["Option 1", "Option 2", "Option 3"],
       type: "single",
-      next: null // This is the last question
+      next: "nextQuestion",
+      required: false
     }
-  ];
+];
 
-// Helper function to find the next question
-export function findNextQuestion(currentKey: string, answer: string[]): Question | null {
-  const currentQuestion = onboardingQuestions.find(q => q.key === currentKey);
-  if (!currentQuestion) return null;
-
-  const nextKey = typeof currentQuestion.next === 'function' 
-    ? currentQuestion.next(answer) 
-    : currentQuestion.next;
-
-  return nextKey ? onboardingQuestions.find(q => q.key === nextKey) || null : null;
-}
+// Remove the findNextQuestion function from here as it's now in onboarding-form.tsx
