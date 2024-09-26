@@ -150,8 +150,7 @@ export default function Chat({
         .pipe(filter((message) => message.sender === recipentId))
         .subscribe({
           next: (payload) => {
-            payload.sender === recipentId &&
-              setStreamingMessages((prev) => [...prev, payload]);
+            setStreamingMessages((prev) => [...prev, payload]);
           },
           error: (error) => {
             console.error("Error in chat context subscription:", error);
