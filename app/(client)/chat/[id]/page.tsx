@@ -14,16 +14,6 @@ interface ChatProps {
 export default async function ChatPage({ params }: ChatProps) {
   const supabase = createClient();
 
-  const advisor = {
-    id: params.id,
-    name: "Sarah Johnson",
-    title: "Senior Financial Advisor",
-    avatarSrc: "/lib/images/profile1.png",
-    initials: "SJ",
-    description:
-      "Experienced financial advisor specializing in retirement planning and investment strategies.",
-  };
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -35,6 +25,16 @@ export default async function ChatPage({ params }: ChatProps) {
   const { data: messages, error } = await supabase.from("messages").select();
   if (error) {
     return "An error occurred" + error.message;
+  }
+
+  const { data: advisor, error: advisorError } = await supabase
+    .from("advisor")
+    .select("*")
+    .eq("id", params.id)
+    .single();
+
+  if(advisorError) {
+    return "An error occurred" + advisorError.message;
   }
 
   return (

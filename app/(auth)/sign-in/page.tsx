@@ -11,7 +11,7 @@ const Auth = () => {
     superbase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: 'http://localhost:3000/callback'
+            redirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback`
         }
     })
   };
