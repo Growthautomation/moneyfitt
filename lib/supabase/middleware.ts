@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 
-const authRoutes = ["/sign-in", "/agent/sign-in", "/agent/sign-up"];
+const authRoutes = ["/sign-in", "/advisor/sign-in", "/advisor/sign-up"];
 
 export const updateSession = async (request: NextRequest) => {
   // This `try/catch` block is only here for the interactive tutorial.
@@ -41,18 +41,18 @@ export const updateSession = async (request: NextRequest) => {
     // https://supabase.com/docs/guides/auth/server-side/nextjs
     const user = await supabase.auth.getUser();
 
-    // auth user with un-auth routes
+    // redirect to home if user is authenticated
     if (authRoutes.includes(request.nextUrl.pathname) && !user.error) {
       return NextResponse.redirect(new URL("/home", request.url));
     }
 
-    // advisor auth with non-advisor routes
-    if (!request.nextUrl.pathname.includes('advisor') && user?.data.user?.user_metadata.userType === "advisor") {
+    // redirect to advisor home if user is an advisor
+    if (!request.nextUrl.pathname.includes('advisor') && user.data.user && user?.data.user?.user_metadata.userType === "advisor") {
       return NextResponse.redirect(new URL("/advisor/home", request.url));
     }
 
-    // user auth with non-user routes
-    if (request.nextUrl.pathname.includes('advisor') && user?.data.user?.user_metadata.userType !== "advisor") {
+    // redirect to home if user is not an advisor
+    if (request.nextUrl.pathname.includes('advisor') && user.data.user && user?.data.user?.user_metadata.userType !== "advisor") {
       return NextResponse.redirect(new URL("/home", request.url));
     }
 

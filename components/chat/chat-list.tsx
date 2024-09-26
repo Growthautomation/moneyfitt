@@ -1,14 +1,18 @@
+import clsx from "clsx";
 import { User } from "lucide-react";
 import Link from "next/link";
 
-export default function ChatList({ clients }) {
+export default function ChatList({ clients, selectedClientId }) {
   return (
     <div className="flex-shrink-0 w-64 overflow-y-auto">
       {clients.map((client) => (
         <Link
           key={client.id}
-          className="flex items-center p-3 cursor-pointer hover:bg-gray-100"
-          href={`/agent/home?clientId=${client.id}`}
+          className={clsx(
+            "flex items-center p-3 cursor-pointer hover:bg-gray-300 rounded",
+            { "bg-gray-200": selectedClientId === client.id }
+          )}
+          href={`${process.env.NEXT_PUBLIC_ORIGIN}/advisor/home?clientId=${client.id}`}
         >
           <User className="w-8 h-8 mr-2 text-gray-500" />
           <span>{client.name}</span>

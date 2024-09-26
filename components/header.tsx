@@ -25,8 +25,8 @@ export default async function Header() {
           </div>
         ) : (
           <div className="flex items-center justify-end h-16">
-            <RedirectButton className="bg-white text-black hover:bg-gray-100" href="/agent/sign-in" variant="outline">
-              Agent Sign In
+            <RedirectButton className="bg-white text-black hover:bg-gray-100" href="/advisor/sign-in" variant="outline">
+              Advisor Sign In
             </RedirectButton>
           </div>
         )}

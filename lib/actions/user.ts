@@ -18,7 +18,11 @@ export const createAgent = async (form: FormData) => {
   const {
     data: { user },
     error,
-  } = await supabase.auth.signUp({ email, password });
+  } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { data: { userType: "advisor" } },
+  });
   if (error) {
     return {
       success: false,

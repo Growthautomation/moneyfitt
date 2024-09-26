@@ -202,7 +202,7 @@ export default function Chat({
                   <span className="text-xs font-semibold">
                     {message.sender !== recipentId
                       ? "You"
-                      : "Financial Advisor"}
+                      : recipentName}
                   </span>
                   <span className="text-xs ml-2 text-gray-500">
                     {new Date(message.created_at).toLocaleTimeString()}
