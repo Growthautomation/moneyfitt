@@ -3,25 +3,27 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { QuestionFlow } from "@/types/onboarding";
-import { useSessionStorage } from "usehooks-ts";
+import Choice from "./questions/choices";
+import TextQuestion from "./questions/text";
+import { createUserClient } from "@/lib/actions/client";
 
 interface OnboardingQuestionsProps {
-  onComplete: (values: Record<string, string[]>) => void;
   questions: QuestionFlow;
 }
 
 export function OnboardingFormComponent({
-  onComplete,
   questions,
 }: OnboardingQuestionsProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useSessionStorage('answers', {})
+  const [answers, setAnswers] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleOptionClick = (key: string, option: string) => {
     if (questions[currentQuestion].type === "single") {
       setAnswers({ ...answers, [key]: [option] });
+    } else if (questions[currentQuestion].type === "text") {
+      setAnswers({ ...answers, [key]: option });
     } else {
       const currentAnswers = answers[key] || [];
       if (currentAnswers.includes(option)) {
@@ -52,7 +54,8 @@ export function OnboardingFormComponent({
 
   const handleComplete = () => {
     // You might want to add some validation here
-    onComplete(answers);
+    setLoading(true);
+    createUserClient(answers).finally(() => setLoading(false));
   };
 
   const currentQuestionData = questions[currentQuestion];
@@ -60,34 +63,20 @@ export function OnboardingFormComponent({
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <Card className="w-full max-w-2xl p-8 space-y-8">
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-center">
-            {currentQuestionData.category}
-          </h2>
-          <p className="text-xl text-center">{currentQuestionData.question}</p>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          {currentQuestionData.options.map((option) => (
-            <Button
-              key={option}
-              variant={
-                answers[currentQuestionData.key]?.includes(option)
-                  ? "default"
-                  : "outline"
-              }
-              className="h-auto py-4 px-6 text-left justify-start items-start"
-              onClick={() => handleOptionClick(currentQuestionData.key, option)}
-            >
-              {currentQuestionData.type === "multiple" && (
-                <Checkbox
-                  checked={answers[currentQuestionData.key]?.includes(option)}
-                  className="mr-2"
-                />
-              )}
-              {option}
-            </Button>
-          ))}
-        </div>
+        {currentQuestionData.type === "text" ? (
+          <TextQuestion
+            question={currentQuestionData}
+            answer={answers}
+            onChange={handleOptionClick}
+          />
+        ) : (
+          <Choice
+            question={currentQuestionData}
+            answers={answers}
+            onChange={handleOptionClick}
+          />
+        )}
+
         <div className="flex justify-between items-center">
           <Button onClick={handleBack} disabled={currentQuestion === 0}>
             Back
@@ -101,7 +90,9 @@ export function OnboardingFormComponent({
             />
           </div>
           {currentQuestion === questions.length - 1 ? (
-            <Button onClick={handleComplete}>Complete</Button>
+            <Button onClick={handleComplete} disabled={loading}>
+              {loading ? "Submitting..." : "Complete"}
+            </Button>
           ) : (
             <Button onClick={handleNext}>Next</Button>
           )}
