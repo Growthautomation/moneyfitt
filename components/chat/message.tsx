@@ -17,7 +17,7 @@ export default function Message({
         "justify-end": ismine,
       })}
     >
-      {message.files ? (
+      {message.files?.length ? (
         <div className="flex flex-col gap-2">
           {message.files.map((f) => (
             <FileMsg path={f} />
@@ -25,7 +25,7 @@ export default function Message({
         </div>
       ) : (
         <span
-          className={`inline-block p-2 rounded-lg ${
+          className={`inline-block p-2 rounded-lg text-sm ${
             message.sender === "user"
               ? "bg-primary text-primary-foreground"
               : "bg-secondary text-secondary-foreground"

@@ -80,6 +80,7 @@ export default function ChatInput({ recipientId, onSuccess }: ChatInputProps) {
           type="text"
           name="message"
           placeholder="Type your message..."
+          onFocus={() => setExpand(false)}
           className="flex-grow transition-all duration-300 ease-in-out"
         />
         <SubmitButton pendingText="Sending...">

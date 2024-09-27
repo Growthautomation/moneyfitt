@@ -37,7 +37,9 @@ export default async function ChatPage({ params }: ChatProps) {
     .select()
     .or(
       `and(sender.eq.${user.id},recipient.eq.${advisor.id}),and(sender.eq.${advisor.id},recipient.eq.${user.id})`
-    );
+    )
+    .order("created_at", { ascending: false })
+    .limit(10);
   if (error) {
     return "An error occurred" + error.message;
   }
@@ -61,7 +63,7 @@ export default async function ChatPage({ params }: ChatProps) {
         </div>
         <div className="w-[40%] sticky top-8">
           <Chat
-            messages={messages}
+            messages={messages.reverse()}
             recipentId={advisor.id}
             recipentName={advisor.name}
           />
