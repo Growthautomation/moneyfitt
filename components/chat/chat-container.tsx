@@ -262,38 +262,6 @@ export default function Chat({
           recipientId={recipentId}
           onSuccess={(msg) => setStreamingMessages((prev) => [...prev, msg])}
         />
-        {/* {error && <p className="text-red-500 mb-2">{error}</p>}
-        <div className="grid grid-cols-3 gap-2 mb-4 w-full">
-          {editableBubbles.map((bubble, index) => (
-            <div key={index} className="relative group">
-              <Button
-                variant="outline"
-                className="w-full h-auto py-2 px-3 text-left flex flex-col items-start justify-start"
-                onClick={() => handleBubbleClick(bubble)}
-                disabled={isLoadingPrompts || !bubble}
-              >
-                {isLoadingPrompts ? (
-                  <span className="text-xs break-words whitespace-pre-wrap">Loading...</span>
-                ) : (
-                  <span className="text-xs break-words whitespace-pre-wrap">{bubble}</span>
-                )}
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute -top-2 -right-2 w-6 h-6 p-1 bg-background border border-input opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const newText = prompt('Edit message:', bubble);
-                  if (newText) handleBubbleEdit(index, newText);
-                }}
-                disabled={isLoadingPrompts}
-              >
-                <EditIcon className="w-4 h-4" />
-              </Button>
-            </div>
-          ))}
-        </div> */}
       </CardFooter>
     </Card>
   );

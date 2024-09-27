@@ -10,6 +10,8 @@ import { Message } from "@/types/chat";
 import { useRef, useState } from "react";
 import { Button } from "../ui/button";
 import clsx from "clsx";
+import { Textarea } from "../ui/textarea";
+import Suggestions from "./chat-suggestions";
 
 interface ChatInputProps {
   recipientId: string;
@@ -20,6 +22,7 @@ export default function ChatInput({ recipientId, onSuccess }: ChatInputProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [expand, setExpand] = useState(false);
+  const [showSuggestion, setShowSuggestions] = useState(false);
 
   const [state, formAction] = useFormState(
     async (state: any, data: FormData) => {
@@ -36,6 +39,25 @@ export default function ChatInput({ recipientId, onSuccess }: ChatInputProps) {
 
   return (
     <>
+      <div className="relative w-full">
+        <div
+          className={clsx(
+            "absolute bottom-full left-0 right-0 mb-2 transition-all duration-300 ease-in-out",
+            {
+              "opacity-0 translate-y-4": !showSuggestion,
+              "opacity-100 translate-y-0": showSuggestion,
+            }
+          )}
+        >
+          <Suggestions
+            onClick={(msg) => {
+              if (formRef.current?.message) {
+                formRef.current.message.value = msg;
+              }
+            }}
+          />
+        </div>
+      </div>
       <form className="flex gap-2 w-full" ref={formRef} action={formAction}>
         <input
           ref={fileRef}
@@ -76,12 +98,17 @@ export default function ChatInput({ recipientId, onSuccess }: ChatInputProps) {
             </Button>
           </div>
         </div>
-        <Input
-          type="text"
+
+        <Textarea
           name="message"
           placeholder="Type your message..."
-          onFocus={() => setExpand(false)}
-          className="flex-grow transition-all duration-300 ease-in-out"
+          onFocus={() => {
+            setExpand(false);
+            setShowSuggestions(true);
+          }}
+          onBlur={() => setShowSuggestions(false)}
+          className="flex-grow transition-all duration-300 ease-in-out min-h-[40px] max-h-[200px] resize-none overflow-y-auto h-[40px]"
+          onKeyDown={(e) => {}}
         />
         <SubmitButton pendingText="Sending...">
           <SendIcon className="w-4 h-4" />
