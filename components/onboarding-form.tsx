@@ -7,17 +7,19 @@ import { QuestionFlow } from "@/types/onboarding";
 import Choice from "./questions/choices";
 import TextQuestion from "./questions/text";
 import { createUserClient } from "@/lib/actions/client";
+import { useSessionStorage } from "usehooks-ts";
 
 interface OnboardingQuestionsProps {
   questions: QuestionFlow;
+  onComplete?: (answers: any) => void;
 }
 
 export function OnboardingFormComponent({
   questions,
+  onComplete
 }: OnboardingQuestionsProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [answers, setAnswers] = useSessionStorage('answers', {});
 
   const handleOptionClick = (key: string, option: string) => {
     if (questions[currentQuestion].type === "single") {
@@ -54,8 +56,7 @@ export function OnboardingFormComponent({
 
   const handleComplete = () => {
     // You might want to add some validation here
-    setLoading(true);
-    createUserClient(answers).finally(() => setLoading(false));
+    onComplete?.(answers)
   };
 
   const currentQuestionData = questions[currentQuestion];
@@ -90,8 +91,8 @@ export function OnboardingFormComponent({
             />
           </div>
           {currentQuestion === questions.length - 1 ? (
-            <Button onClick={handleComplete} disabled={loading}>
-              {loading ? "Submitting..." : "Complete"}
+            <Button onClick={handleComplete}>
+              Complete
             </Button>
           ) : (
             <Button onClick={handleNext}>Next</Button>
