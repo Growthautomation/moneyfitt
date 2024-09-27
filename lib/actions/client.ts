@@ -5,7 +5,7 @@ import { createClient } from "../supabase/server";
 
 export async function createUserClient(data: any) {
     const supabase = createClient();
-    const { data: { user }, error} = await supabase.auth.getUser();
+    const { data: { user }, error } = await supabase.auth.getUser();
     if (!user) {
         return {
             success: false,
@@ -27,5 +27,5 @@ export async function createUserClient(data: any) {
     }
 
     return redirect("/home");
-    
+
 }

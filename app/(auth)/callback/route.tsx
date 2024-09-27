@@ -8,17 +8,12 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
   const origin = process.env.NEXT_PUBLIC_ORIGIN;
-  const redirectTo = requestUrl.searchParams.get("redirect_to")?.toString();
 
   if (code) {
     const supabase = createClient();
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  if (redirectTo) {
-    return NextResponse.redirect(`${origin}${redirectTo}`);
-  }
-
   // URL to redirect to after sign up process completes
-  return NextResponse.redirect(`${origin}/home`);
+  return NextResponse.redirect(`${origin}/redirect`);
 }
