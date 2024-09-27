@@ -20,7 +20,7 @@ export default function Message({
       {message.files?.length ? (
         <div className="flex flex-col gap-2">
           {message.files.map((f) => (
-            <FileMsg path={f} />
+            <FileMsg key={f} path={f} />
           ))}
         </div>
       ) : (

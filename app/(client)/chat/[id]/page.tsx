@@ -9,9 +9,12 @@ interface ChatProps {
   params: {
     id: string;
   };
+  searchParams: {
+    offset?: string;
+  };
 }
 
-export default async function ChatPage({ params }: ChatProps) {
+export default async function ChatPage({ params, searchParams }: ChatProps) {
   const supabase = createClient();
 
   const {
@@ -39,7 +42,7 @@ export default async function ChatPage({ params }: ChatProps) {
       `and(sender.eq.${user.id},recipient.eq.${advisor.id}),and(sender.eq.${advisor.id},recipient.eq.${user.id})`
     )
     .order("created_at", { ascending: false })
-    .limit(10);
+    .limit(parseInt(searchParams.offset ?? '0') + 10);
   if (error) {
     return "An error occurred" + error.message;
   }

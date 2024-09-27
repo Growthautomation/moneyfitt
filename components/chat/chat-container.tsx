@@ -17,13 +17,21 @@ import { SubmitButton } from "../submit-btn";
 import { sendMessage } from "@/lib/actions/chat";
 import { useFormState } from "react-dom";
 import ChatInput from "./chat-input";
-import { useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { Message } from "@/types/chat";
 import { useChatContext } from "./chat-context";
 import { filter } from "rxjs/operators";
 import clsx from "clsx";
 import MessageComponent from "./message";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface ChatProps {
   recipentId: string;
@@ -144,7 +152,11 @@ export default function Chat({
   const [streamingMessages, setStreamingMessages] = useState(messages);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { obs } = useChatContext();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
+  // message streaming
   useEffect(() => {
     if (obs) {
       const subscription = obs
@@ -165,6 +177,7 @@ export default function Chat({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [obs]);
 
+  // autoscroll on new message
   useEffect(() => {
     if (scrollRef.current) {
       const scrollContainer = scrollRef.current.querySelector(
@@ -176,13 +189,41 @@ export default function Chat({
     }
   }, [streamingMessages]);
 
+  // update messages when new messages are received
+  useEffect(() => {
+    setStreamingMessages(messages);
+  }, [messages]);
+
+  // fetch old messages
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      if ((e.target as HTMLDivElement).scrollTop < 10) {
+        const currentOffset = parseInt(searchParams?.get("offset") || "0");
+        const newOffset = currentOffset + streamingMessages.length;
+
+        // Create a new URLSearchParams object
+        const newSearchParams = new URLSearchParams(searchParams?.toString());
+        newSearchParams.set("offset", newOffset.toString());
+
+        // Use router.push to update the URL
+        startTransition(() => router.push(`?${newSearchParams.toString()}`));
+      }
+    },
+    [searchParams]
+  );
+
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle>Chat with {recipentName}</CardTitle>
       </CardHeader>
       <CardContent>
-        <ScrollArea ref={scrollRef} className="h-[400px] pr-4 scroll-smooth">
+        <ScrollArea
+          ref={scrollRef}
+          className="h-[400px] pr-4 scroll-smooth"
+          onScrollCapture={handleScroll}
+        >
+          {isPending && <p className="text-sm text-center text-gray-500 my-10">Loading...</p>}
           {streamingMessages.map((message) => (
             <div key={message.id} className="mb-4">
               <div
