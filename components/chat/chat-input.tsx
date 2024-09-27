@@ -1,13 +1,15 @@
 "use client";
 
-import { SendIcon } from "lucide-react";
+import { Plus, SendIcon, Upload } from "lucide-react";
 import { SubmitButton } from "../submit-btn";
 import { Input } from "../ui/input";
 import { Alert, AlertDescription } from "../ui/alert";
 import { useFormState } from "react-dom";
 import { sendMessage } from "@/lib/actions/chat";
 import { Message } from "@/types/chat";
-import { use, useRef } from "react";
+import { useRef, useState } from "react";
+import { Button } from "../ui/button";
+import clsx from "clsx";
 
 interface ChatInputProps {
   recipientId: string;
@@ -16,12 +18,16 @@ interface ChatInputProps {
 
 export default function ChatInput({ recipientId, onSuccess }: ChatInputProps) {
   const formRef = useRef<HTMLFormElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [expand, setExpand] = useState(false);
+
   const [state, formAction] = useFormState(
     async (state: any, data: FormData) => {
-      const res = await sendMessage(recipientId, data)
-      if(res?.success){
+      const res = await sendMessage(recipientId, data);
+      if (res?.success) {
         formRef.current?.reset();
-        onSuccess?.(res.data as never)
+        setExpand(false);
+        onSuccess?.(res.data as never);
       }
       return { ...state, ...res };
     },
@@ -30,14 +36,53 @@ export default function ChatInput({ recipientId, onSuccess }: ChatInputProps) {
 
   return (
     <>
-      <form className="flex w-full" ref={formRef} action={formAction}>
+      <form className="flex gap-2 w-full" ref={formRef} action={formAction}>
+        <input
+          ref={fileRef}
+          name="file"
+          type="file"
+          multiple
+          className="hidden"
+          onChange={() => formRef.current?.requestSubmit()}
+        />
+        <div
+          className={clsx(
+            "flex items-center space-x-4 transition-all duration-300 ease-in-out border rounded",
+            {
+              "w-11": !expand,
+              "w-full": expand,
+            }
+          )}
+        >
+          <Button
+            type="button"
+            variant="default"
+            className="p-3"
+            onClick={() => setExpand(!expand)}
+          >
+            <Plus className="h-6 w-6" />
+            <span className="sr-only">Expand</span>
+          </Button>
+          <div className="overflow-hidden">
+            <Button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              size="sm"
+              variant="outline"
+              className="rounded-full p-2"
+            >
+              <Upload className="h-4 w-4" />
+              <span className="sr-only">Upload</span>
+            </Button>
+          </div>
+        </div>
         <Input
           type="text"
           name="message"
           placeholder="Type your message..."
-          className="flex-grow"
+          className="flex-grow transition-all duration-300 ease-in-out"
         />
-        <SubmitButton pendingText="Sending..." className="ml-2">
+        <SubmitButton pendingText="Sending...">
           <SendIcon className="w-4 h-4" />
         </SubmitButton>
       </form>

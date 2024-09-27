@@ -4,4 +4,5 @@ export type Message = {
     sender: string;
     created_at: string;
     recepiant: string;
+    files: string[] | null;
 }

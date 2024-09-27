@@ -23,6 +23,7 @@ import { Message } from "@/types/chat";
 import { useChatContext } from "./chat-context";
 import { filter } from "rxjs/operators";
 import clsx from "clsx";
+import MessageComponent from "./message";
 
 interface ChatProps {
   recipentId: string;
@@ -181,7 +182,7 @@ export default function Chat({
         <CardTitle>Chat with {recipentName}</CardTitle>
       </CardHeader>
       <CardContent>
-        <ScrollArea ref={scrollRef} className="h-[400px] pr-4">
+        <ScrollArea ref={scrollRef} className="h-[400px] pr-4 scroll-smooth">
           {streamingMessages.map((message) => (
             <div key={message.id} className="mb-4">
               <div
@@ -207,21 +208,10 @@ export default function Chat({
                   </span>
                 </div>
               </div>
-              <div
-                className={clsx("flex", {
-                  "justify-end": message.sender !== recipentId,
-                })}
-              >
-                <span
-                  className={`inline-block p-2 rounded-lg ${
-                    message.sender === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground"
-                  }`}
-                >
-                  {message.message}
-                </span>
-              </div>
+              <MessageComponent
+                message={message}
+                ismine={message.sender !== recipentId}
+              />
             </div>
           ))}
         </ScrollArea>
