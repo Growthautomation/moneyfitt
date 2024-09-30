@@ -9,6 +9,7 @@ import { useSessionStorage } from "usehooks-ts";
 import { onboardingQuestions } from "@/resources/onboarding-questions";
 import { useRouter } from 'next/navigation';
 import { Alert } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
 
 interface OnboardingQuestionsProps {
   onComplete: (values: Record<string, string[]>) => void;
@@ -49,13 +50,23 @@ export function OnboardingFormComponent({
     });
   };
 
+  const handleTextInput = (key: string, value: string) => {
+    setAnswers(prevAnswers => ({
+      ...prevAnswers,
+      [key]: [value],
+    }));
+  };
+
   const handleNext = () => {
     console.log("Next button clicked");
     console.log("Current question:", currentQuestion);
     console.log("Current answers before next:", answers);
 
-    if (currentQuestion.required !== false && (!answers[currentQuestion.key] || answers[currentQuestion.key].length === 0)) {
-      setError("Please select an option before proceeding.");
+    if (currentQuestion.required !== false && 
+        (!answers[currentQuestion.key] || 
+         (currentQuestion.type !== "text" && answers[currentQuestion.key].length === 0) ||
+         (currentQuestion.type === "text" && answers[currentQuestion.key][0].trim() === ""))) {
+      setError("Please provide an answer before proceeding.");
       return;
     }
 
@@ -88,34 +99,40 @@ export function OnboardingFormComponent({
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-3xl p-6 space-y-6">
         <div className="space-y-4">
-          <h2 className="text-2xl font-bold text-center">
-            {currentQuestion.category}
-          </h2>
-          <p className="text-xl text-center">{currentQuestion.question}</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {currentQuestion.options.map((option) => (
-            <Button
-              key={option}
-              variant={
-                answers[currentQuestion.key]?.includes(option)
-                  ? "default"
-                  : "outline"
-              }
-              className="h-auto py-4 px-6 text-left justify-start items-start w-full"
-              onClick={() => handleOptionClick(currentQuestion.key, option)}
-            >
-              <div className="flex items-start">
-                {currentQuestion.type === "multiple" && (
-                  <Checkbox
-                    checked={answers[currentQuestion.key]?.includes(option)}
-                    className="mr-2 mt-1"
-                  />
-                )}
-                <span className="flex-1 whitespace-normal">{option}</span>
-              </div>
-            </Button>
-          ))}
+          {currentQuestion.type === "text" ? (
+            <Input
+              type="text"
+              placeholder="Enter your answer"
+              value={answers[currentQuestion.key]?.[0] || ""}
+              onChange={(e) => handleTextInput(currentQuestion.key, e.target.value)}
+              className="w-full"
+            />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {currentQuestion.options?.map((option) => (
+                <Button
+                  key={option}
+                  variant={
+                    answers[currentQuestion.key]?.includes(option)
+                      ? "default"
+                      : "outline"
+                  }
+                  className="h-auto py-4 px-6 text-left justify-start items-start w-full"
+                  onClick={() => handleOptionClick(currentQuestion.key, option)}
+                >
+                  <div className="flex items-start">
+                    {currentQuestion.type === "multiple" && (
+                      <Checkbox
+                        checked={answers[currentQuestion.key]?.includes(option)}
+                        className="mr-2 mt-1"
+                      />
+                    )}
+                    <span className="flex-1 whitespace-normal">{option}</span>
+                  </div>
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
         {error && (
           <Alert variant="destructive">
