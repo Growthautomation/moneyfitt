@@ -170,9 +170,6 @@ export const onboardingQuestions: QuestionFlow = [
         return questions;
       }
     },
-
-
-
     {
       key: "emergencySavings",
       category: "Financial Status",
@@ -221,9 +218,7 @@ export const onboardingQuestions: QuestionFlow = [
       options: ["Yes", "No"],
       type: "single",
       next: (answers) => {
-        console.log("Insurance allocation answers:", answers);
         const age = answers?.age?.[0];
-        console.log("Age from answers:", age);
         if (age === "18-25") return "investmentAllocation";
         if (age === "26-34" || age === "36-59") return "incomeInvestmentPercentage";
         return "null"; // Changed from "retirementPlans" to "financialGoals"
@@ -477,7 +472,7 @@ export const onboardingQuestions: QuestionFlow = [
           ]
         },
         {
-          key: "ageRange",
+          key: "preferredAgeRange",
           label: "Age Range",
           options: [
             { value: "20-30", label: "20-30 years old" },
@@ -511,10 +506,4 @@ export const onboardingQuestions: QuestionFlow = [
       type: "text", // New type for text input
       next: null
     },
-
-    
-   
 ];
-
-
-// Remove the findNextQuestion function from here as it's now in onboarding-form.tsx

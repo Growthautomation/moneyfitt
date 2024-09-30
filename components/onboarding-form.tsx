@@ -6,7 +6,6 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Question, Tag } from "@/types/onboarding";
 import { useLocalStorage } from "usehooks-ts";
-import { useRouter } from 'next/navigation';
 import { Alert } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import React from 'react';
@@ -21,7 +20,6 @@ interface OnboardingQuestionsProps {
 export function OnboardingFormComponent({
   onComplete,
 }: OnboardingQuestionsProps) {
-  const router = useRouter();
   const [currentQuestion, setCurrentQuestion] = useState<Question>(onboardingQuestions[0]);
   const [answers, setAnswers] = useLocalStorage<Record<string, string[]>>('answers', {});
   const [questionHistory, setQuestionHistory] = useState<Question[]>([]);
@@ -95,16 +93,10 @@ export function OnboardingFormComponent({
   };
 
   useEffect(() => {
-    console.log("Component rendered. Current question:", currentQuestion.key);
-    console.log("Current answers state:", answers);
-  }, [currentQuestion, answers]);
-
-  useEffect(() => {
     setIsClient(true);
   }, []);
 
   const handleOptionClick = (key: string, option: string | Tag) => {
-    console.log(`Option clicked: ${typeof option === 'string' ? option : option.name} for question: ${key}`);
     setAnswers(prevAnswers => {
       const newAnswers = { ...prevAnswers };
       if (currentQuestion.type === "single") {
@@ -125,7 +117,6 @@ export function OnboardingFormComponent({
           newAnswers[key] = [...currentAnswers as never, option as never];
         }
       }
-      console.log("Updated answers:", newAnswers);
       return newAnswers;
     });
   };
@@ -189,9 +180,7 @@ export function OnboardingFormComponent({
   };
 
   const handleComplete = () => {
-    console.log("Onboarding completed, final answers:", answers);
     onComplete(answers);
-    router.push('/sign-in');
   };
 
   const renderQuestionText = (text: string) => {
@@ -327,9 +316,6 @@ export function OnboardingFormComponent({
 }
 
 function findNextQuestion(currentKey: string, answers: Record<string, string[]>): Question | null {
-  console.log("Finding next question. Current key:", currentKey);
-  console.log("Answers in findNextQuestion:", answers);
-  
   const currentQuestion = onboardingQuestions.find(q => q.key === currentKey);
   if (!currentQuestion) {
     console.error("Current question not found for key:", currentKey);
@@ -341,7 +327,6 @@ function findNextQuestion(currentKey: string, answers: Record<string, string[]>)
   if (typeof currentQuestion.next === 'function') {
     try {
       nextKey = currentQuestion.next(answers || {});
-      console.log("Next key determined by function:", nextKey);
     } catch (error) {
       console.error("Error in next function:", error);
       // Fallback to a default next question if there's an error
@@ -349,11 +334,9 @@ function findNextQuestion(currentKey: string, answers: Record<string, string[]>)
     }
   } else {
     nextKey = currentQuestion.next || null; // Ensure nextKey is string | null
-    console.log("Static next key:", nextKey);
   }
 
   if (!nextKey) {
-    console.log("No next key found, ending questionnaire");
     return null;
   }
 

@@ -25,8 +25,8 @@ export type Database = {
           last_name: string | null
           mas: string | null
           narrow_scope: Json | null
-          personal_website: string | null
           personal_interests: Json | null
+          personal_website: string | null
           professional_background: Json | null
           religion: string | null
           social_profiles: Json | null
@@ -48,8 +48,8 @@ export type Database = {
           last_name?: string | null
           mas?: string | null
           narrow_scope?: Json | null
+          personal_interests?: Json | null
           personal_website?: string | null
-          presonal_interests?: Json | null
           professional_background?: Json | null
           religion?: string | null
           social_profiles?: Json | null
@@ -71,8 +71,8 @@ export type Database = {
           last_name?: string | null
           mas?: string | null
           narrow_scope?: Json | null
+          personal_interests?: Json | null
           personal_website?: string | null
-          presonal_interests?: Json | null
           professional_background?: Json | null
           religion?: string | null
           social_profiles?: Json | null
@@ -83,20 +83,23 @@ export type Database = {
       }
       client: {
         Row: {
+          advisor_preference: Json | null
+          all_answers: Json | null
           created_at: string
-          email: string | null
           id: string
           name: string | null
         }
         Insert: {
+          advisor_preference?: Json | null
+          all_answers?: Json | null
           created_at?: string
-          email?: string | null
           id?: string
           name?: string | null
         }
         Update: {
+          advisor_preference?: Json | null
+          all_answers?: Json | null
           created_at?: string
-          email?: string | null
           id?: string
           name?: string | null
         }
