@@ -11,6 +11,8 @@ import { Alert } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import React from 'react';
 import { onboardingQuestions } from "@/resources/onboarding-questions";
+import { MultiSelectSearchableComponent } from "@/components/multi-select-searchable";
+import { DropdownGroup } from "@/types/onboarding";
 
 interface OnboardingQuestionsProps {
   onComplete: (values: Record<string, string[]>) => void;
@@ -25,6 +27,7 @@ export function OnboardingFormComponent({
   const [questionHistory, setQuestionHistory] = useState<Question[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [drillDownQuestions, setDrillDownQuestions] = useState<Question[]>([]);
+  const [isClient, setIsClient] = useState(false);
 
   const questionMap = useMemo(() => {
     const map = new Map<string, Question>();
@@ -70,6 +73,12 @@ export function OnboardingFormComponent({
     }
 
     traverse(onboardingQuestions[0].key); // Start from the first question
+
+    // Always add the final questions if they're not already included
+    if (!path.includes('advisorPreference')) path.push('advisorPreference');
+    if (!path.includes('userSex')) path.push('userSex');
+    if (!path.includes('userName')) path.push('userName');
+
     return path;
   };
 
@@ -89,6 +98,10 @@ export function OnboardingFormComponent({
     console.log("Component rendered. Current question:", currentQuestion.key);
     console.log("Current answers state:", answers);
   }, [currentQuestion, answers]);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleOptionClick = (key: string, option: string | Tag) => {
     console.log(`Option clicked: ${typeof option === 'string' ? option : option.name} for question: ${key}`);
@@ -159,13 +172,13 @@ export function OnboardingFormComponent({
       // This is the last question, so we complete the onboarding
       handleComplete();
     } else {
-      // If there are no more questions in the main flow, move to userSex
-      const userSexQuestion = onboardingQuestions.find(q => q.key === "userSex");
-      if (userSexQuestion) {
+      // If there are no more questions in the main flow, move to advisorPreference
+      const advisorPreferenceQuestion = onboardingQuestions.find(q => q.key === "advisorPreference");
+      if (advisorPreferenceQuestion) {
         setQuestionHistory(prev => [...prev, currentQuestion]);
-        setCurrentQuestion(userSexQuestion);
+        setCurrentQuestion(advisorPreferenceQuestion);
       } else {
-        console.error("User sex question not found");
+        console.error("Advisor preference question not found");
         handleComplete();
       }
     }
@@ -195,66 +208,100 @@ export function OnboardingFormComponent({
     ));
   };
 
+  const renderQuestionOptions = () => {
+    if (currentQuestion.type === "text") {
+      return (
+        <Input
+          type="text"
+          placeholder="Enter your answer"
+          value={answers[currentQuestion.key]?.[0] || ""}
+          onChange={(e) => handleTextInput(currentQuestion.key, e.target.value)}
+          className="w-full"
+        />
+      );
+    } else if (currentQuestion.type === "multipleDropdown") {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {(currentQuestion.options as DropdownGroup[]).map((group) => (
+            <div key={group.key} className="space-y-2">
+              <h3 className="font-semibold">{group.label}</h3>
+              <MultiSelectSearchableComponent
+                options={group.options}
+                placeholder={`Select ${group.label.toLowerCase()}...`}
+                selected={answers[group.key] || []}
+                onChange={(values) => handleDropdownChange(group.key, values)}
+              />
+            </div>
+          ))}
+        </div>
+      );
+    } else if (currentQuestion.type === "multipleWithTags") {
+      return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {(currentQuestion.options as Tag[]).map((tag) => (
+            <Button
+              key={tag.name}
+              variant={answers[currentQuestion.key]?.includes(tag.name) ? "default" : "outline"}
+              className="w-full justify-start h-auto py-4 px-6 text-left"
+              onClick={() => handleOptionClick(currentQuestion.key, tag)}
+            >
+              <div className="flex flex-col items-start">
+                <span className="font-semibold">{tag.name}</span>
+                {tag.description && (
+                  <span className="text-sm text-gray-500 mt-1 whitespace-normal">{tag.description}</span>
+                )}
+              </div>
+            </Button>
+          ))}
+        </div>
+      );
+    } else {
+      return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {currentQuestion.options?.map((option) => (
+            <Button
+              key={option}
+              variant={
+                answers[currentQuestion.key]?.includes(option)
+                  ? "default"
+                  : "outline"
+              }
+              className="h-auto py-4 px-6 text-left justify-start items-start w-full"
+              onClick={() => handleOptionClick(currentQuestion.key, option)}
+            >
+              <div className="flex items-start">
+                {currentQuestion.type === "multiple" && (
+                  <Checkbox
+                    checked={answers[currentQuestion.key]?.includes(option)}
+                    className="mr-2 mt-1"
+                  />
+                )}
+                <span className="flex-1 whitespace-normal">{option}</span>
+              </div>
+            </Button>
+          ))}
+        </div>
+      );
+    }
+  };
+
+  const handleDropdownChange = (key: string, values: { value: string, label: string }[]) => {
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [key]: values.map(v => v.value),
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl p-6 space-y-6">
         <h2 className="text-2xl font-bold">{currentQuestion.category}</h2>
         <p className="text-lg">{renderQuestionText(currentQuestion.question)}</p>
-        <div className="space-y-4">
-          {currentQuestion.type === "text" ? (
-            <Input
-              type="text"
-              placeholder="Enter your answer"
-              value={answers[currentQuestion.key]?.[0] || ""}
-              onChange={(e) => handleTextInput(currentQuestion.key, e.target.value)}
-              className="w-full"
-            />
-          ) : currentQuestion.type === "multipleWithTags" ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {(currentQuestion.options as Tag[]).map((tag) => (
-                <div key={tag.name} className="space-y-2">
-                  <Button
-                    variant={answers[currentQuestion.key]?.includes(tag.name) ? "default" : "outline"}
-                    className="w-full justify-start h-auto py-4 px-6" // Increased padding
-                    onClick={() => handleOptionClick(currentQuestion.key, tag)}
-                  >
-                    <div className="flex flex-col items-start text-left">
-                      <span className="font-semibold">{tag.name}</span>
-                      {tag.description && (
-                        <span className="text-sm text-gray-500 mt-1 whitespace-normal">{tag.description}</span>
-                      )}
-                    </div>
-                  </Button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {currentQuestion.options?.map((option) => (
-                <Button
-                  key={option}
-                  variant={
-                    answers[currentQuestion.key]?.includes(option)
-                      ? "default"
-                      : "outline"
-                  }
-                  className="h-auto py-4 px-6 text-left justify-start items-start w-full"
-                  onClick={() => handleOptionClick(currentQuestion.key, option)}
-                >
-                  <div className="flex items-start">
-                    {currentQuestion.type === "multiple" && (
-                      <Checkbox
-                        checked={answers[currentQuestion.key]?.includes(option)}
-                        className="mr-2 mt-1"
-                      />
-                    )}
-                    <span className="flex-1 whitespace-normal">{option}</span>
-                  </div>
-                </Button>
-              ))}
-            </div>
-          )}
-        </div>
+        {isClient && (
+          <div className="space-y-4">
+            {renderQuestionOptions()}
+          </div>
+        )}
         {error && (
           <Alert variant="destructive">
             {error}

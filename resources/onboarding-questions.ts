@@ -394,15 +394,101 @@ export const onboardingQuestions: QuestionFlow = [
     {
       key: "advisorPreference",
       category: "Advisor Preferences",
-      question: "What is most important to you in a Financial Advisor?\n(Leave blank and we will match you with the best advisor for you)",
+      question: "What is most important to you in a Financial Advisor?\n(Leave these blank and we will match you with the best advisor for you)",
+      type: "multipleDropdown",
       options: [
-        "Religious Beliefs",
-        "Language Preference",
-        "Additional Specialisations",
-        "Company Preference",
-        "Age Range"
+        {
+          key: "religiousBeliefs",
+          label: "Religious Beliefs",
+          options: [
+            { value: "buddhism", label: "Buddhism" },
+            { value: "christianity", label: "Christianity" },
+            { value: "islam", label: "Islam" },
+            { value: "taoism", label: "Taoism" },
+            { value: "hinduism", label: "Hinduism" },
+            { value: "atheism", label: "Atheism" },
+            { value: "sikhism", label: "Sikhism" },
+            { value: "judaism", label: "Judaism" },
+            { value: "other", label: "Other" },
+          ]
+        },
+        {
+          key: "languagePreference",
+          label: "Language Preference",
+          options: [
+            { value: "english", label: "English" },
+            { value: "mandarin", label: "Mandarin" },
+            { value: "malay", label: "Malay" },
+            { value: "tamil", label: "Tamil" },
+            { value: "hokkien", label: "Hokkien" },
+            { value: "cantonese", label: "Cantonese" },
+            { value: "teochew", label: "Teochew" },
+            { value: "hakka", label: "Hakka" },
+            { value: "bengali", label: "Bengali" },
+            { value: "punjabi", label: "Punjabi" },
+          ]
+        },
+        {
+          key: "additionalSpecialisations",
+          label: "Additional Specialisations",
+          options: [
+            { value: "businessInsuranceRiskManagement", label: "Business Insurance and Risk Management" },
+            { value: "childrenEducationInsurance", label: "Children (Education Savings, Child Health Insurance)" },
+            { value: "criticalIllnessIncomeProtection", label: "Critical Illness/Income Protection" },
+            { value: "corporateTaxPlanning", label: "Corporate Tax Planning" },
+            { value: "cpfHealthSchemes", label: "CPF Health Schemes" },
+            { value: "cpfInvestmentSchemes", label: "CPF Investment Schemes" },
+            { value: "debtManagementStudentLoans", label: "Debt Management and Student Loans" },
+            { value: "divorceFinancialPlanning", label: "Divorce Financial Planning" },
+            { value: "elderCareLongTermSupport", label: "Elder Care and Long-Term Support" },
+            { value: "expatFinancialPlanning", label: "Expat Financial Planning" },
+            { value: "familyChildPlanning", label: "Family and Child Planning" },
+            { value: "genZ", label: "Gen Z" },
+            { value: "healthMedicalCoverage", label: "Health and Medical Coverage" },
+            { value: "highNetWorthPlanning", label: "High Net Worth Planning" },
+            { value: "housingCpfHomes", label: "Housing and CPF for Homes" },
+            { value: "legacyEstatePlanning", label: "Legacy and Estate Planning" },
+            { value: "lifeInsurance", label: "Life Insurance" },
+            { value: "middleAged", label: "Middle Aged (40-60)" },
+            { value: "millennials", label: "Millennials" },
+            { value: "pets", label: "Pets" },
+            { value: "preRetirementPlanning", label: "Pre-Retirement Planning" },
+            { value: "propertyAssetProtection", label: "Property and Asset Protection" },
+            { value: "retirementCpfPlanning", label: "Retirement and CPF Planning" },
+            { value: "singaporeansOverseas", label: "Singaporeans Overseas" },
+            { value: "specialCircumstancesPlanning", label: "Special Circumstances Planning" },
+            { value: "specialNeedsPlanning", label: "Special Needs Planning" },
+            { value: "successionExitPlanning", label: "Succession and Exit Planning" },
+            { value: "sustainableImpactInvesting", label: "Sustainable and Impact Investing" },
+            { value: "taxPlanning", label: "Tax Planning" },
+            { value: "travelInsurance", label: "Travel Insurance" },
+            { value: "wealthCreationInvestments", label: "Wealth Creation and Investments" },
+          ]
+        },
+        {
+          key: "companyPreference",
+          label: "Company Preference",
+          options: [
+            { value: "bank", label: "Bank" },
+            { value: "independentFirmLarge", label: "Independent Firm (Large)" },
+            { value: "independentFirmSmall", label: "Independent Firm (Small)" },
+            { value: "insuranceCompany", label: "Insurance Company" },
+            { value: "other", label: "Other" },
+          ]
+        },
+        {
+          key: "ageRange",
+          label: "Age Range",
+          options: [
+            { value: "20-30", label: "20-30 years old" },
+            { value: "31-40", label: "31-40 years old" },
+            { value: "41-50", label: "41-50 years old" },
+            { value: "51-60", label: "51-60 years old" },
+            { value: "60+", label: "60+ years old" },
+          ]
+        }
+        
       ],
-      type: "single",
       next: "userSex",
       required: false
     },
@@ -429,5 +515,6 @@ export const onboardingQuestions: QuestionFlow = [
     
    
 ];
+
 
 // Remove the findNextQuestion function from here as it's now in onboarding-form.tsx
