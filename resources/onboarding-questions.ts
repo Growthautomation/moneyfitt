@@ -10,7 +10,7 @@ export const onboardingQuestions: QuestionFlow = [
         "Help me identify where I need professional support"
       ],
       type: "single",
-      next: "age" // This will lead to the existing age question
+      next: "age" // Always go to age next
     },
     {
       key: "age",
@@ -18,9 +18,161 @@ export const onboardingQuestions: QuestionFlow = [
       question: "What is your age group?",
       options: ["18-25", "26-34", "36-59", "55-64", "65+"],
       type: "single",
-      next: "emergencySavings"
+      next: (answers) => {
+        // Check the introQuestion answer to determine the next question
+        if (answers.introQuestion?.[0] === "I know what area I want support with or product I need") {
+          return "financialPlanningArea";
+        }
+        return "emergencySavings"; // Continue with the existing flow
+      }
     },
-    
+    {
+      key: "financialPlanningArea",
+      category: "Financial Planning Area",
+      question: "What area of financial planning do you need help with?",
+      options: [
+        {
+          name: "Insurance and Risk Management",
+          description: "Safeguarding health, life, income, and assets."
+        },
+        {
+          name: "Investments and Wealth Management",
+          description: "Growing or preserving wealth."
+        },
+        {
+          name: "Retirement and Later-Life Planning",
+          description: "Planning for retirement and stability."
+        },
+        {
+          name: "Family and Personal Planning",
+          description: "E.g. Education, family planning, wills."
+        },
+        {
+          name: "Business and Corporate Planning",
+          description: "Business growth, protection, and succession planning."
+        },
+        {
+          name: "Niche and Specialised Planning",
+          description: "E.g. Tax planning, alternative investments, divorce planning."
+        }
+      ],
+      type: "multipleWithTags",
+      next: "drillDownQuestions",
+      drillDownQuestions: (selectedAreas: string[]) => {
+        const questions: Question[] = [];
+        
+        if (selectedAreas.includes("Insurance and Risk Management")) {
+          questions.push({
+            key: "insuranceRiskManagement",
+            category: "Insurance and Risk Management",
+            question: "Which aspects of Insurance and Risk Management do you need help with?",
+            options: [
+              "Critical Illness/Income Protection",
+              "Health and Medical Coverage",
+              "CPF Health Schemes",
+              "Life Insurance",
+              "Travel Insurance",
+              "Property and Asset Protection",
+              "Pets",
+              "Other"
+            ],
+            type: "multiple",
+            next: "advisorPreference"
+          });
+        }
+        
+        if (selectedAreas.includes("Investments and Wealth Management")) {
+          questions.push({
+            key: "investmentsWealthManagement",
+            category: "Investments and Wealth Management",
+            question: "Which aspects of Investments and Wealth Management do you need help with?",
+            options: [
+              "CPF Investment Scheme (CPFIS)",
+              "Wealth Creation and Investments",
+              "Sustainable and Impact Investing",
+              "High Net Worth Planning",
+              "Other"
+            ],
+            type: "multiple",
+            next: "advisorPreference"
+          });
+        }
+        
+        if (selectedAreas.includes("Retirement and Later-Life Planning")) {
+          questions.push({
+            key: "retirementLaterLifePlanning",
+            category: "Retirement and Later-Life Planning",
+            question: "Which aspects of Retirement and Later-Life Planning do you need help with?",
+            options: [
+              "Retirement & CPF Planning",
+              "Legacy and Estate Planning",
+              "Pre-Retirement Planning",
+              "Elder Care and Long-Term Support",
+              "Other"
+            ],
+            type: "multiple",
+            next: "advisorPreference"
+          });
+        }
+        
+        if (selectedAreas.includes("Family and Personal Planning")) {
+          questions.push({
+            key: "familyPersonalPlanning",
+            category: "Family and Personal Planning",
+            question: "Which aspects of Family and Personal Planning do you need help with?",
+            options: [
+              "Housing & CPF for Homes",
+              "Family and Child Planning",
+              "Special Circumstances Planning",
+              "Children (Education Savings, Child Insurance)",
+              "Special Needs Planning",
+              "Divorce Financial Planning",
+              "Other"
+            ],
+            type: "multiple",
+            next: "advisorPreference"
+          });
+        }
+        
+        if (selectedAreas.includes("Business and Corporate Planning")) {
+          questions.push({
+            key: "businessCorporatePlanning",
+            category: "Business and Corporate Planning",
+            question: "Which aspects of Business and Corporate Planning do you need help with?",
+            options: [
+              "Succession and Exit Planning",
+              "Corporate Tax Planning",
+              "Business Insurance and Risk Management",
+              "Other"
+            ],
+            type: "multiple",
+            next: "advisorPreference"
+          });
+        }
+        
+        if (selectedAreas.includes("Niche and Specialised Planning")) {
+          questions.push({
+            key: "nicheSpecialisedPlanning",
+            category: "Niche and Specialised Planning",
+            question: "Which aspects of Niche and Specialised Planning do you need help with?",
+            options: [
+              "Debt Management and Student Loans",
+              "Expat Financial Planning",
+              "Tax Planning",
+              "Singaporeans Overseas",
+              "Other"
+            ],
+            type: "multiple",
+            next: "advisorPreference"
+          });
+        }
+        
+        return questions;
+      }
+    },
+
+
+
     {
       key: "emergencySavings",
       category: "Financial Status",
@@ -30,7 +182,7 @@ export const onboardingQuestions: QuestionFlow = [
       next: (answers) => {
         const age = answers?.age?.[0];
         if (age === "65+") return "seniorFinancialSupport";
-        if (age === "55-64") return "retirementPlanning";
+        if (age === "55-64") return "incomeInvestmentPercentage";
         return "insuranceCoverage";
       }
     },
@@ -109,7 +261,14 @@ export const onboardingQuestions: QuestionFlow = [
       question: "Well done! Would you like professional support to optimise your portfolio?",
       options: ["Yes", "No"],
       type: "single",
-      next: "advisorPreference"
+      next: (answers) => {
+        const age = answers?.age?.[0];
+        if (age === "18-25") {
+          return "advisorPreference";
+        } else {
+          return "retirementPlanning";
+        }
+      }
     },
 
     // 26-34 & 36-59
@@ -124,7 +283,7 @@ export const onboardingQuestions: QuestionFlow = [
         if (answers.incomeInvestmentPercentage?.[0] === "Yes") {
           return "optimizePortfolio";
         } else {
-          return "lowInvestmentReason";
+          return "lowInvestmentReason26+";
         }
       }
     },
@@ -210,7 +369,7 @@ export const onboardingQuestions: QuestionFlow = [
     {
       key: "seniorInsurance",
       category: "Insurance",
-      question: "Make sure you have the following:\n\nDeath & Total Permanent Disability. Coverage: 9x annual income.\n\nCritical Illness Insurance. Coverage: 4x annual income.",
+      question: "Do you have the following?\n\n- Death & Total Permanent Disability. Coverage: 9x annual income.\n- Critical Illness Insurance. Coverage: 4x annual income.",
       options: [
         "I am covered",
         "I want help with Critical Illness Insurance",
@@ -224,7 +383,7 @@ export const onboardingQuestions: QuestionFlow = [
     {
       key: "seniorInsuranceAwareness",
       category: "Insurance Awareness",
-      question: "Make sure you are familiar with the following:\n\n- Home insurance\n- Fire and home content insurance\n- MediShield Life for large healthcare bills\n- CareShield Life/ElderShield for long-term case of severe disabilities.",
+      question: "Are you familiar with the following?\n\n- Home insurance\n- Fire and home content insurance\n- MediShield Life for large healthcare bills\n- CareShield Life/ElderShield for long-term case of severe disabilities.",
       options: [
         "Yes, I am familiar",
         "No - Give me resources for this"
@@ -244,7 +403,7 @@ export const onboardingQuestions: QuestionFlow = [
         "Age Range"
       ],
       type: "single",
-      next: "userSex", // Changed from "" to "userSex"
+      next: "userSex",
       required: false
     },
 
