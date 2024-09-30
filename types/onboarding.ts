@@ -13,6 +13,7 @@ export interface Question {
     next?: string | ((answers: Record<string, string[]>) => string | null) | null;
     required?: boolean;
     drillDownQuestions?: (selectedTags: string[]) => Question[];
+    maxPathLength?: number; // Add this new property
 }
 
 export type QuestionFlow = Question[];

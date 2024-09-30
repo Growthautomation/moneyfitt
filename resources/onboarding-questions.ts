@@ -369,7 +369,7 @@ export const onboardingQuestions: QuestionFlow = [
     {
       key: "seniorInsurance",
       category: "Insurance",
-      question: "Do you have the following?\n\n- Death & Total Permanent Disability. Coverage: 9x annual income.\n- Critical Illness Insurance. Coverage: 4x annual income.",
+      question: "Do you have the following?\n\n- Death & Total Permanent Disability. Coverage: 9x annual income.\n-Critical Illness Insurance. Coverage: 4x annual income.",
       options: [
         "I am covered",
         "I want help with Critical Illness Insurance",

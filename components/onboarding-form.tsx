@@ -1,32 +1,89 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { QuestionFlow, Question, Tag } from "@/types/onboarding";
-import { useSessionStorage } from "usehooks-ts";
-import { onboardingQuestions } from "@/resources/onboarding-questions";
+import { Question, Tag } from "@/types/onboarding";
+import { useLocalStorage } from "usehooks-ts";
 import { useRouter } from 'next/navigation';
 import { Alert } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import React from 'react';
+import { onboardingQuestions } from "@/resources/onboarding-questions";
 
 interface OnboardingQuestionsProps {
   onComplete: (values: Record<string, string[]>) => void;
-  questions: QuestionFlow;
 }
 
 export function OnboardingFormComponent({
   onComplete,
-  questions,
 }: OnboardingQuestionsProps) {
   const router = useRouter();
-  const [currentQuestion, setCurrentQuestion] = useState<Question>(questions[0]);
-  const [answers, setAnswers] = useSessionStorage<Record<string, string[]>>('answers', {});
+  const [currentQuestion, setCurrentQuestion] = useState<Question>(onboardingQuestions[0]);
+  const [answers, setAnswers] = useLocalStorage<Record<string, string[]>>('answers', {});
   const [questionHistory, setQuestionHistory] = useState<Question[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [drillDownQuestions, setDrillDownQuestions] = useState<Question[]>([]);
+
+  const questionMap = useMemo(() => {
+    const map = new Map<string, Question>();
+    onboardingQuestions.forEach(q => map.set(q.key, q));
+    return map;
+  }, []);
+
+  const getQuestionsPath = (answers: Record<string, string[]>) => {
+    const path: string[] = [];
+    const visited = new Set<string>();
+
+    function traverse(questionKey: string | null) {
+      if (!questionKey || visited.has(questionKey)) return;
+      visited.add(questionKey);
+      path.push(questionKey);
+
+      const question = questionMap.get(questionKey);
+      if (!question) return;
+
+      // Handle drill-down questions
+      if (question.type === "multipleWithTags" && question.drillDownQuestions) {
+        const selectedTags = answers[question.key] || [];
+        const drillDownQs = question.drillDownQuestions(selectedTags);
+        for (const dq of drillDownQs) {
+          traverse(dq.key);
+        }
+      }
+
+      // Determine the next question
+      let nextKey: string | null = null;
+      if (typeof question.next === 'function') {
+        try {
+          nextKey = question.next(answers);
+        } catch (error) {
+          console.error("Error determining next question:", error);
+          nextKey = null;
+        }
+      } else {
+        nextKey = question.next;
+      }
+
+      traverse(nextKey);
+    }
+
+    traverse(onboardingQuestions[0].key); // Start from the first question
+    return path;
+  };
+
+  const questionsPath = useMemo(() => {
+    return getQuestionsPath(answers);
+  }, [answers, questionMap]);
+
+  const currentQuestionIndex = questionsPath.indexOf(currentQuestion.key);
+
+  const calculateProgress = () => {
+    const totalQuestions = questionsPath.length;
+    const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+    return Math.min(progress, 100);
+  };
 
   useEffect(() => {
     console.log("Component rendered. Current question:", currentQuestion.key);
@@ -138,38 +195,9 @@ export function OnboardingFormComponent({
     ));
   };
 
-  const estimateTotalQuestions = () => {
-    const age = answers.age?.[0];
-    const introAnswer = answers.introQuestion?.[0];
-    let estimatedTotal = 4; // Start with intro, age, sex, and name questions
-
-    if (introAnswer === "I know what area I want support with or product I need") {
-      estimatedTotal += 2; // financialPlanningArea + one drill-down
-    } else {
-      if (age === "65+") {
-        estimatedTotal += 4; // emergencySavings, seniorFinancialSupport, estatePlanning, seniorInsurance
-      } else if (age === "55-64") {
-        estimatedTotal += 6; // emergencySavings, incomeInvestmentPercentage, retirementPlanning, estatePlanning, seniorInsurance
-      } else if (age === "36-59") {
-        estimatedTotal += 6; // emergencySavings, insuranceCoverage, criticalIllnessInsurance, insuranceAllocation, incomeInvestmentPercentage, retirementPlanning
-      } else {
-        estimatedTotal += 5; // emergencySavings, insuranceCoverage, criticalIllnessInsurance, insuranceAllocation, investmentAllocation
-      }
-    }
-
-    return estimatedTotal;
-  };
-
-  const calculateProgress = () => {
-    const estimatedTotal = estimateTotalQuestions();
-    const answeredQuestions = Object.keys(answers).length;
-    const progress = (answeredQuestions / estimatedTotal) * 100;
-    return Math.min(progress, 100); // Ensure progress doesn't exceed 100%
-  };
-
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-4xl p-6 space-y-6"> {/* Increased max-width */}
+      <Card className="w-full max-w-4xl p-6 space-y-6">
         <h2 className="text-2xl font-bold">{currentQuestion.category}</h2>
         <p className="text-lg">{renderQuestionText(currentQuestion.question)}</p>
         <div className="space-y-4">
@@ -248,7 +276,9 @@ export function OnboardingFormComponent({
             {currentQuestion.key === "userName" ? "Complete" : "Next"}
           </Button>
         </div>
-        <div className="text-sm text-gray-500">Debug: Current question key: {currentQuestion.key}</div>
+        <div className="text-sm text-gray-500">
+          Progress: {Math.round(calculateProgress())}% (Question {currentQuestionIndex + 1} of {questionsPath.length})
+        </div>
       </Card>
     </div>
   );
@@ -276,7 +306,7 @@ function findNextQuestion(currentKey: string, answers: Record<string, string[]>)
       nextKey = "financialGoals";
     }
   } else {
-    nextKey = currentQuestion.next;
+    nextKey = currentQuestion.next || null; // Ensure nextKey is string | null
     console.log("Static next key:", nextKey);
   }
 
