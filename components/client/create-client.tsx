@@ -1,7 +1,5 @@
 "use client";
 import { createUserClient } from "@/lib/actions/client";
-import { User } from "@supabase/supabase-js";
-import { create } from "domain";
 import { useEffect } from "react";
 import { useSessionStorage } from "usehooks-ts";
 
