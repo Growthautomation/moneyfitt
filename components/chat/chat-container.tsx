@@ -6,21 +6,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-
-import { SendIcon, EditIcon, UserCircle, Bot, ArrowLeft } from "lucide-react";
-import { User } from "@supabase/supabase-js";
-import { createClient } from "@/lib/supabase/client";
-import ChatContainer from "./chat-container";
-import { SubmitButton } from "../submit-btn";
-import { sendMessage } from "@/lib/actions/chat";
-import { useFormState } from "react-dom";
 import ChatInput from "./chat-input";
 import {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
   useTransition,
@@ -32,6 +21,7 @@ import { filter } from "rxjs/operators";
 import clsx from "clsx";
 import MessageComponent from "./message";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Bot, UserCircle } from "lucide-react";
 
 interface ChatProps {
   recipentId: string;
@@ -44,110 +34,6 @@ export default function Chat({
   recipentName,
   messages,
 }: ChatProps) {
-  // const router = useRouter()
-  // const [messages, setMessages] = useState<Message[]>([]);
-  // const [input, setInput] = useState('');
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState<string | null>(null);
-  // const [editableBubbles, setEditableBubbles] = useState([
-  //   'What financial products are suitable for me?',
-  //   'How can I start investing in Singapore?',
-  //   'Tell me about insurance options in Singapore.'
-  // ]);
-  // const [isLoadingPrompts, setIsLoadingPrompts] = useState(false);
-
-  // const generatePrompts = useCallback(async () => {
-  //   setIsLoadingPrompts(true);
-  //   setEditableBubbles(['', '', '']); // Clear prompts while loading
-
-  //   try {
-  //     const response = await fetch('/api/chat', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ messages, generatePrompts: true }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-
-  //     const data = await response.json();
-  //     setEditableBubbles(data.suggestedPrompts || ['', '', '']);
-  //   } catch (error) {
-  //     console.error('Error in generatePrompts:', error);
-  //     setEditableBubbles(['Error loading prompts', 'Please try again', '']);
-  //   } finally {
-  //     setIsLoadingPrompts(false);
-  //   }
-  // }, [messages, setEditableBubbles]); // Include both messages and setEditableBubbles as dependencies
-
-  // const sendMessage = useCallback(async (text: string) => {
-  //   setIsLoading(true);
-  //   setError(null);
-  //   const newMessage: Message = {
-  //     id: Date.now(),
-  //     text,
-  //     sender: 'user',
-  //     timestamp: new Date()
-  //   };
-  //   setMessages(prevMessages => [...prevMessages, newMessage]);
-  //   setInput('');
-
-  //   try {
-  //     const response = await fetch('/api/chat', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ messages: [...messages, newMessage] }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-
-  //     const data = await response.json();
-  //     const advisorMessage: Message = {
-  //       id: Date.now(),
-  //       text: data.message,
-  //       sender: 'advisor',
-  //       timestamp: new Date()
-  //     };
-  //     setMessages(prevMessages => [...prevMessages, advisorMessage]);
-
-  //     // After receiving the advisor's response, generate new prompts
-  //     generatePrompts();
-  //   } catch (error) {
-  //     console.error('Error in sendMessage:', error);
-  //     setError('Failed to get advisor response. Please try again.');
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // }, [generatePrompts, messages, setMessages, setInput, setIsLoading, setError]); // Add all state setters as dependencies
-
-  // useEffect(() => {
-  //   // Generate initial prompts when the component mounts
-  //   generatePrompts();
-  // }, [generatePrompts]);
-
-  // const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   if (input.trim() && !isLoading) {
-  //     sendMessage(input.trim());
-  //   }
-  // }
-
-  // const handleBubbleClick = (text: string) => {
-  //   sendMessage(text);
-  // }
-
-  // const handleBubbleEdit = (index: number, newText: string) => {
-  //   const newBubbles = [...editableBubbles];
-  //   newBubbles[index] = newText;
-  //   setEditableBubbles(newBubbles);
-  // }
 
   const [streamingMessages, setStreamingMessages] = useState(messages);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -245,7 +131,7 @@ export default function Chat({
                     {message.sender !== recipentId ? "You" : recipentName}
                   </span>
                   <span className="text-xs ml-2 text-gray-500">
-                    {new Date(message.created_at).toLocaleTimeString()}
+                    {new Date(message.created_at!).toLocaleTimeString()}
                   </span>
                 </div>
               </div>

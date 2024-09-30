@@ -17,9 +17,9 @@ export default function Message({
         "justify-end": ismine,
       })}
     >
-      {message.files?.length ? (
+      {(message.files as string[])?.length ? (
         <div className="flex flex-col gap-2">
-          {message.files.map((f) => (
+          {(message.files as string[])?.map((f) => (
             <FileMsg key={f} path={f} />
           ))}
         </div>

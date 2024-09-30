@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabase/server";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { redirect } from "next/navigation";
 import ChatList from "@/components/chat/chat-list";
 import ClientDashboard from "@/components/client/client-dashboard";
