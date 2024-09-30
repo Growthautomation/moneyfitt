@@ -1,8 +1,3 @@
-export type Message = {
-    id: string;
-    message: string;
-    sender: string;
-    created_at: string;
-    recepiant: string;
-    files: string[] | null;
-}
+import { Database } from "./database.types";
+
+export type Message = Database['public']['Tables']['messages']['Row'];
