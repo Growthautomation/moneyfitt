@@ -4,44 +4,22 @@ import { AdvisorProfileCard } from "@/components/advisor-profile-card";
 import ResourceCard from "@/components/resource-card";
 import { BarChart2, PiggyBank } from "lucide-react";
 import { redirect } from "next/navigation";
+import ChatSummaryContainer from "@/components/client/chat-summary-container";
 
-const advisors = [
-  {
-    id: "b0631cd8-ab49-4a1c-8b98-a63236dc68a4",
-    name: "Sarah Johnson",
-    title: "Financial Advisor",
-    avatarSrc: "/lib/images/profile1.png",
-    initials: "SJ",
-    description:
-      "Experienced financial advisor specializing in retirement planning and investment strategies.",
-  },
-  {
-    id: "b0631cd8-ab49-4a1c-8b98-a63236dc68a4",
-    name: "John Smith",
-    title: "Investment Specialist",
-    avatarSrc: "/lib/images/profile3.png",
-    initials: "JS",
-    description:
-      "Expert in creating diversified investment portfolios tailored to individual goals.",
-  },
-  {
-    id: "b0631cd8-ab49-4a1c-8b98-a63236dc68a4",
-    name: "Emily Chen",
-    title: "Retirement Planner",
-    avatarSrc: "/lib/images/profile2.png",
-    initials: "EC",
-    description:
-      "Specialized in helping clients prepare for a comfortable and secure retirement.",
-  },
-];
-
-export default async function HomePageRoute() {
+export default async function HomePageRoute({ searchParams }) {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    return redirect("/onboarding");
+    return redirect("/sign-in");
   }
+
+  const { data: advisors } = await supabase
+    .from("advisor")
+    .select("*")
+    .limit(6);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -56,15 +34,30 @@ export default async function HomePageRoute() {
 
         <section className="mb-12">
           <h2 className="text-xl font-semibold mb-4">Your Matched Advisors</h2>
-          <div className="flex flex-nowrap overflow-x-auto gap-4 pb-4">
-            {advisors.map((advisor) => (
-              <div
-                key={advisor.id}
-                className="flex-none w-full sm:w-1/2 lg:w-1/3 max-w-md"
-              >
-                <AdvisorProfileCard advisor={advisor} redirectTo={`/chat/${advisor.id}`} />
-              </div>
-            ))}
+          <div className="flex">
+            <div className="w-full lg:w-2/3 flex flex-nowrap overflow-x-auto gap-4 pb-4">
+              {advisors?.map((advisor) => (
+                <div
+                  key={advisor.id}
+                  className="flex-none w-full sm:w-1/2 lg:w-1/3 max-w-md"
+                >
+                  <AdvisorProfileCard
+                    advisor={advisor as never}
+                    redirectTo={`/chat/${advisor.id}`}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="w-full lg:w-1/3">
+              <ChatSummaryContainer
+                advisors={advisors}
+                selectedAdvisor={
+                  advisors?.find((a) => a.id === searchParams?.advisor) ??
+                  advisors?.[0]
+                }
+                user={user}
+              />
+            </div>
           </div>
         </section>
 

@@ -1,6 +1,7 @@
 import ChatContextProvider from "@/components/chat/chat-context";
 import { createClient } from "@/lib/supabase/server";
 import "@/styles/globals.css";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const metadata = {
@@ -14,9 +15,14 @@ export default async function ClientLayout({
   children: React.ReactNode;
 }) {
   const supabase = createClient();
-  const { data: { user }} = await supabase.auth.getUser();
-    if (!user) {
-        return redirect("/onboarding");
-    }
-  return <ChatContextProvider userId={user.id}>{children}</ChatContextProvider>;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return redirect("/sign-in");
+  }
+
+  return (
+    <ChatContextProvider userId={user?.id}>{children}</ChatContextProvider>
+  );
 }

@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,14 +10,17 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CheckCircle2 } from "lucide-react";
 import { RedirectButton } from "./redirect-btn";
+import { Database } from "@/types/database.types";
 
 interface AdvisorProfileCardProps {
   advisor: {
-    name: string;
-    title: string;
-    avatarSrc: string;
-    initials: string;
-    description: string;
+    first_name: string | null;
+    last_name: string | null;
+    title: string | null;
+    bio: string | null;
+    profile?: string | null;
+    narrow_scope: string[] | null;
+    languages: string[] | null;
   };
   redirectTo: string;
 }
@@ -31,23 +33,22 @@ export function AdvisorProfileCard({
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
         <Avatar className="w-24 h-24 mx-auto">
-          <AvatarImage src={advisor.avatarSrc} alt={advisor.name} />
-          <AvatarFallback>{advisor.initials}</AvatarFallback>
+          <AvatarImage src={advisor.profile || ""} alt="advisor-profile-pic" />
+          <AvatarFallback>{`${advisor?.first_name?.[0]} ${advisor?.last_name?.[0]}`}</AvatarFallback>
         </Avatar>
-        <CardTitle className="mt-4">{advisor.name}</CardTitle>
+        <CardTitle className="mt-4">{`${advisor.first_name} ${advisor.last_name}`}</CardTitle>
         <CardDescription className="text-base">{advisor.title}</CardDescription>
         <CardDescription className="mt-2 text-sm">
-          {advisor.description}
+          {advisor.bio}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
           <h3 className="font-semibold mb-2">Specializations</h3>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary">Retirement Planning</Badge>
-            <Badge variant="secondary">Investment Strategies</Badge>
-            <Badge variant="secondary">Tax Optimization</Badge>
-            <Badge variant="secondary">Insurance Solutions</Badge>
+            {advisor?.narrow_scope?.map((scope) => (
+              <Badge variant="secondary">{scope}</Badge>
+            ))}
           </div>
         </div>
         <div>
@@ -74,7 +75,7 @@ export function AdvisorProfileCard({
         </div>
         <div>
           <h3 className="font-semibold mb-2">Languages Spoken</h3>
-          <p className="text-sm">English, Spanish, Mandarin</p>
+          <p className="text-sm">{advisor.languages?.join(", ")}</p>
         </div>
       </CardContent>
       <CardFooter>

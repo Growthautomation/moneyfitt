@@ -9,30 +9,40 @@ interface ChatProps {
   params: {
     id: string;
   };
+  searchParams: {
+    offset?: string;
+  };
 }
 
-export default async function ChatPage({ params }: ChatProps) {
+export default async function ChatPage({ params, searchParams }: ChatProps) {
   const supabase = createClient();
-
-  const advisor = {
-    id: params.id,
-    name: "Sarah Johnson",
-    title: "Senior Financial Advisor",
-    avatarSrc: "/lib/images/profile1.png",
-    initials: "SJ",
-    description:
-      "Experienced financial advisor specializing in retirement planning and investment strategies.",
-  };
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return redirect("/onboarding");
+    return redirect("/sign-in");
   }
 
-  const { data: messages, error } = await supabase.from("messages").select();
+  const { data: advisor, error: advisorError } = await supabase
+    .from("advisor")
+    .select("*")
+    .eq("id", params.id)
+    .single();
+
+  if (advisorError) {
+    return "An error occurred" + advisorError.message;
+  }
+
+  const { data: messages, error } = await supabase
+    .from("messages")
+    .select()
+    .or(
+      `and(sender.eq.${user.id},recipient.eq.${advisor.id}),and(sender.eq.${advisor.id},recipient.eq.${user.id})`
+    )
+    .order("created_at", { ascending: false })
+    .limit(parseInt(searchParams.offset ?? '0') + 10);
   if (error) {
     return "An error occurred" + error.message;
   }
@@ -48,17 +58,17 @@ export default async function ChatPage({ params }: ChatProps) {
         >
           <ArrowLeft className="h-6 w-6" />
         </RedirectButton>
-        <h1 className="text-2xl font-bold">Chat with {advisor.name}</h1>
+        <h1 className="text-2xl font-bold">{`Chat with ${advisor.first_name} ${advisor.last_name}`}</h1>
       </div>
       <div className="flex flex-row gap-8">
         <div className="w-[60%]">
-          <AdvisorProfile />
+          <AdvisorProfile advisor={advisor} />
         </div>
         <div className="w-[40%] sticky top-8">
           <Chat
-            messages={messages}
+            messages={messages.reverse()}
             recipentId={advisor.id}
-            recipentName={advisor.name}
+            recipentName={`${advisor.first_name} ${advisor.last_name}`}
           />
         </div>
       </div>

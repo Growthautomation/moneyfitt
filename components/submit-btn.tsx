@@ -10,7 +10,6 @@ type Props = ComponentProps<typeof Button> & {
 
 export function SubmitButton({
   children,
-  formAction,
   pendingText = "Submitting...",
   ...props
 }: Props) {
@@ -20,8 +19,7 @@ export function SubmitButton({
     <>
       <Button
         type="submit"
-        aria-disabled={pending}
-        formAction={formAction}
+        disabled={pending}
         {...props}
       >
         {pending ? pendingText : children}
