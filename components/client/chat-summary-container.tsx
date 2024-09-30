@@ -14,7 +14,7 @@ export default async function ChatSummaryContainer({
     .from("messages")
     .select()
     .or(
-      `and(sender.eq.${user.id},recipient.eq.${selectedAdvisor.id}),and(sender.eq.${selectedAdvisor.id},recipient.eq.${user.id})`
+      `and(sender.eq.${user.id},recipient.eq.${selectedAdvisor?.id}),and(sender.eq.${selectedAdvisor?.id},recipient.eq.${user.id})`
     );
 
   // populate here
@@ -36,7 +36,7 @@ export default async function ChatSummaryContainer({
                 : "text-[#9CABC2]"
             }`}
           >
-            {advisor.name}
+            {`${advisor.first_name} ${advisor.last_name}`}
           </Link>
         ))}
       </div>

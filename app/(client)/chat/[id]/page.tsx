@@ -58,17 +58,17 @@ export default async function ChatPage({ params, searchParams }: ChatProps) {
         >
           <ArrowLeft className="h-6 w-6" />
         </RedirectButton>
-        <h1 className="text-2xl font-bold">Chat with {advisor.name}</h1>
+        <h1 className="text-2xl font-bold">{`Chat with ${advisor.first_name} ${advisor.last_name}`}</h1>
       </div>
       <div className="flex flex-row gap-8">
         <div className="w-[60%]">
-          <AdvisorProfile />
+          <AdvisorProfile advisor={advisor} />
         </div>
         <div className="w-[40%] sticky top-8">
           <Chat
             messages={messages.reverse()}
             recipentId={advisor.id}
-            recipentName={advisor.name}
+            recipentName={`${advisor.first_name} ${advisor.last_name}`}
           />
         </div>
       </div>

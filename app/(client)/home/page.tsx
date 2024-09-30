@@ -42,7 +42,7 @@ export default async function HomePageRoute({ searchParams }) {
                   className="flex-none w-full sm:w-1/2 lg:w-1/3 max-w-md"
                 >
                   <AdvisorProfileCard
-                    advisor={advisor}
+                    advisor={advisor as never}
                     redirectTo={`/chat/${advisor.id}`}
                   />
                 </div>

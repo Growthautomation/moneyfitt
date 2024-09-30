@@ -13,7 +13,7 @@ export const createAgent = async (form: FormData) => {
   const supabase = createClient();
   const email = form.get("email") as string;
   const password = form.get("password") as string;
-  const name = form.get("name") as string;
+  const attributes = JSON.parse((form.get("attributes") as string) || "{}");
 
   const {
     data: { user },
@@ -24,6 +24,7 @@ export const createAgent = async (form: FormData) => {
     options: { data: { userType: "advisor" } },
   });
   if (error) {
+    console.error("user creation", error);
     return {
       success: false,
       error: error.message,
@@ -32,9 +33,10 @@ export const createAgent = async (form: FormData) => {
 
   const { data, error: insertError } = await supabase
     .from("advisor")
-    .insert({ id: user?.id, email, name })
+    .insert({ id: user?.id, ...attributes })
     .single();
   if (insertError) {
+    console.error("agent creation", insertError);
     return {
       success: false,
       error: insertError.message,

@@ -26,7 +26,7 @@ export type Database = {
           mas: string | null
           narrow_scope: Json | null
           personal_website: string | null
-          presonal_interests: Json | null
+          personal_interests: Json | null
           professional_background: Json | null
           religion: string | null
           social_profiles: Json | null
