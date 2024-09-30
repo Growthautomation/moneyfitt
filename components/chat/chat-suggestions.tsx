@@ -1,20 +1,28 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { getSuggestions } from "@/lib/actions/chat";
 
 export default function Suggestions({
   onClick,
+  recipientId,
 }: {
   onClick: (value: string) => void;
+  recipientId: string;
 }) {
-  const editableBubbles = [
-    "What financial products are suitable for me?",
-    "How can I start investing in Singapore?",
-    "Tell me about insurance options in Singapore.",
-  ];
+  const [loading, setLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  const isLoading = true;
+  useEffect(() => {
+    setLoading(true);
+    getSuggestions(recipientId)
+      .then((res) => {
+        setSuggestions(res);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="text-center text-gray-500 my-5">
         {"Loading...".split("").map((char, index) => (
@@ -35,7 +43,7 @@ export default function Suggestions({
 
   return (
     <div className="grid grid-cols-3 gap-2 w-full">
-      {editableBubbles.map((bubble, index) => (
+      {suggestions.map((bubble, index) => (
         <div key={index} className="relative group">
           <Button
             variant="outline"

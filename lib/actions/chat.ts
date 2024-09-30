@@ -1,6 +1,11 @@
 "use server";
 
+import {
+  GENERATE_INITIAL_QUESTIONS_PROMPT,
+  GENERATE_QUESTIONS_PROMPT,
+} from "../prompts";
 import { createClient } from "../supabase/server";
+import { callGPT4 } from "../utils";
 
 export const sendMessage = async (recipient: string, formData: FormData) => {
   try {
@@ -67,4 +72,40 @@ export const sendMessage = async (recipient: string, formData: FormData) => {
   }
 };
 
-// ((bucket_id = 'client-files'::text) AND (lower((storage.foldername(name))[1]) = 'public'::text))
+export const getSuggestions = async (recipient: string) => {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    throw new Error("Authentication failed");
+  }
+  const { data: messages, error } = await supabase
+    .from("messages")
+    .select()
+    .or(
+      `and(sender.eq.${user?.id},recipient.eq.${recipient}),and(sender.eq.${recipient},recipient.eq.${user?.id})`
+    );
+
+  const { data: client } = await supabase
+    .from("client")
+    .select()
+    .eq("id", user.id)
+    .single();
+
+  if (messages && messages.length > 0) {
+    // Generate follow-up questions using GENERATE_QUESTIONS_PROMPT
+    const prompt = GENERATE_QUESTIONS_PROMPT.replace(
+      "{{CONVERSATION}}",
+      messages.map((m) => m.message).join("\n")
+    ).replace("{{USER}}", JSON.stringify(client));
+    return (await callGPT4(prompt, "")).split("||");
+  } else {
+    // Generate initial questions using GENERATE_INITIAL_QUESTIONS_PROMPT
+    const prompt = GENERATE_INITIAL_QUESTIONS_PROMPT.replace(
+      "{{USER}}",
+      JSON.stringify(client)
+    );
+    return (await callGPT4(prompt, "")).split("||");
+  }
+};

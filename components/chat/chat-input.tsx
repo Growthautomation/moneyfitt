@@ -50,6 +50,7 @@ export default function ChatInput({ recipientId, onSuccess }: ChatInputProps) {
           )}
         >
           <Suggestions
+            recipientId={recipientId}
             onClick={(msg) => {
               if (formRef.current?.message) {
                 formRef.current.message.value = msg;
