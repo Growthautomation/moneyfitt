@@ -4,7 +4,6 @@ import { OnboardingFormComponent } from "@/components/onboarding-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/client";
-import { onboardingQuestions } from "@/resources/onboarding-questions";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -53,7 +52,6 @@ const Auth = () => {
 
   return (
     <OnboardingFormComponent
-      questions={onboardingQuestions}
       onComplete={() => setShowLogin(true)}
     />
   );

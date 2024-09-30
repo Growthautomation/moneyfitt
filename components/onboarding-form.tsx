@@ -57,7 +57,7 @@ export function OnboardingFormComponent({
       }
 
       // Determine the next question
-      let nextKey: string | null = null;
+      let nextKey: string | null | undefined = null;
       if (typeof question.next === 'function') {
         try {
           nextKey = question.next(answers);
@@ -69,7 +69,7 @@ export function OnboardingFormComponent({
         nextKey = question.next;
       }
 
-      traverse(nextKey);
+      traverse(nextKey as never);
     }
 
     traverse(onboardingQuestions[0].key); // Start from the first question
@@ -119,10 +119,10 @@ export function OnboardingFormComponent({
         }
       } else {
         const currentAnswers = newAnswers[key] || [];
-        if (currentAnswers.includes(option)) {
+        if (currentAnswers.includes(option as never)) {
           newAnswers[key] = currentAnswers.filter((a) => a !== option);
         } else {
-          newAnswers[key] = [...currentAnswers, option];
+          newAnswers[key] = [...currentAnswers as never, option as never];
         }
       }
       console.log("Updated answers:", newAnswers);
@@ -138,10 +138,6 @@ export function OnboardingFormComponent({
   };
 
   const handleNext = () => {
-    console.log("Next button clicked");
-    console.log("Current question:", currentQuestion);
-    console.log("Current answers before next:", answers);
-
     if (currentQuestion.required !== false && 
         (!answers[currentQuestion.key] || 
          (currentQuestion.type !== "text" && answers[currentQuestion.key].length === 0) ||
@@ -185,7 +181,6 @@ export function OnboardingFormComponent({
   };
 
   const handleBack = () => {
-    console.log("Back button clicked");
     if (questionHistory.length > 0) {
       const previousQuestion = questionHistory[questionHistory.length - 1];
       setCurrentQuestion(previousQuestion);

@@ -1,5 +1,6 @@
 "use server";
 
+import { Json } from "@/types/database.types";
 import {
   GENERATE_INITIAL_QUESTIONS_PROMPT,
   GENERATE_QUESTIONS_PROMPT,
@@ -29,7 +30,7 @@ export const sendMessage = async (recipient: string, formData: FormData) => {
       message,
       recipient,
       sender: user.id,
-      files: [] as (string | undefined)[],
+      files: [] as string[],
     };
 
     const file = formData.get("file");
@@ -52,7 +53,7 @@ export const sendMessage = async (recipient: string, formData: FormData) => {
         throw new Error("Failed to upload files");
       }
 
-      insertPayload.files = promises.map((p) => p.data?.path);
+      insertPayload.files = promises.map((p) => p.data?.path) as string[];
     }
 
     const { data, error } = await supabase

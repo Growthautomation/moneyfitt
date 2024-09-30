@@ -46,8 +46,8 @@ export function AdvisorProfileCard({
         <div>
           <h3 className="font-semibold mb-2">Specializations</h3>
           <div className="flex flex-wrap gap-2">
-            {advisor?.narrow_scope?.map((scope) => (
-              <Badge variant="secondary">{scope}</Badge>
+            {advisor?.narrow_scope?.map((scope, idx) => (
+              <Badge key={idx} variant="secondary">{scope}</Badge>
             ))}
           </div>
         </div>
