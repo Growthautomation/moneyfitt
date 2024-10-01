@@ -1,7 +1,6 @@
 import ChatContextProvider from "@/components/chat/chat-context";
 import { createClient } from "@/lib/supabase/server";
 import "@/styles/globals.css";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const metadata = {
