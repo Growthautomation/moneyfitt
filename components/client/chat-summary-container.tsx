@@ -11,8 +11,10 @@ export default async function ChatSummaryContainer({
 }) {
   const supabase = createClient();
 
+  console.log("Starting ChatSummaryContainer function");
+
   // Fetch all messages between the user and the selected advisor, ordered by ID
-  const { data: messages } = await supabase
+  const { data: messages, error: messagesError } = await supabase
     .from("messages")
     .select()
     .or(
@@ -20,27 +22,46 @@ export default async function ChatSummaryContainer({
     )
     .order("id", { ascending: true });
 
+  if (messagesError) {
+    console.error("Error fetching messages:", messagesError);
+    return <div>Error loading messages</div>;
+  }
+
+  console.log(`Fetched ${messages.length} messages`);
+
   // Fetch the last conversation summary between the user and the advisor
-  const { data: lastSummary } = await supabase
+  const { data: lastSummary, error: summaryError } = await supabase
     .from("conversation_summaries")
     .select()
     .eq("client_id", user.id)
     .eq("advisor_id", selectedAdvisor.id)
     .single();
 
-  // Determine the ID of the last message included in the summary
-  const lastSummarizedMessageId = lastSummary?.last_message_id || 0;
+  if (summaryError && summaryError.code !== 'PGRST116') {
+    console.error("Error fetching last summary:", summaryError);
+    return <div>Error loading summary</div>;
+  }
 
-  // Check if there are new messages to summarize
-  const hasNewMessages = messages.some(
-    (message) => message.id > lastSummarizedMessageId
-  );
+  console.log("Last summary:", lastSummary);
 
-  let summaryData = lastSummary?.summary;
+  let summaryData = lastSummary ? JSON.parse(lastSummary.summary) : null;
+  let needNewSummary = false;
 
-  // If there are new messages, generate a new summary
-  if (hasNewMessages) {
-    // Prepare the conversation string using all messages
+  if (!lastSummary) {
+    console.log("No previous summary found, creating new one");
+    needNewSummary = true;
+  } else {
+    // Check if there are new messages to summarize
+    const lastSummarizedMessageId = lastSummary.last_message_id || 0;
+    needNewSummary = messages.some(
+      (message) => message.id > lastSummarizedMessageId
+    );
+    console.log(`Need new summary: ${needNewSummary}`);
+  }
+
+  // If we need a new summary (no previous summary or new messages), generate one
+  if (needNewSummary && messages.length > 0) {
+    console.log("Generating new summary");
     const conversation = messages
       .map((msg) => `${msg.sender === user.id ? "User" : "Advisor"}: ${msg.message}`)
       .join("\n");
@@ -52,18 +73,39 @@ export default async function ChatSummaryContainer({
 
     // Call GPT-4 to generate a new summary
     const newSummaryText = await callGPT4(prompt, "");
+    console.log("New summary text:", newSummaryText);
 
     // Parse the GPT-4 response
     summaryData = parseSummaryResponse(newSummaryText);
+    console.log("Parsed summary data:", summaryData);
 
     // Upsert the new summary into the database
-    await supabase.from("conversation_summaries").upsert({
-      client_id: user.id,
-      advisor_id: selectedAdvisor.id,
-      summary: summaryData,
-      last_message_id: messages[messages.length - 1].id,
-    });
+    const { data, error } = await supabase
+      .from("conversation_summaries")
+      .upsert({
+        client_id: user.id,
+        advisor_id: selectedAdvisor.id,
+        summary: JSON.stringify(summaryData), // Stringify the summary object
+        last_message_id: messages[messages.length - 1].id,
+      }, 
+      { 
+        onConflict: 'client_id,advisor_id',
+        ignoreDuplicates: false
+      }) // Specify the conflict resolution
+      .select();
+
+    if (error) {
+      console.error("Error upserting summary:", error);
+      // Handle the error appropriately, maybe set a state or show a user message
+    } else if (data) {
+      console.log("Summary upserted successfully:", data);
+      // Optionally, update local state or trigger a re-fetch if necessary
+    }
+  } else {
+    console.log("Using existing summary");
   }
+
+  console.log("Final summary data:", summaryData);
 
   return (
     <div className="text-sm max-w-4xl mx-auto p-4 font-['Fira_Sans'] text-[#222222]">
