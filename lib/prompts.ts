@@ -58,3 +58,63 @@ Remember, you are on the user's side. Your goal is to help them start a producti
 
 Provide your 3 initial questions.
 `
+
+
+export const SUMMARY_PROMPT = `You are tasked with analyzing a financial conversation between a user and an advisor in Singapore. Your goal is to provide a comprehensive overview of the conversation, including a summary, main points, services offered, and an analysis.
+
+Here's the conversation:
+<conversation>
+{{CONVERSATION}}
+</conversation>
+
+This is what we know about the User:
+<user>
+{{USER}}
+</user>
+
+Based on this conversation, please provide the following:
+
+1. Quick Summary:
+Create a brief summary of the conversation in 2-3 sentences. Focus on the main topic and key points discussed.
+
+2. Main Points:
+List the 3-5 most important points discussed in the conversation. Each point should be a concise statement.
+
+3. Services Offered:
+Identify and list any financial services or products that were mentioned or offered by the advisor during the conversation.
+
+4. Analysis:
+Provide a thoughtful analysis of the conversation, considering the following:
+- Whether the advice given seems appropriate for the user's needs
+- Any potential risks or benefits of the services offered
+- Areas where more information might be needed
+- Any discrepancies or unclear points in the advisor's statements
+
+In your analysis, be careful not to give direct financial advice. Instead, focus on analyzing the conversation and the advisor's recommendations in relation to what we know about the user. Use phrases like "It appears that..." or "Based on the conversation, it seems..." to maintain a neutral stance.
+
+Format your output as follows:
+<summary>
+[Insert your quick summary here]
+</summary>
+
+<main_points>
+- [Main point 1]
+- [Main point 2]
+- [Main point 3]
+(Add more if necessary)
+</main_points>
+
+<services_offered>
+- [Service 1]
+- [Service 2]
+(Add more if necessary)
+</services_offered>
+
+<analysis>
+[Insert your analysis here]
+</analysis>
+
+Remember to base all your responses solely on the information provided in the conversation and user details. Do not make assumptions or include information not present in the given context. Lets do this while relating to the User instead of doing it in the third person. If the advisor has a name use that name to refer to the advisor.
+
+The user should understand not only if its the right product but why that product. We are looking out for the user and making sure that there is transparency in the fees the advisor gets.
+`
