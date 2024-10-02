@@ -16,9 +16,7 @@ export default function renderQuestions(
         <Select
           options={question.options}
           value={answer[question.key]}
-          onSelect={(val) =>
-            setAnswer({ ...answer, ...question.answerModifier(val, answer) })
-          }
+          onSelect={(val) => setAnswer({ ...answer, [question.key]: val })}
         />
       );
     case "multiple":
@@ -29,7 +27,13 @@ export default function renderQuestions(
           onSelect={(val) =>
             setAnswer({
               ...answer,
-              ...question.answerModifier(val, answer),
+              [question.key]: answer[question.key]?.includes(val)
+                ? [
+                    ...(answer[question.key] as string[])?.filter(
+                      (a) => a !== val
+                    ),
+                  ]
+                : [...((answer[question.key] || []) as string[]), val],
             })
           }
           multiple

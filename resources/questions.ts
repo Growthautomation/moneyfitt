@@ -6,6 +6,7 @@ import {
   ageGroups,
 } from "@/lib/constants";
 import { create } from "lodash";
+import { spec } from "node:test/reporters";
 
 export type QNode = {
   key: string;
@@ -13,7 +14,6 @@ export type QNode = {
   question: string;
   options: { code: string; name: string; description?: string }[];
   answerModifier: (
-    answer: string,
     answers: Record<string, string | string[]>
   ) => Record<string, string | string[]>;
   type:
@@ -32,7 +32,7 @@ function createNode(
   question: string,
   type: QNode["type"],
   options: QNode["options"] = [],
-  answerModifier: QNode["answerModifier"] = (answer) => ({ [key]: answer })
+  answerModifier: QNode["answerModifier"] = () => ({})
 ): QNode {
   return {
     key,
@@ -70,12 +70,7 @@ export const planningArea = () =>
     "Financial Planning Areas",
     "What area of financial planning do you need help with?",
     "multiple",
-    broadScope,
-    (answer, answers) => ({
-      broadScope: answers["broadScope"]?.includes(answer)
-        ? [...(answers["broadScope"] as string[])?.filter((a) => a !== answer)]
-        : [...((answers["broadScope"] || []) as string[]), answer],
-    })
+    broadScope
   );
 
 export const specializationNodes = {
@@ -118,16 +113,7 @@ export const specializationNodes = {
           code: "OTHER",
           name: "Other",
         },
-      ],
-      (answer, answers) => ({
-        specification: answers["specification"]?.includes(answer)
-          ? [
-              ...(answers["specification"] as string[])?.filter(
-                (a) => a !== answer
-              ),
-            ]
-          : [...((answers["specification"] || []) as string[]), answer],
-      })
+      ]
     ),
   IWM: () =>
     createNode(
@@ -156,16 +142,7 @@ export const specializationNodes = {
           code: "OTHER",
           name: "Other",
         },
-      ],
-      (answer, answers) => ({
-        specification: answers["specification"]?.includes(answer)
-          ? [
-              ...(answers["specification"] as string[])?.filter(
-                (a) => a !== answer
-              ),
-            ]
-          : [...((answers["specification"] || []) as string[]), answer],
-      })
+      ]
     ),
   RLP: () =>
     createNode(
@@ -194,16 +171,7 @@ export const specializationNodes = {
           code: "OTHER",
           name: "Other",
         },
-      ],
-      (answer, answers) => ({
-        specification: answers["specification"]?.includes(answer)
-          ? [
-              ...(answers["specification"] as string[])?.filter(
-                (a) => a !== answer
-              ),
-            ]
-          : [...((answers["specification"] || []) as string[]), answer],
-      })
+      ]
     ),
   FPP: () =>
     createNode(
@@ -240,16 +208,7 @@ export const specializationNodes = {
           code: "OTHER",
           name: "Other",
         },
-      ],
-      (answer, answers) => ({
-        specialization: answers["specification"]?.includes(answer)
-          ? [
-              ...(answers["specification"] as string[])?.filter(
-                (a) => a !== answer
-              ),
-            ]
-          : [...((answers["specification"] || []) as string[]), answer],
-      })
+      ]
     ),
   BCP: () =>
     createNode(
@@ -286,16 +245,7 @@ export const specializationNodes = {
           code: "OTHER",
           name: "Other",
         },
-      ],
-      (answer, answers) => ({
-        specification: answers["specification"]?.includes(answer)
-          ? [
-              ...(answers["specification"] as string[])?.filter(
-                (a) => a !== answer
-              ),
-            ]
-          : [...((answers["specification"] || []) as string[]), answer],
-      })
+      ]
     ),
   NSP: () =>
     createNode(
@@ -324,16 +274,7 @@ export const specializationNodes = {
           code: "OTHER",
           name: "Other",
         },
-      ],
-      (answer, answers) => ({
-        specification: answers["specification"]?.includes(answer)
-          ? [
-              ...(answers["specification"] as string[])?.filter(
-                (a) => a !== answer
-              ),
-            ]
-          : [...((answers["specification"] || []) as string[]), answer],
-      })
+      ]
     ),
 };
 
@@ -358,12 +299,7 @@ export const languageNode = () =>
     "Advisor preferences",
     "What language do you prefer to communicate in?",
     "multiple",
-    languages,
-    (answer, answers) => ({
-      language: answers["language"]?.includes(answer)
-        ? [...(answers["language"] as string[])?.filter((a) => a !== answer)]
-        : [...((answers["language"] || []) as string[]), answer],
-    })
+    languages
   );
 
 export const ageNode = () =>
@@ -387,12 +323,7 @@ export const preferredCompanyNode = () =>
       { code: "independentFirmSmall", name: "Independent Firm (Small)" },
       { code: "insuranceCompany", name: "Insurance Company" },
       { code: "other", name: "Other" },
-    ],
-    (answer, answers) => ({
-      company: answers["company"]?.includes(answer)
-        ? [...(answers["company"] as string[])?.filter((a) => a !== answer)]
-        : [...((answers["company"] || []) as string[]), answer],
-    })
+    ]
   );
 
 export const userNameNode = () =>
@@ -437,19 +368,37 @@ export const emegencyFundNode = () =>
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
-    ]
+    ],
+    (answers) => ({
+      contents: [
+        ...((answers["contents"] as string[]) ?? []),
+        ...(answers["emergencyFund"] === "NO" &&
+        !(answers["contents"] || []).includes("755")
+          ? ["755"]
+          : []),
+      ],
+    })
   );
 
 export const DTPDcoverageNode = () =>
   createNode(
-    "DTPDcoverage",
+    "DTPDCoverage",
     "Protection",
-    "Do you have Disability and Terminal Illness coverage?",
+    "Do you have Death and Total Permanent Disability Coverage worth 9x annual income?",
     "single",
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
-    ]
+    ],
+    (answers) => ({
+      specification: [
+        ...((answers["specification"] as string[]) || []),
+        ...(answers["DTPDCoverage"] === "NO" &&
+        !answers["specification"]?.includes("LI")
+          ? ["LI"]
+          : []),
+      ],
+    })
   );
 
 export const illnessCoverageNode = () =>
@@ -461,7 +410,16 @@ export const illnessCoverageNode = () =>
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
-    ]
+    ],
+    (answers) => ({
+      specification: [
+        ...((answers["specification"] as string[]) || []),
+        ...(answers["illnessCoverage"] === "NO" &&
+        !(answers["specification"] || [])?.includes("CIIP")
+          ? ["CIIP"]
+          : []),
+      ],
+    })
   );
 
 export const insuranceCoverageNode = () =>
@@ -473,7 +431,16 @@ export const insuranceCoverageNode = () =>
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
-    ]
+    ],
+    (answers) => ({
+      broadScope: [
+        ...((answers["broadScope"] as string[]) || []),
+        ...(answers["insuranceCoverage"] === "NO" &&
+        !answers["broadScope"]?.includes("IRM")
+          ? ["IRM"]
+          : []),
+      ],
+    })
   );
 
 export const investingNode = (investmentPercent: string) =>
@@ -497,7 +464,16 @@ export const reviewInvestment = () =>
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
-    ]
+    ],
+    (answers) => ({
+      specification: [
+        ...((answers["specification"] as string[]) || []),
+        ...(answers["professionalSupport"] === "YES" &&
+        !answers["specification"]?.includes("WCI")
+          ? ["WCI"]
+          : []),
+      ],
+    })
   );
 
 export const investmentAdvise = () =>
@@ -517,7 +493,36 @@ export const investmentAdvise = () =>
       },
       { code: "BUSY", name: "Too busy building emergency fund." },
       { code: "DEBT", name: "Proioring debt management" },
-    ]
+    ],
+    (answers) => {
+      switch (answers["investmentAdvise"]) {
+        case "LEARNMORE":
+          return {
+            broadScope: [
+              ...((answers["broadScope"] as string[]) || []),
+              ...(!answers["broadScope"]?.includes("IWM") ? ["IWM"] : []),
+            ],
+          } as never;
+        case "HELP":
+          return {
+            contents: [
+              ...((answers["contents"] as string[]) || []),
+              ...(!answers["contents"]?.includes("756") ? ["756"] : []),
+            ],
+          } as never;
+        case "DEBT":
+          return {
+            contents: [
+              ...((answers["contents"] as string[]) || []),
+              "708",
+              "710",
+              "3261",
+            ],
+          } as never;
+        default:
+          return {};
+      }
+    }
   );
 
 export const startRetirementNode = () =>
@@ -532,71 +537,164 @@ export const startRetirementNode = () =>
     ]
   );
 
-export const reviewRetirementNode = () => createNode(
-  "retirementReview",
-  "Retirement Planning",
-  "Would you like to review your retirement plan?",
-  "single",
-  [
-    { code: "YES", name: "Yes" },
-    { code: "NO", name: "No" },
-  ]
-);
+export const reviewRetirementNode = () =>
+  createNode(
+    "retirementReview",
+    "Retirement Planning",
+    "Would you like to review your retirement plan?",
+    "single",
+    [
+      { code: "YES", name: "Yes" },
+      { code: "NO", name: "No" },
+    ],
+    (answers) => ({
+      broadScope: [
+        ...((answers["broadScope"] as string[]) || []),
+        ...(answers["retirementReview"] === "YES" &&
+        !answers["broadScope"]?.includes("RLP")
+          ? ["RLP"]
+          : []),
+      ],
+    })
+  );
 
-export const considerRetirementNode = () => createNode(
-  "retirementConsider",
-  "Retirement Planning",
-  "Consider starting! Woould you like professional support on this metter?",
-  "single",
-  [
-    { code: "YES", name: "Yes" },
-    { code: "NO", name: "No" },
-  ]
-);
+export const considerRetirementNode = () =>
+  createNode(
+    "retirementConsider",
+    "Retirement Planning",
+    "Consider starting! Woould you like professional support on this metter?",
+    "single",
+    [
+      { code: "YES", name: "Yes" },
+      { code: "NO", name: "No" },
+    ],
+    (answers) => ({
+      broadScope: [
+        ...((answers["broadScope"] as string[]) || []),
+        ...(answers["retirementConsider"] === "YES" &&
+        !answers["broadScope"]?.includes("RLP")
+          ? ["RLP"]
+          : []),
+      ],
+    })
+  );
 
-export const lagacyPlanningNode = () => createNode(
-  "lagacyPlanning",
-  "Retirement Planning",
-  "Do you have the following addressed \n 1. A will \n 2.CPF nomination \n 3. Appointed trusted persons",
-  "single",
-  [
-    { code: "YES", name: "Yes" },
-    { code: "HELP", name: "No, I want professional helpth with this" },
-    { code: "RESOURCE", name: "No, give me resources for this"}
-  ]
-);
+export const lagacyPlanningNode = () =>
+  createNode(
+    "lagacyPlanning",
+    "Retirement Planning",
+    "Do you have the following addressed \n 1. A will \n 2.CPF nomination \n 3. Appointed trusted persons",
+    "single",
+    [
+      { code: "YES", name: "Yes" },
+      { code: "HELP", name: "No, I want professional helpth with this" },
+      { code: "RESOURCE", name: "No, give me resources for this" },
+    ],
+    (answers) => {
+      switch (answers["lagacyPlanning"]) {
+        case "HELP":
+          return {
+            specification: [
+              ...((answers["specification"] as string[]) || []),
+              ...(!answers["specification"]?.includes("LEP") ? ["LEP"] : []),
+            ],
+          } as never;
+        case "RESOURCE":
+          return {
+            contents: [
+              ...((answers["contents"] as string[]) || []),
+              "760",
+              "761",
+              "763",
+              "683",
+            ],
+          } as never;
+        default:
+          return {};
+      }
+    }
+  );
 
-export const DTPDProtection = () => createNode(
-  "DTPDProtection",
-  "Protection",
-  "Make sure you have the following. \n Death and Total Disability Coverage: 9x annual income \n Critical Illness Insurance: 4x annual income",
-  "single",
-  [
-    { code: "YES", name: "I am covered" },
-    { code: "CRITAL_ILLNESS", name: "I want help with Critical Illness Insurance" },
-    { code: "DTPD", name: "I want help with Death and Total Permanent Disability Coverage" },
-    { code: "RESOURCE", name: "Give me resources for this" }
-  ]
-)
+export const DTPDProtection = () =>
+  createNode(
+    "DTPDProtection",
+    "Protection",
+    "Make sure you have the following. \n Death and Total Disability Coverage: 9x annual income \n Critical Illness Insurance: 4x annual income",
+    "single",
+    [
+      { code: "YES", name: "I am covered" },
+      {
+        code: "CRITAL_ILLNESS",
+        name: "I want help with Critical Illness Insurance",
+      },
+      {
+        code: "DTPD",
+        name: "I want help with Death and Total Permanent Disability Coverage",
+      },
+      { code: "RESOURCE", name: "Give me resources for this" },
+    ],
+    (answers) => {
+      switch(answers['DTPDProtection']){
+        case "CRITAL_ILLNESS":
+          return {
+            specification: [
+              ...((answers["specification"] as string[]) || []),
+              ...(!answers["specification"]?.includes("CIIP") ? ["CIIP"] : []),
+            ],
+          } as never;
+        case "DTPD":
+          return {
+            specification: [
+              ...((answers["specification"] as string[]) || []),
+              ...(!answers["specification"]?.includes("LI") ? ["LI"] : []),
+            ],
+          } as never
+        case "RESOURCE":
+          return {
+            contents: [
+              ...((answers["contents"] as string[]) || []),
+              "2851",
+              "3303",
+            ],
+          } as never;
+        default:
+          return {}
+      }
+    }
+  );
 
-export const insuranceFamilarity = () => createNode(
-  "insuranceFamilarity",
-  "Insurance Familarity",
-  "Are you familiar with the following?\nHome Insurance\nFire and Home Content Insurance\nMediShield Life for large healthcare bill\nCareShield Life/Elder Shield for longterm case of severe disiability",
-  "single",
-  [
-    { code: "YES", name: "Yes, I am familier" },
-    { code: "NO", name: "No, Give me resources for this" }
-  ]
-)
+export const insuranceFamilarity = () =>
+  createNode(
+    "insuranceFamilarity",
+    "Insurance Familarity",
+    "Are you familiar with the following?\nHome Insurance\nFire and Home Content Insurance\nMediShield Life for large healthcare bill\nCareShield Life/Elder Shield for longterm case of severe disiability",
+    "single",
+    [
+      { code: "YES", name: "Yes, I am familier" },
+      { code: "NO", name: "No, Give me resources for this" },
+    ]
+  );
 
-export const retirementGoals = () => createNode(
-  "retirementGoals",
-  "Retirement Goals",
-  "Do you need professional support with either of the following\n1. Unlocking the value of your assets\n2. CPF management, particularly CPF life",
-  "single",
-  [
-    { code: "YES", name: "I want help with either CPF retirement schemes or asset management" },
-    { code: "NO", name: "No help needed" },
-  ],
-)
+export const retirementGoals = () =>
+  createNode(
+    "retirementGoals",
+    "Retirement Goals",
+    "Do you need professional support with either of the following\n1. Unlocking the value of your assets\n2. CPF management, particularly CPF life",
+    "single",
+    [
+      {
+        code: "YES",
+        name: "I want help with either CPF retirement schemes or asset management",
+      },
+      { code: "NO", name: "No help needed" },
+    ],
+    (answers) => ({
+      specification: [
+        ...((answers["specification"] as string[]) || []),
+        ...(answers["retirementGoals"] === "YES" &&
+        !answers["specification"]?.includes("RCP")
+          ? ["RCP"]
+          : []),
+      ],
+    })
+  );

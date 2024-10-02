@@ -5,9 +5,6 @@ import ResourceCard from "@/components/resource-card";
 import { BarChart2, PiggyBank } from "lucide-react";
 import { redirect } from "next/navigation";
 import ChatSummaryContainer from "@/components/client/chat-summary-container";
-import { Button } from "@/components/ui/button";
-import { createMatching } from "@/lib/actions/client";
-import { SubmitButton } from "@/components/submit-btn";
 
 export default async function HomePageRoute({ searchParams }) {
   const supabase = createClient();
@@ -43,14 +40,7 @@ export default async function HomePageRoute({ searchParams }) {
         </header>
 
         <section className="mb-12">
-          <h2 className="text-xl font-semibold mb-4">
-            Your Matched Advisors
-            <form>
-              <SubmitButton formAction={createMatching as never}>
-                Rematch
-              </SubmitButton>
-            </form>
-          </h2>
+          <h2 className="text-xl font-semibold mb-4">Your Matched Advisors</h2>
           <div className="flex">
             <div className="w-full lg:w-2/3 flex flex-nowrap overflow-x-auto gap-4 pb-4">
               {advisors?.map(({ advisor_id, advisor }) => (

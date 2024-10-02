@@ -24,7 +24,7 @@ interface OnboardingQuestionsProps {
 export function OnboardingFormComponent({
   onComplete,
 }: OnboardingQuestionsProps) {
-  const [answers, setAnswers] = useLocalStorage<Record<string, string | string[]>>('answers', {});
+  const [answers, setAnswers] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState<QNode | null>(
     getQuestions()
   );
@@ -40,6 +40,7 @@ export function OnboardingFormComponent({
   };
 
   const handleNext = () => {
+    setAnswers({...answers, ...currentQuestion?.answerModifier(answers)});
     const val = currentQuestion?.next(answers);
     if (val) {
       setCurrentQuestion(val || null);
@@ -48,6 +49,8 @@ export function OnboardingFormComponent({
     }
     onComplete(answers as never);
   };
+
+  console.log(answers);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">

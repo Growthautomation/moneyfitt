@@ -35,7 +35,7 @@ export const broadScope = [
 export const narrowScope = [
   { code: "BIRM", name: "Business Insurance and Risk Management" },
   { code: "CEI", name: "Children (Education Savings, Child Health Insurance)" },
-  { code: "CII", name: "Critical Illness/Income Protection" },
+  { code: "CIIP", name: "Critical Illness/Income Protection" },
   { code: "CTP", name: "Corporate Tax Planning" },
   { code: "CHS", name: "CPF Health Schemes" },
   { code: "CIS", name: "CPF Investment Schemes" },
