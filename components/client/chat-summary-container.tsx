@@ -31,16 +31,16 @@ export default async function ChatSummaryContainer({
   // Determine the ID of the last message included in the summary
   const lastSummarizedMessageId = lastSummary?.last_message_id || 0;
 
-  // Filter messages that have not been summarized yet
-  const newMessages = messages.filter(
+  // Check if there are new messages to summarize
+  const hasNewMessages = messages.some(
     (message) => message.id > lastSummarizedMessageId
   );
 
   let summaryData = lastSummary?.summary;
 
-  // Check if there are new messages to summarize
-  if (newMessages.length > 0) {
-    // Prepare the conversation string
+  // If there are new messages, generate a new summary
+  if (hasNewMessages) {
+    // Prepare the conversation string using all messages
     const conversation = messages
       .map((msg) => `${msg.sender === user.id ? "User" : "Advisor"}: ${msg.message}`)
       .join("\n");
@@ -48,7 +48,7 @@ export default async function ChatSummaryContainer({
     // Prepare the prompt with the conversation and user data
     const prompt = SUMMARY_PROMPT
       .replace("{{CONVERSATION}}", conversation)
-      .replace("{{USER}}", JSON.stringify(user));
+      .replace("{{USER}}", JSON.stringify(user)); // This needs to pull from client table not user table
 
     // Call GPT-4 to generate a new summary
     const newSummaryText = await callGPT4(prompt, "");
