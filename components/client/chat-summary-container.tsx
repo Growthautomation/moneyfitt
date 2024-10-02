@@ -20,7 +20,7 @@ export default async function ChatSummaryContainer({
     .or(
       `and(sender.eq.${user.id},recipient.eq.${selectedAdvisor?.id}),and(sender.eq.${selectedAdvisor?.id},recipient.eq.${user.id})`
     )
-    .order("id", { ascending: true });
+    .order("created_at", { ascending: true });
 
   if (messagesError) {
     console.error("Error fetching messages:", messagesError);
@@ -52,9 +52,9 @@ export default async function ChatSummaryContainer({
     needNewSummary = true;
   } else {
     // Check if there are new messages to summarize
-    const lastSummarizedMessageId = lastSummary.last_message_id || 0;
+    const lastSummarizedMessageTime = new Date(lastSummary.created_at);
     needNewSummary = messages.some(
-      (message) => message.id > lastSummarizedMessageId
+      (message) => new Date(message.created_at) > lastSummarizedMessageTime
     );
     console.log(`Need new summary: ${needNewSummary}`);
   }
@@ -66,10 +66,24 @@ export default async function ChatSummaryContainer({
       .map((msg) => `${msg.sender === user.id ? "User" : "Advisor"}: ${msg.message}`)
       .join("\n");
 
-    // Prepare the prompt with the conversation and user data
+    // Include the previous summary in the prompt
+    let previousSummary = "";
+    if (lastSummary) {
+      const parsedLastSummary = JSON.parse(lastSummary.summary);
+      previousSummary = `
+Previous Summary:
+Quick Summary: ${parsedLastSummary.quickSummary}
+Main Points: ${parsedLastSummary.mainPoints.join(", ")}
+Services Offered: ${parsedLastSummary.servicesOffered.join(", ")}
+Analysis: ${parsedLastSummary.analysis}
+`;
+    }
+
+    // Prepare the prompt with the conversation, user data, and previous summary
     const prompt = SUMMARY_PROMPT
       .replace("{{CONVERSATION}}", conversation)
-      .replace("{{USER}}", JSON.stringify(user)); // This needs to pull from client table not user table
+      .replace("{{USER}}", JSON.stringify(user))
+      .replace("{{PREVIOUS_SUMMARY}}", previousSummary);
 
     // Call GPT-4 to generate a new summary
     const newSummaryText = await callGPT4(prompt, "");
@@ -79,19 +93,23 @@ export default async function ChatSummaryContainer({
     summaryData = parseSummaryResponse(newSummaryText);
     console.log("Parsed summary data:", summaryData);
 
+    // Get the latest message
+    const latestMessage = messages[messages.length - 1];
+
     // Upsert the new summary into the database
     const { data, error } = await supabase
       .from("conversation_summaries")
       .upsert({
         client_id: user.id,
         advisor_id: selectedAdvisor.id,
-        summary: JSON.stringify(summaryData), // Stringify the summary object
-        last_message_id: messages[messages.length - 1].id,
+        summary: JSON.stringify(summaryData),
+        last_message_id: latestMessage.id,
+        created_at: latestMessage.created_at,
       }, 
       { 
         onConflict: 'client_id,advisor_id',
         ignoreDuplicates: false
-      }) // Specify the conflict resolution
+      })
       .select();
 
     if (error) {
