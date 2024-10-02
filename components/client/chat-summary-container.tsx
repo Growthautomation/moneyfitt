@@ -35,6 +35,8 @@ export default async function ChatSummaryContainer({
     .select()
     .eq("client_id", user.id)
     .eq("advisor_id", selectedAdvisor.id)
+    .order('created_at', { ascending: false })
+    .limit(1)
     .single();
 
   if (summaryError && summaryError.code !== 'PGRST116') {
@@ -96,27 +98,23 @@ Analysis: ${parsedLastSummary.analysis}
     // Get the latest message
     const latestMessage = messages[messages.length - 1];
 
-    // Upsert the new summary into the database
+    // Insert the new summary into the database
     const { data, error } = await supabase
       .from("conversation_summaries")
-      .upsert({
+      .insert({
         client_id: user.id,
         advisor_id: selectedAdvisor.id,
         summary: JSON.stringify(summaryData),
         last_message_id: latestMessage.id,
         created_at: latestMessage.created_at,
-      }, 
-      { 
-        onConflict: 'client_id,advisor_id',
-        ignoreDuplicates: false
       })
       .select();
 
     if (error) {
-      console.error("Error upserting summary:", error);
+      console.error("Error inserting summary:", error);
       // Handle the error appropriately, maybe set a state or show a user message
     } else if (data) {
-      console.log("Summary upserted successfully:", data);
+      console.log("Summary inserted successfully:", data);
       // Optionally, update local state or trigger a re-fetch if necessary
     }
   } else {
