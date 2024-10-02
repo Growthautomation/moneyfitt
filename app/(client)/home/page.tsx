@@ -5,6 +5,9 @@ import ResourceCard from "@/components/resource-card";
 import { BarChart2, PiggyBank } from "lucide-react";
 import { redirect } from "next/navigation";
 import ChatSummaryContainer from "@/components/client/chat-summary-container";
+import { Button } from "@/components/ui/button";
+import { createMatching } from "@/lib/actions/client";
+import { SubmitButton } from "@/components/submit-btn";
 
 export default async function HomePageRoute({ searchParams }) {
   const supabase = createClient();
@@ -17,9 +20,16 @@ export default async function HomePageRoute({ searchParams }) {
   }
 
   const { data: advisors } = await supabase
-    .from("advisor")
-    .select("*")
-    .limit(6);
+    .from("matchings")
+    .select(
+      `
+    advisor_id,
+    advisor (
+      *
+    )
+  `
+    )
+    .eq("client_id", user.id);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -33,27 +43,38 @@ export default async function HomePageRoute({ searchParams }) {
         </header>
 
         <section className="mb-12">
-          <h2 className="text-xl font-semibold mb-4">Your Matched Advisors</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            Your Matched Advisors
+            <form>
+              <SubmitButton formAction={createMatching as never}>
+                Rematch
+              </SubmitButton>
+            </form>
+          </h2>
           <div className="flex">
             <div className="w-full lg:w-2/3 flex flex-nowrap overflow-x-auto gap-4 pb-4">
-              {advisors?.map((advisor) => (
+              {advisors?.map(({ advisor_id, advisor }) => (
                 <div
-                  key={advisor.id}
+                  key={advisor_id}
                   className="flex-none w-full sm:w-1/2 lg:w-1/3 max-w-md"
                 >
                   <AdvisorProfileCard
                     advisor={advisor as never}
-                    redirectTo={`/chat/${advisor.id}`}
+                    redirectTo={`/chat/${advisor_id}`}
                   />
                 </div>
               ))}
             </div>
             <div className="w-full lg:w-1/3">
               <ChatSummaryContainer
-                advisors={advisors}
+                advisors={advisors?.map((a) => ({
+                  ...a.advisor,
+                  id: a.advisor_id,
+                }))}
                 selectedAdvisor={
-                  advisors?.find((a) => a.id === searchParams?.advisor) ??
-                  advisors?.[0]
+                  advisors?.find(
+                    (a) => a.advisor_id === searchParams?.advisor
+                  ) ?? advisors?.[0].advisor
                 }
                 user={user}
               />

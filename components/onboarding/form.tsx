@@ -24,7 +24,7 @@ interface OnboardingQuestionsProps {
 export function OnboardingFormComponent({
   onComplete,
 }: OnboardingQuestionsProps) {
-  const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
+  const [answers, setAnswers] = useLocalStorage<Record<string, string | string[]>>('answers', {});
   const [currentQuestion, setCurrentQuestion] = useState<QNode | null>(
     getQuestions()
   );
@@ -46,7 +46,7 @@ export function OnboardingFormComponent({
       setNumAnswers(numAnswers + 1);
       return
     }
-    console.log(answers)
+    onComplete(answers as never);
   };
 
   return (

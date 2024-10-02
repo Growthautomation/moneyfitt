@@ -19,10 +19,10 @@ export async function createUserClient(
       error: error?.message,
     };
   }
-  const { error: insertError } = await supabase.from("client").insert({
+  const { data: clientData, error: insertError } = await supabase.from("client").insert({
     ...data,
     id: user.id,
-  });
+  }).select().single();
 
   if (insertError) {
     console.log(insertError);
@@ -32,6 +32,13 @@ export async function createUserClient(
     };
   }
 
+  // const { data: advisors } = await supabase.from("advisor").select();
+  // if (!advisors) {
+  //   return {
+  //     success: false,
+  //     error: "No advisors found",
+  //   }
+  // }
   return redirect("/home");
 }
 
@@ -67,7 +74,7 @@ export async function createMatching() {
   const matches = matchAdvisors(advisors, client);
 
   for (const match of matches) {
-    await supabase.from("matchings").insert({
+    const { error } = await supabase.from("matchings").insert({
       advisor_id: match.id,
       client_id: user.id,
       need_score: match.needScore,

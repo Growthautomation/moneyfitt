@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Link from "next/link";
 import ChatSummary from "./chat-summary";
 import { createClient } from "@/lib/supabase/server";

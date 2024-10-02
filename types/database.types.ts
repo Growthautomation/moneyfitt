@@ -129,6 +129,33 @@ export type Database = {
         }
         Relationships: []
       }
+      conversation_summaries: {
+        Row: {
+          advisor_id: string
+          client_id: string
+          created_at: string | null
+          id: number
+          last_message_id: string | null
+          summary: Json
+        }
+        Insert: {
+          advisor_id: string
+          client_id: string
+          created_at?: string | null
+          id?: number
+          last_message_id?: string | null
+          summary: Json
+        }
+        Update: {
+          advisor_id?: string
+          client_id?: string
+          created_at?: string | null
+          id?: number
+          last_message_id?: string | null
+          summary?: Json
+        }
+        Relationships: []
+      }
       matchings: {
         Row: {
           advisor_id: string | null
