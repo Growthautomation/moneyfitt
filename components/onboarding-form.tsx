@@ -82,6 +82,7 @@ export function OnboardingFormComponent({
 
   const questionsPath = useMemo(() => {
     return getQuestionsPath(answers);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answers, questionMap]);
 
   const currentQuestionIndex = questionsPath.indexOf(currentQuestion.key);
@@ -103,7 +104,7 @@ export function OnboardingFormComponent({
         newAnswers[key] = [typeof option === 'string' ? option : option.name];
       } else if (currentQuestion.type === "multipleWithTags") {
         const currentAnswers = newAnswers[key] || [];
-        const optionName = typeof option === 'string' ? option : option.name;
+        const optionName = typeof option === 'string' ? option : option.code;
         if (currentAnswers.includes(optionName)) {
           newAnswers[key] = currentAnswers.filter((a) => a !== optionName);
         } else {
@@ -127,6 +128,8 @@ export function OnboardingFormComponent({
       [key]: [value],
     }));
   };
+
+  console.log(answers);
 
   const handleNext = () => {
     if (currentQuestion.required !== false && 
@@ -224,8 +227,8 @@ export function OnboardingFormComponent({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {(currentQuestion.options as Tag[]).map((tag) => (
             <Button
-              key={tag.name}
-              variant={answers[currentQuestion.key]?.includes(tag.name) ? "default" : "outline"}
+              key={tag.code}
+              variant={answers[currentQuestion.key]?.includes(tag.code) ? "default" : "outline"}
               className="w-full justify-start h-auto py-4 px-6 text-left"
               onClick={() => handleOptionClick(currentQuestion.key, tag)}
             >

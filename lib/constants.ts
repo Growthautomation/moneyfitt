@@ -1,6 +1,6 @@
 export const broadScope = [
   {
-    code: "INR",
+    code: "IRM",
     name: "Insurance and Risk Management",
     description: "Safeguarding health, life, income, and assets.",
   },
@@ -89,7 +89,7 @@ export const ageGroups = [
   },
 ];
 
-export const Gender = [
+export const gender = [
   {
     code: "M",
     name: "Male",
@@ -104,7 +104,7 @@ export const Gender = [
   },
 ];
 
-export const Languages = [
+export const languages = [
   {code: "ENG", name: "English"},
   {code: "CHI", name: "Mandarin"},
   {code: "MAL", name: "Malay"},
@@ -117,7 +117,7 @@ export const Languages = [
   {code: "PUN", name: "Punjabi"},
 ];
 
-export const Religion = [
+export const religion = [
   {code: "CHR", name: "Christianity"},
   {code: "ISL", name: "Islam"},
   {code: "BUD", name: "Buddhism"},
