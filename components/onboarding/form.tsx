@@ -33,49 +33,57 @@ export function OnboardingFormComponent({
 
   const handleBack = () => {
     const val = currentQuestion?.prev(answers);
-    val && setCurrentQuestion(val || null);
-    val && setNumAnswers(numAnswers - 1);
+    if (val) {
+      setCurrentQuestion(val || null);
+      setNumAnswers(numAnswers - 1);
+    }
   };
 
   const handleNext = () => {
     const val = currentQuestion?.next(answers);
-    val && setCurrentQuestion(val || null);
-    val && setNumAnswers(numAnswers + 1);
+    if (val) {
+      setCurrentQuestion(val || null);
+      setNumAnswers(numAnswers + 1);
+      return
+    }
+    console.log(answers)
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-    <Card className="w-full max-w-4xl p-6 space-y-6">
-      <h2 className="text-2xl font-bold">{currentQuestion?.category}</h2>
-      <p className="text-lg">{currentQuestion?.question}</p>
+      <Card className="w-full max-w-4xl p-6 space-y-6">
+        <h2 className="text-2xl font-bold">{currentQuestion?.category}</h2>
+        <p className="text-lg whitespace-pre">{currentQuestion?.question}</p>
         <div className="space-y-4">
           {renderQuestions(currentQuestion, answers, setAnswers)}
         </div>
-      {error && (
-        <Alert variant="destructive">
-          {error}
-        </Alert>
-      )}
-      <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-        <Button onClick={handleBack} disabled={!currentQuestion?.prev(answers)}>
-          Back
-        </Button>
-        <div className="h-2 flex-1 bg-gray-200 mx-4 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-purple-600 rounded-full"
-            style={{
-              width: `${(numAnswers / 12) * 100}%`,
-            }}
-          />
+        {error && <Alert variant="destructive">{error}</Alert>}
+        <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+          <Button
+            onClick={handleBack}
+            disabled={!currentQuestion?.prev(answers)}
+          >
+            Back
+          </Button>
+          <div className="h-2 flex-1 bg-gray-200 mx-4 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-purple-600 rounded-full"
+              style={{
+                width: `${(numAnswers / 12) * 100}%`,
+              }}
+            />
+          </div>
+          <Button
+            onClick={handleNext}
+          >
+            {currentQuestion?.next(answers) ? "Next" : "Complete"}
+          </Button>
         </div>
-        <Button onClick={handleNext} disabled={!currentQuestion?.next(answers)}>
-          {currentQuestion?.key === 'userName' ? "Complete" : "Next"}
-        </Button>
-      </div>
-      <div className="text-sm text-gray-500">
-        Progress: {((numAnswers / 12) * 100).toFixed()}% (Question {numAnswers} of {12})
-      </div>
-    </Card>
-  </div>
+        <div className="text-sm text-gray-500">
+          Progress: {((numAnswers / 12) * 100).toFixed()}% (Question{" "}
+          {numAnswers} of {12})
+        </div>
+      </Card>
+    </div>
   );
 }

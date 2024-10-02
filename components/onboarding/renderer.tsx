@@ -1,6 +1,7 @@
 import { QNode } from "@/resources/questions";
 import Select from "./select";
 import { SetStateAction } from "react";
+import { Input } from "../ui/input";
 
 export default function renderQuestions(
   question: QNode | null,
@@ -13,28 +14,37 @@ export default function renderQuestions(
     case "single":
       return (
         <Select
-          question={question}
-          answer={answer}
-          onSelect={(key, val) => setAnswer({ ...answer, [key]: [val] })}
+          options={question.options}
+          value={answer[question.key]}
+          onSelect={(val) =>
+            setAnswer({ ...answer, ...question.answerModifier(val, answer) })
+          }
         />
       );
     case "multiple":
       return (
         <Select
-          question={question}
-          answer={answer}
-          onSelect={(key, val) =>
+          options={question.options}
+          value={answer[question.key]}
+          onSelect={(val) =>
             setAnswer({
               ...answer,
-              [key]: answer[key]?.includes(val)
-                ? [
-                    ...((answer[key] as string[]) || []).filter(
-                      (v) => v !== val
-                    ),
-                  ]
-                : [...((answer[key] as string[]) || []), val],
+              ...question.answerModifier(val, answer),
             })
           }
+          multiple
+        />
+      );
+    case "text":
+      return (
+        <Input
+          type="text"
+          placeholder="Enter your answer"
+          value={answer[question.key]}
+          onChange={(e) =>
+            setAnswer({ ...answer, [question.key]: e.target.value })
+          }
+          className="w-full"
         />
       );
     default:
