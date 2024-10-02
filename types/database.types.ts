@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       advisor: {
         Row: {
+          age_group: string | null
           agency_website: string | null
           awards: Json | null
           bio: string | null
@@ -20,6 +21,7 @@ export type Database = {
           current_company: string | null
           education: string | null
           first_name: string | null
+          gender: string | null
           id: string
           languages: Json | null
           last_name: string | null
@@ -34,6 +36,7 @@ export type Database = {
           title: string | null
         }
         Insert: {
+          age_group?: string | null
           agency_website?: string | null
           awards?: Json | null
           bio?: string | null
@@ -43,6 +46,7 @@ export type Database = {
           current_company?: string | null
           education?: string | null
           first_name?: string | null
+          gender?: string | null
           id?: string
           languages?: Json | null
           last_name?: string | null
@@ -57,6 +61,7 @@ export type Database = {
           title?: string | null
         }
         Update: {
+          age_group?: string | null
           agency_website?: string | null
           awards?: Json | null
           bio?: string | null
@@ -66,6 +71,7 @@ export type Database = {
           current_company?: string | null
           education?: string | null
           first_name?: string | null
+          gender?: string | null
           id?: string
           languages?: Json | null
           last_name?: string | null
@@ -83,25 +89,67 @@ export type Database = {
       }
       client: {
         Row: {
-          advisor_preference: Json | null
           all_answers: Json | null
+          broad_scope: Json | null
           created_at: string
           id: string
           name: string | null
+          narrow_scope: Json | null
+          preferred_advisor: Json | null
+          preferred_age_group: Json | null
+          preferred_language: Json | null
+          preferred_religion: Json | null
+          preferred_sex: Json | null
         }
         Insert: {
-          advisor_preference?: Json | null
           all_answers?: Json | null
+          broad_scope?: Json | null
           created_at?: string
           id?: string
           name?: string | null
+          narrow_scope?: Json | null
+          preferred_advisor?: Json | null
+          preferred_age_group?: Json | null
+          preferred_language?: Json | null
+          preferred_religion?: Json | null
+          preferred_sex?: Json | null
         }
         Update: {
-          advisor_preference?: Json | null
           all_answers?: Json | null
+          broad_scope?: Json | null
           created_at?: string
           id?: string
           name?: string | null
+          narrow_scope?: Json | null
+          preferred_advisor?: Json | null
+          preferred_age_group?: Json | null
+          preferred_language?: Json | null
+          preferred_religion?: Json | null
+          preferred_sex?: Json | null
+        }
+        Relationships: []
+      }
+      matchings: {
+        Row: {
+          advisor_id: string | null
+          client_id: string | null
+          created_at: string
+          enabled: boolean | null
+          id: number
+        }
+        Insert: {
+          advisor_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          enabled?: boolean | null
+          id?: number
+        }
+        Update: {
+          advisor_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          enabled?: boolean | null
+          id?: number
         }
         Relationships: []
       }

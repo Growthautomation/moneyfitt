@@ -2,7 +2,7 @@ import { SubmitButton } from "@/components/submit-btn";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { createAgent } from "@/lib/actions/user";
+import { createAgent } from "@/lib/actions/agent";
 
 export default function AgentSignup() {
   return (

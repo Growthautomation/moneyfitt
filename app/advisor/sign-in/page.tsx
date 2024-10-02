@@ -1,7 +1,7 @@
 import { SubmitButton } from "@/components/submit-btn";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { agentSignIn } from "@/lib/actions/user";
+import { agentSignIn } from "@/lib/actions/agent";
 
 export default function Login() {
   return (

@@ -3,12 +3,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "../supabase/server";
 
-export const signOutAction = async () => {
-  const supabase = createClient();
-  await supabase.auth.signOut();
-  return redirect("/sign-in");
-};
-
 export const createAgent = async (form: FormData) => {
   const supabase = createClient();
   const email = form.get("email") as string;

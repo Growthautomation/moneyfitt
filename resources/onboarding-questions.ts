@@ -1,3 +1,4 @@
+import { broadScope } from "@/lib/constants";
 import { QuestionFlow, Question } from "@/types/onboarding";
 
 export const onboardingQuestions: QuestionFlow = [
@@ -30,38 +31,13 @@ export const onboardingQuestions: QuestionFlow = [
       key: "financialPlanningArea",
       category: "Financial Planning Area",
       question: "What area of financial planning do you need help with?",
-      options: [
-        {
-          name: "Insurance and Risk Management",
-          description: "Safeguarding health, life, income, and assets."
-        },
-        {
-          name: "Investments and Wealth Management",
-          description: "Growing or preserving wealth."
-        },
-        {
-          name: "Retirement and Later-Life Planning",
-          description: "Planning for retirement and stability."
-        },
-        {
-          name: "Family and Personal Planning",
-          description: "E.g. Education, family planning, wills."
-        },
-        {
-          name: "Business and Corporate Planning",
-          description: "Business growth, protection, and succession planning."
-        },
-        {
-          name: "Niche and Specialised Planning",
-          description: "E.g. Tax planning, alternative investments, divorce planning."
-        }
-      ],
+      options: broadScope,
       type: "multipleWithTags",
       next: "drillDownQuestions",
       drillDownQuestions: (selectedAreas: string[]) => {
         const questions: Question[] = [];
         
-        if (selectedAreas.includes("Insurance and Risk Management")) {
+        if (selectedAreas.includes("IRM")) {
           questions.push({
             key: "insuranceRiskManagement",
             category: "Insurance and Risk Management",
@@ -81,7 +57,7 @@ export const onboardingQuestions: QuestionFlow = [
           });
         }
         
-        if (selectedAreas.includes("Investments and Wealth Management")) {
+        if (selectedAreas.includes("IWM")) {
           questions.push({
             key: "investmentsWealthManagement",
             category: "Investments and Wealth Management",
@@ -98,7 +74,7 @@ export const onboardingQuestions: QuestionFlow = [
           });
         }
         
-        if (selectedAreas.includes("Retirement and Later-Life Planning")) {
+        if (selectedAreas.includes("RLP")) {
           questions.push({
             key: "retirementLaterLifePlanning",
             category: "Retirement and Later-Life Planning",
@@ -115,7 +91,7 @@ export const onboardingQuestions: QuestionFlow = [
           });
         }
         
-        if (selectedAreas.includes("Family and Personal Planning")) {
+        if (selectedAreas.includes("FPP")) {
           questions.push({
             key: "familyPersonalPlanning",
             category: "Family and Personal Planning",
@@ -134,7 +110,7 @@ export const onboardingQuestions: QuestionFlow = [
           });
         }
         
-        if (selectedAreas.includes("Business and Corporate Planning")) {
+        if (selectedAreas.includes("BCP")) {
           questions.push({
             key: "businessCorporatePlanning",
             category: "Business and Corporate Planning",
@@ -150,7 +126,7 @@ export const onboardingQuestions: QuestionFlow = [
           });
         }
         
-        if (selectedAreas.includes("Niche and Specialised Planning")) {
+        if (selectedAreas.includes("NSP")) {
           questions.push({
             key: "nicheSpecialisedPlanning",
             category: "Niche and Specialised Planning",

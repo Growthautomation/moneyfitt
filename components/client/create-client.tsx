@@ -6,22 +6,20 @@ import { useLocalStorage } from "usehooks-ts";
 export default function CreateClient() {
   const [answers, _] = useLocalStorage<Record<string, string[]>>("answers", {});
 
-  const payload = {
-    name: answers["userName"]?.[0],
-    advisor_preference: {
-      broad_scope: answers["broad_scope"],
-      narrow_scope: answers["narrow_scope"],
-      preferred_age_group: answers["preferedAgeRange"],
-      preferred_sex: answers["userSex"],
-      preferred_language: answers["languagePreference"],
-      preferred_religion: answers["religiousBeliefs"],
-      preferred_advisor: answers["companyPreference"],
-    },
-    all_answers: answers,
-  };
 
   useEffect(() => {
-    createUserClient(payload);
+    createUserClient({
+      name: answers["userName"]?.[0],
+      broad_scope: answers["financialPlanningArea"],
+      narrow_scope: answers["narrow_scope"],
+      preferred_age_group: answers["preferedAgeRange"],
+      preferred_advisor: answers["companyPreference"],
+      preferred_language: answers["languagePreference"],
+      preferred_religion: answers["religiousBeliefs"],
+      preferred_sex: answers["userSex"],
+      all_answers: answers,
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return null;

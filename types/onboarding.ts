@@ -1,5 +1,6 @@
 export interface Tag {
     name: string;
+    code: string;
     description?: string;
     subTags?: string[];
 }
