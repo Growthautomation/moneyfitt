@@ -90,6 +90,7 @@ export default function Chat({
         startTransition(() => router.push(`?${newSearchParams.toString()}`));
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [searchParams]
   );
 

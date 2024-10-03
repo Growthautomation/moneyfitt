@@ -17,7 +17,7 @@ export default async function Callback() {
     .eq("id", user.id);
 
   if (error) {
-    console.log(error);
+    console.error(error);
     return "An error occurred" + error.message;
   }
 

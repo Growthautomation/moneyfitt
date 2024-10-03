@@ -28,7 +28,6 @@ export async function AdvisorProfileCard({
     .from("public-files")
     .getPublicUrl(advisor.profile_img ?? "");
 
-  console.log(data)
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">

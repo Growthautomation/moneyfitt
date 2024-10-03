@@ -5,6 +5,9 @@ import ResourceCard from "@/components/resource-card";
 import { BarChart2, PiggyBank } from "lucide-react";
 import { redirect } from "next/navigation";
 import ChatSummaryContainer from "@/components/client/chat-summary-container";
+import { Suspense } from "react";
+
+// TODO: format and style return error page properly
 
 export default async function HomePageRoute({ searchParams }) {
   const supabase = createClient();
@@ -56,20 +59,28 @@ export default async function HomePageRoute({ searchParams }) {
                 </div>
               ))}
             </div>
-            <div className="w-full lg:w-1/3">
-              <ChatSummaryContainer
-                advisors={advisors?.map((a) => ({
-                  ...a.advisor,
-                  id: a.advisor_id,
-                }))}
-                selectedAdvisor={
-                  advisors?.find(
-                    (a) => a.advisor_id === searchParams?.advisor
-                  ) ?? advisors?.[0]?.advisor
-                }
-                user={user}
-              />
-            </div>
+            <Suspense
+              fallback={
+                <div className="flex justify-center items-center">
+                  Loading...
+                </div>
+              }
+            >
+              <div className="w-full lg:w-1/3">
+                <ChatSummaryContainer
+                  advisors={advisors?.map((a) => ({
+                    ...a.advisor,
+                    id: a.advisor_id,
+                  }))}
+                  selectedAdvisor={
+                    advisors?.find(
+                      (a) => a.advisor_id === searchParams?.advisorId
+                    )?.advisor ?? advisors?.[0]?.advisor
+                  }
+                  user={user}
+                />
+              </div>
+            </Suspense>
           </div>
         </section>
 

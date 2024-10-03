@@ -26,7 +26,7 @@ export async function createUserClient(
   }).select().single();
 
   if (insertError) {
-    console.log(insertError);
+    console.error(insertError);
     return {
       success: false,
       error: insertError.message,

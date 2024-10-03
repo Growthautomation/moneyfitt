@@ -1,4 +1,5 @@
 // @ts-nocheck
+// TODO: please clean this up
 import Link from "next/link";
 import ChatSummary from "./chat-summary";
 import { createClient } from "@/lib/supabase/server";
@@ -10,6 +11,7 @@ export default async function ChatSummaryContainer({
   selectedAdvisor,
   user,
 }) {
+  console.log(selectedAdvisor);
   const supabase = createClient();
 
   console.log("Starting ChatSummaryContainer function");
