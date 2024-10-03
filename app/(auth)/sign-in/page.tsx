@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/client";
 import Image from "next/image";
 import { useState } from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 const Auth = () => {
   const superbase = createClient();
@@ -17,6 +18,7 @@ const Auth = () => {
       },
     });
   };
+  const [_, setAnswers] = useLocalStorage("answers", {});
 
   const [showLogin, setShowLogin] = useState(false);
 
@@ -26,7 +28,7 @@ const Auth = () => {
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-center">
-              Create your account
+              Sign In to your account
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -36,7 +38,7 @@ const Auth = () => {
               className="w-full flex items-center justify-center space-x-2"
             >
               <Image
-                src="/google-logo.svg"
+                src="/google-logo.png"
                 alt="Google logo"
                 width={20}
                 height={20}
@@ -52,7 +54,11 @@ const Auth = () => {
 
   return (
     <OnboardingFormComponent
-      onComplete={() => setShowLogin(true)}
+      onComplete={(answers) => {
+        setAnswers(answers);
+        setShowLogin(true);
+      }}
+      onSkip={() => setShowLogin(true)}
     />
   );
 };

@@ -30,6 +30,7 @@ export type Database = {
           personal_interests: Json | null
           personal_website: string | null
           professional_background: Json | null
+          profile_img: string | null
           religion: string | null
           social_profiles: Json | null
           testinomial: Json | null
@@ -55,6 +56,7 @@ export type Database = {
           personal_interests?: Json | null
           personal_website?: string | null
           professional_background?: Json | null
+          profile_img?: string | null
           religion?: string | null
           social_profiles?: Json | null
           testinomial?: Json | null
@@ -80,6 +82,7 @@ export type Database = {
           personal_interests?: Json | null
           personal_website?: string | null
           professional_background?: Json | null
+          profile_img?: string | null
           religion?: string | null
           social_profiles?: Json | null
           testinomial?: Json | null
@@ -163,6 +166,9 @@ export type Database = {
           created_at: string
           enabled: boolean | null
           id: number
+          need_score: number | null
+          personal_score: number | null
+          total_score: number | null
         }
         Insert: {
           advisor_id?: string | null
@@ -170,6 +176,9 @@ export type Database = {
           created_at?: string
           enabled?: boolean | null
           id?: number
+          need_score?: number | null
+          personal_score?: number | null
+          total_score?: number | null
         }
         Update: {
           advisor_id?: string | null
@@ -177,8 +186,26 @@ export type Database = {
           created_at?: string
           enabled?: boolean | null
           id?: number
+          need_score?: number | null
+          personal_score?: number | null
+          total_score?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "matchings_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisor"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matchings_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "client"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       messages: {
         Row: {

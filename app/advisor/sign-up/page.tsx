@@ -23,6 +23,14 @@ export default function AgentSignup() {
         <Label htmlFor="attributes">Attributes</Label>
         <Textarea name="attributes" placeholder="User attributes" required />
 
+        <Label htmlFor="profile_img">Profile Img</Label>
+        <Input
+          name="profile_img"
+          placeholder="Profile image"
+          required
+          type="file"
+        />
+
         <SubmitButton
           pendingText="Registering..."
           formAction={createAgent as never}

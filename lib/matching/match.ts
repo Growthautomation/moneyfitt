@@ -7,10 +7,24 @@ export default function matchAdvisors(advisors: Advisor[], user: Client) {
     ...advisor,
     ...calculateScore(advisor, user),
   }));
-  const maxNeed = scores.sort((a, b) => b.needScore - a.needScore)[0];
-  const maxPersonal = scores.sort((a, b) => b.personalScore - a.personalScore)[0];
-  const maxTotal = scores.sort((a, b) => b.totalScore - a.totalScore)[0];
-  return [maxNeed, maxPersonal, maxTotal];
+  const matched: (Advisor & {
+    totalScore: number;
+    needScore: number;
+    personalScore: number;
+  })[] = [];
+  const maxNeed = scores
+    .toSorted((a, b) => b.needScore - a.needScore)
+    .find((a) => !matched.map((m) => m.id).includes(a.id));
+  if (maxNeed) matched.push(maxNeed);
+  const maxPersonal = scores
+    .toSorted((a, b) => b.personalScore - a.personalScore)
+    .find((a) => !matched.map((m) => m.id).includes(a.id));
+  if (maxPersonal) matched.push(maxPersonal);
+  const maxTotal = scores
+    .toSorted((a, b) => b.totalScore - a.totalScore)
+    .find((a) => !matched.map((m) => m.id).includes(a.id));
+  if (maxTotal) matched.push(maxTotal);
+  return matched;
 }
 
 function calculateScore(advisor: Advisor, client: Client) {
@@ -19,21 +33,28 @@ function calculateScore(advisor: Advisor, client: Client) {
   return {
     needScore: nS,
     personalScore: pS,
-    totalScore: nS + pS
-  }
+    totalScore: nS + pS,
+  };
 }
 
 function needScore(advisor: Advisor, client: Client) {
   let score = 0;
-  if(client.broad_scope) {
-    score += intersection(client.broad_scope as string[], advisor.broad_scope as string[]).length * 5;
+  if (client.broad_scope) {
+    score +=
+      intersection(
+        client.broad_scope as string[],
+        advisor.broad_scope as string[]
+      ).length * 5;
   }
-  if(client.narrow_scope) {
-    score += intersection(client.narrow_scope as string[], advisor.narrow_scope as string[]).length * 3;
+  if (client.narrow_scope) {
+    score +=
+      intersection(
+        client.narrow_scope as string[],
+        advisor.narrow_scope as string[]
+      ).length * 3;
   }
   return score;
 }
-
 
 function personalScore(advisor: Advisor, client: Client) {
   let score = 0;

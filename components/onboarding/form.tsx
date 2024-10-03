@@ -3,26 +3,20 @@
 import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Question, Tag } from "@/types/onboarding";
-import { useLocalStorage } from "usehooks-ts";
 import { Alert } from "@/components/ui/alert";
-import { Input } from "@/components/ui/input";
 import React from "react";
-import { onboardingQuestions } from "@/resources/onboarding-questions";
-import { MultiSelectSearchableComponent } from "@/components/multi-select-searchable";
-import { DropdownGroup } from "@/types/onboarding";
 import { QNode } from "@/resources/questions";
 import { getQuestions } from "@/resources/onboarding-question-v2";
-import { broadScope } from "@/lib/constants";
 import renderQuestions from "./renderer";
 
 interface OnboardingQuestionsProps {
   onComplete: (values: Record<string, string[]>) => void;
+  onSkip?: () => void;
 }
 
 export function OnboardingFormComponent({
   onComplete,
+  onSkip,
 }: OnboardingQuestionsProps) {
   const [answers, setAnswers] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState<QNode | null>(
@@ -40,17 +34,15 @@ export function OnboardingFormComponent({
   };
 
   const handleNext = () => {
-    setAnswers({...answers, ...currentQuestion?.answerModifier(answers)});
+    setAnswers({ ...answers, ...currentQuestion?.answerModifier(answers) });
     const val = currentQuestion?.next(answers);
     if (val) {
       setCurrentQuestion(val || null);
       setNumAnswers(numAnswers + 1);
-      return
+      return;
     }
     onComplete(answers as never);
   };
-
-  console.log(answers);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -76,15 +68,21 @@ export function OnboardingFormComponent({
               }}
             />
           </div>
-          <Button
-            onClick={handleNext}
-          >
+          <Button onClick={handleNext}>
             {currentQuestion?.next(answers) ? "Next" : "Complete"}
           </Button>
         </div>
-        <div className="text-sm text-gray-500">
-          Progress: {((numAnswers / 12) * 100).toFixed()}% (Question{" "}
-          {numAnswers} of {12})
+        <div className="flex justify-between">
+          <p className="text-sm text-gray-500">
+            Progress: {((numAnswers / 12) * 100).toFixed()}% (Question{" "}
+            {numAnswers} of {12})
+          </p>
+          <span
+            onClickCapture={() => onSkip?.()}
+            className="hover:cursor-pointer hover:underline hover:text-blue-600 decoration-solid text-sm text-blue-500"
+          >
+            I have an account
+          </span>
         </div>
       </Card>
     </div>

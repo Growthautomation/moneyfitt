@@ -8,7 +8,9 @@ export const createAgent = async (form: FormData) => {
   const email = form.get("email") as string;
   const password = form.get("password") as string;
   const attributes = JSON.parse((form.get("attributes") as string) || "{}");
+  const profile = form.get("profile_img") as File;
 
+  // TODO: single transaction for both user and advisor creation
   const {
     data: { user },
     error,
@@ -25,10 +27,18 @@ export const createAgent = async (form: FormData) => {
     };
   }
 
+  const { data: profileUploaded } = await supabase.storage
+    .from("public-files")
+    .upload(`${user?.id}/${profile.name}`, profile, {
+      cacheControl: "3600",
+      upsert: true,
+    });
+
   const { data, error: insertError } = await supabase
     .from("advisor")
-    .insert({ id: user?.id, ...attributes })
+    .insert({ id: user?.id, ...attributes, profile_img: profileUploaded?.path })
     .single();
+  
   if (insertError) {
     console.error("agent creation", insertError);
     return {

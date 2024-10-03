@@ -36,7 +36,6 @@ export const sendMessage = async (recipient: string, formData: FormData) => {
     const file = formData.get("file");
 
     if (file instanceof File && file?.size > 0) {
-      supabase.storage.from("client-files");
       const promises = await Promise.all(
         formData.getAll("file").map((f: File) =>
           supabase.storage

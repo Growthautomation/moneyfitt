@@ -20,11 +20,11 @@ export default async function HomePageRoute({ searchParams }) {
     .from("matchings")
     .select(
       `
-    advisor_id,
-    advisor (
-      *
-    )
-  `
+        advisor_id,
+        advisor (
+          *
+        )
+      `
     )
     .eq("client_id", user.id);
 
@@ -42,6 +42,7 @@ export default async function HomePageRoute({ searchParams }) {
         <section className="mb-12">
           <h2 className="text-xl font-semibold mb-4">Your Matched Advisors</h2>
           <div className="flex">
+            {/* TODO: Fix advisor card width overflowing */}
             <div className="w-full lg:w-2/3 flex flex-nowrap overflow-x-auto gap-4 pb-4">
               {advisors?.map(({ advisor_id, advisor }) => (
                 <div
@@ -64,7 +65,7 @@ export default async function HomePageRoute({ searchParams }) {
                 selectedAdvisor={
                   advisors?.find(
                     (a) => a.advisor_id === searchParams?.advisor
-                  ) ?? advisors?.[0].advisor
+                  ) ?? advisors?.[0]?.advisor
                 }
                 user={user}
               />

@@ -11,29 +11,30 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CheckCircle2 } from "lucide-react";
 import { RedirectButton } from "./redirect-btn";
 import { Database } from "@/types/database.types";
+import { languages, narrowScope } from "@/lib/constants";
+import { createClient } from "@/lib/supabase/server";
+import { Advisor } from "@/types/advisor";
 
 interface AdvisorProfileCardProps {
-  advisor: {
-    first_name: string | null;
-    last_name: string | null;
-    title: string | null;
-    bio: string | null;
-    profile?: string | null;
-    narrow_scope: string[] | null;
-    languages: string[] | null;
-  };
+  advisor: Advisor;
   redirectTo: string;
 }
 
-export function AdvisorProfileCard({
+export async function AdvisorProfileCard({
   advisor,
   redirectTo,
 }: AdvisorProfileCardProps) {
+  const supabase = createClient();
+  const { data } = await supabase.storage
+    .from("public-files")
+    .getPublicUrl(advisor.profile_img ?? "");
+
+  console.log(data)
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
         <Avatar className="w-24 h-24 mx-auto">
-          <AvatarImage src={advisor.profile || ""} alt="advisor-profile-pic" />
+          <AvatarImage src={data.publicUrl || ""} alt="advisor-profile-pic" />
           <AvatarFallback>{`${advisor?.first_name?.[0]} ${advisor?.last_name?.[0]}`}</AvatarFallback>
         </Avatar>
         <CardTitle className="mt-4">{`${advisor.first_name} ${advisor.last_name}`}</CardTitle>
@@ -46,8 +47,10 @@ export function AdvisorProfileCard({
         <div>
           <h3 className="font-semibold mb-2">Specializations</h3>
           <div className="flex flex-wrap gap-2">
-            {advisor?.narrow_scope?.map((scope, idx) => (
-              <Badge key={idx} variant="secondary">{scope}</Badge>
+            {(advisor?.narrow_scope as string[])?.map((scope, idx) => (
+              <Badge key={idx} variant="secondary">
+                {narrowScope.find((n) => n.code === scope)?.name ?? scope}
+              </Badge>
             ))}
           </div>
         </div>
@@ -75,7 +78,11 @@ export function AdvisorProfileCard({
         </div>
         <div>
           <h3 className="font-semibold mb-2">Languages Spoken</h3>
-          <p className="text-sm">{advisor.languages?.join(", ")}</p>
+          <p className="text-sm">
+            {(advisor.languages as string[])
+              ?.map((lang) => languages.find((l) => l.code === lang)?.name)
+              .join(", ")}
+          </p>
         </div>
       </CardContent>
       <CardFooter>

@@ -22,3 +22,14 @@ To learn more about Next.js, take a look at the following resources:
 To make your next App run smoothly in production make sure to deploy your project with [Repl Deployments](https://docs.replit.com/hosting/deployments/about-deployments)!
 
 You can also produce a production build by running `npm run build` and [changing the run command](https://docs.replit.com/programming-ide/configuring-repl#run) to `npm run start`.
+
+
+Feature List
+- [x] Advisor creation
+- [x] User can sign up with question answered
+- [x] User can skip the answer and signin
+- [x] System should match with three different advisor
+- [x] User can see matched advisors
+- [x] User can see exact detail of the advisors
+- [x] User can check detail of the advisor by visiting him
+- [] Advisor profile should be visible
