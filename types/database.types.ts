@@ -19,7 +19,7 @@ export type Database = {
           certifications: Json | null
           created_at: string
           current_company: string | null
-          education: string | null
+          education: Json | null
           first_name: string | null
           gender: string | null
           id: string
@@ -45,7 +45,7 @@ export type Database = {
           certifications?: Json | null
           created_at?: string
           current_company?: string | null
-          education?: string | null
+          education?: Json | null
           first_name?: string | null
           gender?: string | null
           id?: string
@@ -71,7 +71,7 @@ export type Database = {
           certifications?: Json | null
           created_at?: string
           current_company?: string | null
-          education?: string | null
+          education?: Json | null
           first_name?: string | null
           gender?: string | null
           id?: string

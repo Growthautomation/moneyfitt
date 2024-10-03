@@ -19,15 +19,30 @@ import {
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Advisor } from "@/types/advisor";
+import { createClient } from "@/lib/supabase/client";
+import { languages, narrowScope } from "@/lib/constants";
 
 export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [profile, setProfile] = useState<string | null>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % 3);
     }, 5000);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const supabase = createClient();
+      const { data } = await supabase.storage
+        .from("public-files")
+        .getPublicUrl(advisor.profile_img ?? "");
+      setProfile(data?.publicUrl);
+    };
+    fetchProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const nextSlide = () => {
@@ -44,8 +59,8 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
         <CardHeader className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
           <div className="relative flex-shrink-0">
             <Image
-              src={"/lib/images/placeholder.svg?height=150&width=150"}
-              alt="John Doe"
+              src={profile || ""}
+              alt={`${advisor.first_name} ${advisor.last_name}`}
               width={150}
               height={150}
               className="rounded-full border-4 border-white shadow-lg"
@@ -92,7 +107,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
             <div className="flex flex-wrap gap-2">
               {(advisor.narrow_scope as string[])?.map((spec) => (
                 <Badge key={spec} variant="secondary">
-                  {spec}
+                  {narrowScope.find((s) => s.code === spec)?.name}
                 </Badge>
               ))}
             </div>
@@ -105,7 +120,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
             <div className="flex gap-2">
               {(advisor.languages as string[])?.map((lang) => (
                 <Badge key={lang} variant="outline">
-                  {lang}
+                  {languages.find((l) => l.code === lang)?.name}
                 </Badge>
               ))}
             </div>
@@ -116,7 +131,9 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
               <GraduationCap className="mr-2" /> Education
             </h2>
             <ul className="list-disc list-inside text-muted-foreground">
-              <li>{advisor.education}</li>
+              {(advisor.education as string[]).map((e) => (
+                <li key={e}>{e}</li>
+              ))}
             </ul>
           </section>
 
@@ -166,7 +183,9 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
             </h2>
             <ul className="text-muted-foreground flex gap-2 my-2">
               {(advisor?.personal_interests as string[]).map((interest) => (
-                <li key={interest} className="bg-gray-200 w-fit rounded p-1">{interest}</li>
+                <li key={interest} className="bg-gray-200 w-fit rounded p-1">
+                  {interest}
+                </li>
               ))}
             </ul>
             <div className="relative w-full h-64 overflow-hidden rounded-lg">

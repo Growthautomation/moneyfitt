@@ -28,8 +28,18 @@ Feature List
 - [x] Advisor creation
 - [x] User can sign up with question answered
 - [x] User can skip the answer and signin
+
 - [x] System should match with three different advisor
 - [x] User can see matched advisors
 - [x] User can see exact detail of the advisors
 - [x] User can check detail of the advisor by visiting him
-- [] Advisor profile should be visible
+- [x] Advisor profile should be visible in card and detail
+
+- [x] User can send message
+- [x] User can upload files
+- [x] User can download files
+- [x] User can see suggestion bubbles
+- [x] User can receive the message
+
+- [] User can see chat summary of the user
+- [] User can switch between summary of the each conv

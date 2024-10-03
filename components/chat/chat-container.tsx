@@ -7,13 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ChatInput from "./chat-input";
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { Message } from "@/types/chat";
 import { useChatContext } from "./chat-context";
@@ -27,14 +21,15 @@ interface ChatProps {
   recipentId: string;
   recipentName: string;
   messages: Message[];
+  showSuggestion?: boolean;
 }
 
 export default function Chat({
   recipentId,
   recipentName,
   messages,
+  showSuggestion = false
 }: ChatProps) {
-
   const [streamingMessages, setStreamingMessages] = useState(messages);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { obs } = useChatContext();
@@ -109,7 +104,11 @@ export default function Chat({
           className="h-[400px] pr-4 scroll-smooth"
           onScrollCapture={handleScroll}
         >
-          {isPending && <p className="text-sm text-center text-gray-500 my-10">Loading...</p>}
+          {isPending && (
+            <p className="text-sm text-center text-gray-500 my-10">
+              Loading...
+            </p>
+          )}
           {streamingMessages.map((message) => (
             <div key={message.id} className="mb-4">
               <div
@@ -145,6 +144,7 @@ export default function Chat({
       </CardContent>
       <CardFooter className="flex flex-col items-center">
         <ChatInput
+          enableSuggestion={showSuggestion}
           recipientId={recipentId}
           onSuccess={(msg) => setStreamingMessages((prev) => [...prev, msg])}
         />

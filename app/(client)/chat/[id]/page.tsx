@@ -69,6 +69,7 @@ export default async function ChatPage({ params, searchParams }: ChatProps) {
             messages={messages.reverse()}
             recipentId={advisor.id}
             recipentName={`${advisor.first_name} ${advisor.last_name}`}
+            showSuggestion
           />
         </div>
       </div>

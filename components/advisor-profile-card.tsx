@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CheckCircle2 } from "lucide-react";
 import { RedirectButton } from "./redirect-btn";
-import { Database } from "@/types/database.types";
 import { languages, narrowScope } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 import { Advisor } from "@/types/advisor";

@@ -15,10 +15,15 @@ import Suggestions from "./chat-suggestions";
 
 interface ChatInputProps {
   recipientId: string;
+  enableSuggestion?: boolean;
   onSuccess?: (data: Message) => void;
 }
 
-export default function ChatInput({ recipientId, onSuccess }: ChatInputProps) {
+export default function ChatInput({
+  recipientId,
+  onSuccess,
+  enableSuggestion = false,
+}: ChatInputProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [expand, setExpand] = useState(false);
@@ -39,26 +44,29 @@ export default function ChatInput({ recipientId, onSuccess }: ChatInputProps) {
 
   return (
     <>
-      <div className="relative w-full">
-        <div
-          className={clsx(
-            "absolute bottom-full left-0 right-0 mb-2 transition-all duration-300 ease-in-out",
-            {
-              "opacity-0 translate-y-4": !showSuggestion,
-              "opacity-100 translate-y-0": showSuggestion,
-            }
-          )}
-        >
-          <Suggestions
-            recipientId={recipientId}
-            onClick={(msg) => {
-              if (formRef.current?.message) {
-                formRef.current.message.value = msg;
+      {enableSuggestion && (
+        <div className="relative w-full">
+          <div
+            className={clsx(
+              "absolute bottom-full left-0 right-0 mb-2 transition-all duration-300 ease-in-out",
+              {
+                "opacity-0 translate-y-4": !showSuggestion,
+                "opacity-100 translate-y-0": showSuggestion,
               }
-            }}
-          />
+            )}
+          >
+            {/* TODO: Invalidate suggestion on each message send and receive */}
+            <Suggestions
+              recipientId={recipientId}
+              onClick={(msg) => {
+                if (formRef.current?.message) {
+                  formRef.current.message.value = msg;
+                }
+              }}
+            />
+          </div>
         </div>
-      </div>
+      )}
       <form className="flex gap-2 w-full" ref={formRef} action={formAction}>
         <input
           ref={fileRef}
