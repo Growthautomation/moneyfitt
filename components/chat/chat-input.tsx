@@ -55,7 +55,6 @@ export default function ChatInput({
               }
             )}
           >
-            {/* TODO: Invalidate suggestion on each message send and receive */}
             {showSuggestion && (
               <Suggestions
                 recipientId={recipientId}
