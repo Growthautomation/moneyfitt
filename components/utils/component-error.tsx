@@ -4,7 +4,6 @@ export default function ComponentError({ message }) {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
       <Image src="/404-error.png" alt="error-icon" height={100} width={100} />
-      <p className="text-red-400 text-3xl">Something went wrong!</p>
       <p className="text-red-400">{message}</p>
     </div>
   );

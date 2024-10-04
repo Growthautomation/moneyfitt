@@ -1,7 +1,7 @@
 import { signOutAction } from "@/lib/actions/auth";
 import { SubmitButton } from "./submit-btn";
 import { createClient } from "@/lib/supabase/server";
-import { RedirectButton } from "./redirect-btn";
+import { RedirectButton } from "./utils/redirect-btn";
 
 export default async function Header() {
   const supabase = createClient();

@@ -1,8 +1,4 @@
-import Chat from "@/components/chat/chat-container";
-import { AdvisorProfile } from "@/components/advisor-profile";
-import { RedirectButton } from "@/components/redirect-btn";
 import { createClient } from "@/lib/supabase/server";
-import { ArrowLeft } from "lucide-react";
 import { redirect } from "next/navigation";
 import AdvisorDetail from "@/components/client/advisor-detail";
 import { Suspense } from "react";

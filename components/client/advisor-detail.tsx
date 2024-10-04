@@ -1,5 +1,5 @@
 import { AdvisorProfile } from "@/components/advisor-profile";
-import { RedirectButton } from "@/components/redirect-btn";
+import { RedirectButton } from "@/components/utils/redirect-btn";
 import { createClient } from "@/lib/supabase/server";
 import { ArrowLeft } from "lucide-react";
 import { User } from "@supabase/supabase-js";
@@ -38,7 +38,7 @@ export default async function AdvisorDetail({
         <RedirectButton
           variant="ghost"
           size="icon"
-          className="mr-2 bg-white text-black hover:text-white"
+          className="mr-2"
           href="/home"
         >
           <ArrowLeft className="h-6 w-6" />
