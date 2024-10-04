@@ -2,6 +2,7 @@ import ChatContextProvider from "@/components/chat/chat-context";
 import { createClient } from "@/lib/supabase/server";
 import "@/styles/globals.css";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "Next.js",
@@ -22,6 +23,8 @@ export default async function ClientLayout({
   }
 
   return (
-    <ChatContextProvider userId={user?.id}>{children}</ChatContextProvider>
+    <ChatContextProvider userId={user?.id}>
+      <Suspense fallback="Loading...">{children}</Suspense>
+    </ChatContextProvider>
   );
 }
