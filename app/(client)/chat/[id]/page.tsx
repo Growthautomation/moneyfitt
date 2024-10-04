@@ -4,6 +4,8 @@ import { RedirectButton } from "@/components/redirect-btn";
 import { createClient } from "@/lib/supabase/server";
 import { ArrowLeft } from "lucide-react";
 import { redirect } from "next/navigation";
+import { ShareContactDetailsComponent } from "@/components/share-contact-details";
+import { Toaster } from "@/components/ui/toaster";
 
 interface ChatProps {
   params: {
@@ -65,6 +67,9 @@ export default async function ChatPage({ params, searchParams }: ChatProps) {
           <AdvisorProfile advisor={advisor} />
         </div>
         <div className="w-[40%] sticky top-8">
+          <div className="mb-4">
+            <ShareContactDetailsComponent />
+          </div>
           <Chat
             messages={messages.reverse()}
             recipentId={advisor.id}
@@ -73,6 +78,7 @@ export default async function ChatPage({ params, searchParams }: ChatProps) {
           />
         </div>
       </div>
+      <Toaster />
     </main>
   );
 }

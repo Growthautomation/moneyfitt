@@ -1,5 +1,6 @@
 import Header from '@/components/header'
 import '@/styles/globals.css'
+import { Toaster } from '@/components/ui/toaster'
 
 // TODO: add suspense for every page and high latency component so only that component show loading while the rest is visible
 
@@ -18,6 +19,7 @@ export default function RootLayout({
       <body>
         <Header />
         {children}
+        <Toaster />
       </body>
     </html>
   )
