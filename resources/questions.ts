@@ -282,7 +282,7 @@ export const religionNode = () =>
   createNode(
     "religion",
     "Advisor preferences",
-    "What is your religious beliefs?",
+    "Do you have any prefernces for your advisors religous beliefs?",
     "single",
     religion
   );

@@ -77,7 +77,7 @@ export const ageGroups = [
   },
   {
     code: "A3",
-    name: "35-59",
+    name: "35-54",
   },
   {
     code: "A4",
@@ -122,10 +122,9 @@ export const religion = [
   {code: "ISL", name: "Islam"},
   {code: "BUD", name: "Buddhism"},
   {code: "HIN", name: "Hinduism"},
-  {code: "JAI", name: "Jainism"},
+  {code: "TAO", name: "Taoism"},
   {code: "SIK", name: "Sikhism"},
   {code: "JUD", name: "Judaism"},
-  {code: "BAH", name: "Bahá'í"},
-  {code: "ZOR", name: "Zoroastrianism"},
-  {code: "TEN", name: "Tengrism"},
+  {code: "ATH", name: "Atheism"},
+  {code: "OTH", name: "Other"},
 ];
