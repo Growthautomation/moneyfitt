@@ -1,8 +1,8 @@
 import { Advisor } from "@/types/advisor";
 import { User } from "@supabase/supabase-js";
-import Chat from "../chat/chat-container";
+import Chat from "@/components/chat/chat-container";
 import { createClient } from "@/lib/supabase/server";
-import ComponentError from "../utils/component-error";
+import ComponentError from "@/components/utils/component-error";
 
 interface AdvisorChatProps {
   user: User;

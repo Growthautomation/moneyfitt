@@ -15,11 +15,12 @@ export default function Suggestions({
 
   useEffect(() => {
     setLoading(true);
-    getSuggestions(recipientId)
-      .then((res) => {
-        setSuggestions(res);
-      })
-      .finally(() => setLoading(false));
+    !loading &&
+      getSuggestions(recipientId)
+        .then((res) => {
+          setSuggestions(res);
+        })
+        .finally(() => setLoading(false));
   }, []);
 
   if (loading) {

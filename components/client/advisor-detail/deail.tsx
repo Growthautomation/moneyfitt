@@ -1,14 +1,14 @@
-import { AdvisorProfile } from "@/components/advisor-profile";
 import { RedirectButton } from "@/components/utils/redirect-btn";
 import { createClient } from "@/lib/supabase/server";
 import { ArrowLeft } from "lucide-react";
 import { User } from "@supabase/supabase-js";
 import { Suspense } from "react";
-import ComponentLoading from "../utils/component-loading";
-import AdvisorChat from "./advisor-chat";
-import ComponentError from "../utils/component-error";
+import ComponentLoading from "@/components/utils/component-loading";
+import AdvisorChat from "./chat";
+import ComponentError from "@/components/utils/component-error";
+import { AdvisorProfile } from "./advisor-profile";
 
-interface ClientChatContainerProps {
+interface AdvisorDetailProps {
   advisorId: string;
   user: User;
   messageOffset?: string;
@@ -18,7 +18,7 @@ export default async function AdvisorDetail({
   advisorId,
   user,
   messageOffset,
-}) {
+}: AdvisorDetailProps) {
   const supabase = createClient();
 
   const { data: advisor, error: advisorError } = await supabase

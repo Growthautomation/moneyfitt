@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import AdvisorDetail from "@/components/client/advisor-detail";
+import AdvisorDetail from "@/components/client/advisor-detail/deail";
 import { Suspense } from "react";
 import PageLoading from "@/components/utils/page-loading";
 
