@@ -137,7 +137,7 @@ export type Database = {
           advisor_id: string
           client_id: string
           created_at: string | null
-          id: number
+          id: string
           last_message_id: string | null
           summary: Json
         }
@@ -145,7 +145,7 @@ export type Database = {
           advisor_id: string
           client_id: string
           created_at?: string | null
-          id?: number
+          id?: string
           last_message_id?: string | null
           summary: Json
         }
@@ -153,7 +153,7 @@ export type Database = {
           advisor_id?: string
           client_id?: string
           created_at?: string | null
-          id?: number
+          id?: string
           last_message_id?: string | null
           summary?: Json
         }

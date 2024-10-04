@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { User } from "@supabase/supabase-js";
-import { AdvisorProfileCard } from "../advisor-profile-card";
-import ComponentError from "../utils/component-error";
+import { AdvisorProfileCard } from "@/components/client/advisor-list/profile-card";
+import ComponentError from "@/components/utils/component-error";
 
 export default async function AdvisorList({ user }: { user: User }) {
   const supabase = createClient();
