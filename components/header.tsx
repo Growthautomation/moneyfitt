@@ -17,6 +17,7 @@ export default async function Header() {
               <SubmitButton
                 pendingText="Signing out..."
                 formAction={signOutAction}
+                className="bg-primary text-white hover:bg-primary hover:text-white"
                 variant="outline"
               >
                 Logout
