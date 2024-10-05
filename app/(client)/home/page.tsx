@@ -41,7 +41,7 @@ export default async function HomePageRoute({ searchParams }) {
 
         <section className="mb-12">
           <h2 className="text-xl font-semibold mb-4">Your Matched Advisors</h2>
-          <div className="flex">
+          <div className="flex flex-col lg:flex-row gap-4">
             <Suspense fallback={<ComponentLoading />}>
               <AdvisorList user={user} />
             </Suspense>
