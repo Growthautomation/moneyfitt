@@ -29,45 +29,55 @@ export async function AdvisorProfileCard({
     .getPublicUrl(advisor.profile_img ?? "");
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto bg-white shadow-lg border-t-4 border-[#5C59E4]">
       <CardHeader className="text-center">
-        <Avatar className="w-24 h-24 mx-auto">
+        <Avatar className="w-24 h-24 mx-auto border-4 border-[#D6D5F8]">
           <AvatarImage src={data.publicUrl || ""} alt="advisor-profile-pic" />
-          <AvatarFallback>{`${advisor?.first_name?.[0]} ${advisor?.last_name?.[0]}`}</AvatarFallback>
+          <AvatarFallback className="bg-[#8583EB] text-white text-xl font-semibold">
+            {`${advisor?.first_name?.[0]}${advisor?.last_name?.[0]}`}
+          </AvatarFallback>
         </Avatar>
-        <CardTitle className="mt-4">{`${advisor.first_name} ${advisor.last_name}`}</CardTitle>
-        <CardDescription className="text-base">{advisor.title}</CardDescription>
-        <CardDescription className="mt-2 text-sm">
+        <CardTitle className="mt-4 text-2xl font-bold text-[#222222]">
+          {`${advisor.first_name} ${advisor.last_name}`}
+        </CardTitle>
+        <CardDescription className="text-base font-medium text-[#4543AB]">
+          {advisor.title}
+        </CardDescription>
+        <CardDescription className="mt-2 text-sm text-[#222222]">
           {advisor.bio}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
-          <h3 className="font-semibold mb-2">Specializations</h3>
+          <h3 className="font-semibold mb-2 text-[#2E2C72]">Specializations</h3>
           <div className="flex flex-wrap gap-2">
             {(advisor?.narrow_scope as string[])?.map((scope, idx) => (
-              <Badge key={idx} variant="secondary">
+              <Badge 
+                key={idx} 
+                variant="secondary"
+                className="bg-[#D6D5F8] text-[#2E2C72] hover:bg-[#8583EB] hover:text-white"
+              >
                 {narrowScope.find((n) => n.code === scope)?.name ?? scope}
               </Badge>
             ))}
           </div>
         </div>
         <div>
-          <h3 className="font-semibold mb-2">Matching Criteria</h3>
+          <h3 className="font-semibold mb-2 text-[#2E2C72]">Matching Criteria</h3>
           <div className="grid grid-cols-1 gap-2">
             <div className="flex items-center">
-              <CheckCircle2 className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-              <span className="text-sm">Similar age group to you</span>
+              <CheckCircle2 className="h-5 w-5 text-[#5C59E4] mr-2 flex-shrink-0" />
+              <span className="text-sm text-[#222222]">Similar age group to you</span>
             </div>
             <div className="flex items-center">
-              <CheckCircle2 className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-              <span className="text-sm">
+              <CheckCircle2 className="h-5 w-5 text-[#5C59E4] mr-2 flex-shrink-0" />
+              <span className="text-sm text-[#222222]">
                 Matched with your preferred gender
               </span>
             </div>
             <div className="flex items-center">
-              <CheckCircle2 className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-              <span className="text-sm">
+              <CheckCircle2 className="h-5 w-5 text-[#5C59E4] mr-2 flex-shrink-0" />
+              <span className="text-sm text-[#222222]">
                 Shares interests in Health & Wellness and Family-Oriented
                 Planning
               </span>
@@ -75,8 +85,8 @@ export async function AdvisorProfileCard({
           </div>
         </div>
         <div>
-          <h3 className="font-semibold mb-2">Languages Spoken</h3>
-          <p className="text-sm">
+          <h3 className="font-semibold mb-2 text-[#2E2C72]">Languages Spoken</h3>
+          <p className="text-sm text-[#222222]">
             {(advisor.languages as string[])
               ?.map((lang) => languages.find((l) => l.code === lang)?.name)
               .join(", ")}
@@ -84,7 +94,10 @@ export async function AdvisorProfileCard({
         </div>
       </CardContent>
       <CardFooter>
-        <RedirectButton className="w-full" href={redirectTo}>
+        <RedirectButton 
+          className="w-full bg-[#5C59E4] hover:bg-[#4543AB] text-white font-semibold py-2 px-4 rounded transition-colors duration-300"
+          href={redirectTo}
+        >
           View Profile
         </RedirectButton>
       </CardFooter>
