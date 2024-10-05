@@ -59,7 +59,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
         <CardHeader className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
           <div className="relative flex-shrink-0">
             <Image
-              src={profile || ""}
+              src={profile || "/default-profile.png"}
               alt={`${advisor.first_name} ${advisor.last_name}`}
               width={150}
               height={150}

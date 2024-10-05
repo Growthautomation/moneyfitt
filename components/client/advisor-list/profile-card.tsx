@@ -1,3 +1,4 @@
+import { CheckCircle2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -8,8 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CheckCircle2 } from "lucide-react";
-import { RedirectButton } from "./redirect-btn";
+import { RedirectButton } from "@/components/utils/redirect-btn";
 import { languages, narrowScope } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 import { Advisor } from "@/types/advisor";

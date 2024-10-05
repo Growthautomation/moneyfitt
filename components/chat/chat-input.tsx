@@ -55,15 +55,16 @@ export default function ChatInput({
               }
             )}
           >
-            {/* TODO: Invalidate suggestion on each message send and receive */}
-            <Suggestions
-              recipientId={recipientId}
-              onClick={(msg) => {
-                if (formRef.current?.message) {
-                  formRef.current.message.value = msg;
-                }
-              }}
-            />
+            {showSuggestion && (
+              <Suggestions
+                recipientId={recipientId}
+                onClick={(msg) => {
+                  if (formRef.current?.message) {
+                    formRef.current.message.value = msg;
+                  }
+                }}
+              />
+            )}
           </div>
         </div>
       )}

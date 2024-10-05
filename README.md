@@ -43,3 +43,7 @@ Feature List
 
 - [] User can see chat summary of the user
 - [] User can switch between summary of the each conv
+
+Usibiality issues
+Chat page
+- [] FCP

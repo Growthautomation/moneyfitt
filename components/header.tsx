@@ -1,7 +1,7 @@
 import { signOutAction } from "@/lib/actions/auth";
 import { SubmitButton } from "./submit-btn";
 import { createClient } from "@/lib/supabase/server";
-import { RedirectButton } from "./redirect-btn";
+import { RedirectButton } from "./utils/redirect-btn";
 
 export default async function Header() {
   const supabase = createClient();
@@ -17,6 +17,7 @@ export default async function Header() {
               <SubmitButton
                 pendingText="Signing out..."
                 formAction={signOutAction}
+                className="bg-primary text-white hover:bg-primary hover:text-white"
                 variant="outline"
               >
                 Logout
@@ -25,7 +26,7 @@ export default async function Header() {
           </div>
         ) : (
           <div className="flex items-center justify-end h-16">
-            <RedirectButton className="bg-white text-black hover:bg-gray-100" href="/advisor/sign-in" variant="outline">
+            <RedirectButton className="" href="/advisor/sign-in" variant="outline">
               Advisor Sign In
             </RedirectButton>
           </div>

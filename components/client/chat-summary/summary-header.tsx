@@ -1,0 +1,50 @@
+import ComponentError from "@/components/utils/component-error";
+import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+
+export default async function Header({ selectedAdvisor, user }) {
+  const supabase = createClient();
+
+  const { data: advisors, error: advisorsError } = await supabase
+    .from("matchings")
+    .select(
+      `
+        advisor_id,
+        advisor (
+          *
+        )
+      `
+    )
+    .eq("client_id", user.id);
+
+  if (!advisors) {
+    console.error(advisorsError);
+    return <ComponentError message={"Fail to fetch advisors"} />;
+  }
+
+  if (!selectedAdvisor) {
+    redirect(`?advisorId=${advisors?.[0]?.advisor?.id}`);
+  }
+
+  return (
+    <div className="flex mb-6 border-b border-[#ECF0F3]">
+      {advisors.map(({ advisor }) => (
+        <Link
+          key={advisor?.id}
+          href={{
+            pathname: `/home`,
+            query: { advisorId: advisor?.id },
+          }}
+          className={`px-4 py-2 text-lg ${
+            selectedAdvisor === advisor?.id
+              ? "text-[#5C59E4] border-b-2 border-[#5C59E4]"
+              : "text-[#9CABC2]"
+          }`}
+        >
+          {`${advisor?.first_name} ${advisor?.last_name}`}
+        </Link>
+      ))}
+    </div>
+  );
+}

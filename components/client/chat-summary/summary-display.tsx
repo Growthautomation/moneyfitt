@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-export default function ClientChatSummary({ services, mainPoints, quickSummary, analysis }) {
+export default function SummaryDisplay({ services, mainPoints, quickSummary, analysis }) {
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
   const sectionVariants = {
