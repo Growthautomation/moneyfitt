@@ -1,6 +1,6 @@
 import { mapAnswersToQA } from '@/resources/map-questions';
 
-export default function UserInfoCard({ client }) {
+export default function UserInfoCard({ client, contactInfo }) {
   const { qaList, helpAreas } = mapAnswersToQA(client.all_answers);
 
   // Helper function to generate a summary
@@ -108,6 +108,15 @@ export default function UserInfoCard({ client }) {
   return (
     <div className="bg-white shadow rounded-lg p-6 mb-4 w-full">
       <h2 className="font-bold text-xl mb-4">Client Info</h2>
+      
+      {/* Contact Information Section */}
+      {contactInfo && (
+        <div className="mb-6 bg-blue-50 p-4 rounded-lg">
+          <h3 className="font-semibold text-lg mb-2">Contact Information</h3>
+          <p><strong>Email:</strong> {contactInfo.email}</p>
+          <p><strong>Phone:</strong> {contactInfo.phone}</p>
+        </div>
+      )}
       
       {/* Summary Section */}
       <div className="mb-6">

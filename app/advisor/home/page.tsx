@@ -14,9 +14,42 @@ export default async function AgentHome({ searchParams }) {
     return redirect("/agent/sign-in");
   }
 
-  const { data: clients } = await supabase.from("client").select().limit(6);
+  // Fetch matchings for the current advisor
+  const { data: matchings, error: matchingsError } = await supabase
+    .from("matchings")
+    .select("client_id, shared_details")
+    .eq("advisor_id", user.id)
+    .eq("enabled", true);
 
-  const selectedClient = clients?.find((x) => x.id === searchParams?.clientId);
+  if (matchingsError) {
+    console.error("Error fetching matchings:", matchingsError);
+    // Handle the error appropriately
+  }
+
+  // Extract client IDs from matchings
+  const clientIds = matchings?.map(matching => matching.client_id) || [];
+
+  // Fetch clients based on the matchings
+  const { data: clients, error: clientsError } = await supabase
+    .from("client")
+    .select()
+    .in("id", clientIds);
+
+  if (clientsError) {
+    console.error("Error fetching clients:", clientsError);
+    // Handle the error appropriately
+  }
+
+  // Combine client data with shared_details information
+  const clientsWithSharedDetails = clients?.map(client => {
+    const matching = matchings?.find(m => m.client_id === client.id);
+    return {
+      ...client,
+      shared_details: matching?.shared_details || false
+    };
+  }) || [];
+
+  const selectedClient = clientsWithSharedDetails.find((x) => x.id === searchParams?.clientId);
 
   return (
     <ChatContextProvider userId={user?.id}>
@@ -27,7 +60,7 @@ export default async function AgentHome({ searchParams }) {
             <div className="flex flex-nowrap overflow-x-auto gap-4 pb-4">
               <div>
                 <ChatList
-                  clients={clients ?? []}
+                  clients={clientsWithSharedDetails}
                   selectedClientId={searchParams?.clientId}
                 />
               </div>
