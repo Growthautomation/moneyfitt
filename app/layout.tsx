@@ -21,7 +21,7 @@ export default function RootLayout({
         <div className="absolute top-4 left-4 z-50">
           <Link href="/">
             <Image 
-              src="/Full_colored@2x.webp" 
+              src="https://xpjrqmknieuxbnpilskz.supabase.co/storage/v1/object/public/public-files/Full_colored@2x.webp" 
               alt="Logo" 
               width={200} 
               height={80} 
