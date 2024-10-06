@@ -54,6 +54,9 @@ module.exports = {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
+  		},
+  		fontFamily: {
+  			sans: ['Fira Sans', 'sans-serif'],
   		}
   	}
   },

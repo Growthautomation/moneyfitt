@@ -4,6 +4,8 @@
 
 /* Your custom styles go here */
 
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+
 html,
 body {
   padding: 0;
@@ -19,6 +21,7 @@ a {
 
 * {
   box-sizing: border-box;
+  font-family: 'Fira Sans', sans-serif;
 }
 
 @layer base {
