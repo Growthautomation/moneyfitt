@@ -17,11 +17,20 @@ export default async function HomePageRoute({ searchParams }) {
     return redirect("/sign-in");
   }
 
+  // Fetch client data using the user's ID
+  const { data: clientData } = await supabase
+    .from("client")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="container mx-auto px-4 py-8">
         <header className="mb-8 flex items-center space-x-4">
-          <h1 className="text-2xl font-bold">Welcome</h1>
+          <h1 className="text-2xl font-bold">{`Welcome, ${
+            clientData?.name || user?.email
+          }`}</h1>
         </header>
 
         <section className="mb-12">

@@ -44,30 +44,6 @@ export default function ChatInput({
 
   return (
     <>
-      {enableSuggestion && (
-        <div className="relative w-full">
-          <div
-            className={clsx(
-              "absolute bottom-full left-0 right-0 mb-2 transition-all duration-300 ease-in-out",
-              {
-                "opacity-0 translate-y-4": !showSuggestion,
-                "opacity-100 translate-y-0": showSuggestion,
-              }
-            )}
-          >
-            {showSuggestion && (
-              <Suggestions
-                recipientId={recipientId}
-                onClick={(msg) => {
-                  if (formRef.current?.message) {
-                    formRef.current.message.value = msg;
-                  }
-                }}
-              />
-            )}
-          </div>
-        </div>
-      )}
       <form className="flex gap-2 w-full" ref={formRef} action={formAction}>
         <input
           ref={fileRef}
@@ -118,7 +94,29 @@ export default function ChatInput({
           }}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
           className="flex-grow transition-all duration-300 ease-in-out min-h-[40px] max-h-[200px] resize-none overflow-y-auto h-[40px]"
-          onKeyDown={(e) => {}}
+          onInput={(e) => {
+            const textarea = e.target as HTMLTextAreaElement;
+            if (textarea.scrollHeight > textarea.clientHeight) {
+              textarea.style.height = "auto";
+              const newHeight = Math.min(
+                Math.max(textarea.scrollHeight, 40),
+                80
+              );
+              textarea.style.height = `${newHeight}px`;
+            } else if (textarea.value === "") {
+              textarea.style.height = "40px";
+            }
+          }}
+          onKeyDown={(e) => {
+            if (
+              e.key === "Enter" &&
+              !e.shiftKey &&
+              (e.target as HTMLTextAreaElement).value?.trim() !== ""
+            ) {
+              e.preventDefault();
+              formRef.current?.requestSubmit();
+            }
+          }}
         />
         <SubmitButton pendingText="Sending...">
           <SendIcon className="w-4 h-4" />
@@ -128,6 +126,30 @@ export default function ChatInput({
         <Alert variant="destructive" className="mt-2">
           <AlertDescription>{state.error}</AlertDescription>
         </Alert>
+      )}
+      {enableSuggestion && (
+        <div className="relative w-full">
+          <div
+            className={clsx(
+              "absolute top-0 left-0 right-0 mb-2 transition-all duration-300 ease-in-out",
+              {
+                "opacity-0 translate-y-4": !showSuggestion,
+                "opacity-100 translate-y-0": showSuggestion,
+              }
+            )}
+          >
+            {showSuggestion && (
+              <Suggestions
+                recipientId={recipientId}
+                onClick={(msg) => {
+                  if (formRef.current?.message) {
+                    formRef.current.message.value = msg;
+                  }
+                }}
+              />
+            )}
+          </div>
+        </div>
       )}
     </>
   );
