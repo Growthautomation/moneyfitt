@@ -21,12 +21,9 @@ export default async function AdvisorList({ user }: { user: User }) {
     return <ComponentError message="Error loading advisors" />;
   }
   return (
-    <div className="w-full lg:w-2/3 flex flex-nowrap overflow-x-auto gap-4 pb-4">
+    <div className="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {advisors.map(({ advisor_id, advisor }) => (
-        <div
-          key={advisor_id}
-          className="flex-none w-full sm:w-1/2 lg:w-1/3 max-w-md"
-        >
+        <div key={advisor_id} className="h-full">
           <AdvisorProfileCard
             advisor={advisor as never}
             redirectTo={`/chat/${advisor_id}`}

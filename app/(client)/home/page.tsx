@@ -17,16 +17,31 @@ export default async function HomePageRoute({ searchParams }) {
     return redirect("/sign-in");
   }
 
+  // Fetch client data using the user's ID
+  const { data: clientData, error: clientError } = await supabase
+    .from('client')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+
+  if (clientError) {
+    console.error('Error fetching client data:', clientError);
+    // Handle the error appropriately
+  }
+
+  // Use client data if available, otherwise fallback to user data
+  const clientName = clientData?.name || user.email;
+
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="container mx-auto px-4 py-8">
         <header className="mb-8 flex items-center space-x-4">
-          <h1 className="text-2xl font-bold">{`Welcome, ${user.email}`}</h1>
+          <h1 className="text-2xl font-bold">{`Welcome, ${clientName}`}</h1>
         </header>
 
         <section className="mb-12">
           <h2 className="text-xl font-semibold mb-4">Your Matched Advisors</h2>
-          <div className="flex">
+          <div className="flex flex-col lg:flex-row gap-4">
             <Suspense fallback={<ComponentLoading />}>
               <AdvisorList user={user} />
             </Suspense>
