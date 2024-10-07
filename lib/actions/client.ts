@@ -8,7 +8,7 @@ import matchAdvisors from "../matching/match";
 export async function createUserClient(
   data: Omit<Client, "created_at" | "id">
 ) {
-  // TODO: Clean up this function, add validation, error handling to FE, 
+  // TODO: Clean up this function, add validation, error handling to FE,
   const supabase = createClient();
   const {
     data: { user },
@@ -20,10 +20,14 @@ export async function createUserClient(
       error: error?.message,
     };
   }
-  const { data: clientData, error: insertError } = await supabase.from("client").insert({
-    ...data,
-    id: user.id,
-  }).select().single();
+  const { data: clientData, error: insertError } = await supabase
+    .from("client")
+    .insert({
+      ...data,
+      id: user.id,
+    })
+    .select()
+    .single();
 
   if (insertError) {
     console.error(insertError);
@@ -38,7 +42,7 @@ export async function createUserClient(
     return {
       success: false,
       error: "No advisors found",
-    }
+    };
   }
 
   const matches = matchAdvisors(advisors, clientData);
@@ -70,7 +74,7 @@ export async function createMatching() {
     return {
       success: false,
       error: "No advisors found",
-    }
+    };
   }
   const { data: client } = await supabase
     .from("client")
@@ -81,10 +85,13 @@ export async function createMatching() {
     return {
       success: false,
       error: "No client found",
-    }
+    };
   }
 
-  await supabase.from("matchings").update({enabled: false}).eq("client_id", user.id);
+  await supabase
+    .from("matchings")
+    .update({ enabled: false })
+    .eq("client_id", user.id);
 
   const matches = matchAdvisors(advisors, client);
 
@@ -101,6 +108,115 @@ export async function createMatching() {
 
   return {
     success: true,
+  };
+}
+
+export async function shareContact(data: FormData) {
+  const sharedScope: string[] = [];
+  const payload = {} as any;
+  if(data.get('advisor_id')) {
+    return {
+      success: false,
+      error: "Advisor ID is missing",
+    };
   }
-  
+  if (data.get("shareName")) {
+    if (!data.get("name")) {
+      return {
+        success: false,
+        error: "Name is required",
+      };
+    }
+    sharedScope.push("name");
+    payload.name = data.get("name");
+  }
+
+  if (data.get("shareEmail")) {
+    if (!data.get("email")) {
+      return {
+        success: false,
+        error: "Email is required",
+      };
+    }
+    sharedScope.push("preferred_contact_email");
+    payload.preferred_contact_email = data.get("email");
+  }
+
+  if (data.get("sharePhone")) {
+    if (!data.get("phone")) {
+      return {
+        success: false,
+        error: "Phone is required",
+      };
+    }
+    sharedScope.push("phone_number");
+    payload.phone_number = data.get("phone");
+  }
+
+  if (sharedScope.length === 0) {
+    return {
+      success: false,
+      error: "Should share at least one field",
+    };
+  }
+
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      success: false,
+      error: "User not found",
+    };
+  }
+
+  const { data: client, error } = await supabase
+    .from("client")
+    .select()
+    .eq("id", user.id)
+    .single();
+
+  if (!client) {
+    return {
+      success: false,
+      error: "Client not found",
+    };
+  }
+
+  const { error: updVisibilityErr } = await supabase
+    .from("matchings")
+    .update({
+      advisor_visibility: sharedScope,
+    })
+    .eq("client_id", user.id)
+    .eq("enabled", true)
+    .eq("advisor_id", data.get("advisorId") || '');
+
+  if (updVisibilityErr) {
+    console.error(updVisibilityErr);
+    return {
+      success: false,
+      error: "Error updating visibility",
+    };
+  }
+
+  const { error: updClientErr } = await supabase
+    .from("client")
+    .update(payload)
+    .eq("id", user.id);
+
+  if (updClientErr) {
+    console.error(updClientErr);
+    return {
+      success: false,
+      error: "Error updating client",
+    };
+  }
+
+  return {
+    success: true,
+    error: null,
+  };
 }
