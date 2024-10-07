@@ -5,6 +5,7 @@ import SummaryDisplay from "./summary-display";
 import { SUMMARY_PROMPT } from "@/lib/prompts";
 import { callGPT4 } from "@/lib/utils";
 import { parseSummaryResponse } from "./helper";
+import { getUserAnswerSummary } from "@/lib/utils/user-answer-summary";
 
 export default async function Summarizer({ user, selectedAdvisor }) {
   const supabase = createClient();
@@ -16,7 +17,7 @@ export default async function Summarizer({ user, selectedAdvisor }) {
     .maybeSingle();
 
   if (summaryError) {
-    console.error(summaryError);
+    console.error("client/chat-summary/summarizer: fail to fetch summary", summaryError);
     return <ComponentError message={"Fail to fetch summary"} />;
   }
 
@@ -29,11 +30,14 @@ export default async function Summarizer({ user, selectedAdvisor }) {
     .order("created_at", { ascending: true });
 
   if (!messages) {
-    console.error(messagesError);
+    console.error("client/chat-summary/summarizer: fail to fetch messages", messagesError);
     return <ComponentError message={"Fail to fetch messages"} />;
   }
 
-  if (summary && summary.last_message_id === messages[messages.length - 1]?.id) {
+  if (
+    summary &&
+    summary.last_message_id === messages[messages.length - 1]?.id
+  ) {
     return (
       <SummaryDisplay
         services={summary.summary?.["servicesOffered"] || []}
@@ -64,7 +68,10 @@ export default async function Summarizer({ user, selectedAdvisor }) {
     .join("\n");
 
   const prompt = SUMMARY_PROMPT.replace("{{CONVERSATION}}", conversation)
-    .replace("{{USER}}", JSON.stringify(client?.all_answers))
+    .replace(
+      "{{USER}}",
+      JSON.stringify(getUserAnswerSummary(client?.all_answers))
+    )
     .replace("{{PREVIOUS_SUMMARY}}", previousSummary);
 
   const response = await callGPT4(prompt, "");

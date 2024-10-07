@@ -7,6 +7,7 @@ import {
 } from "../prompts";
 import { createClient } from "../supabase/server";
 import { callGPT4 } from "../utils";
+import { getUserAnswerSummary } from "../utils/user-answer-summary";
 
 export const sendMessage = async (recipient: string, formData: FormData) => {
   try {
@@ -80,6 +81,7 @@ export const getSuggestions = async (recipient: string) => {
   if (!user) {
     throw new Error("Authentication failed");
   }
+
   const { data: messages, error } = await supabase
     .from("messages")
     .select()
@@ -98,7 +100,10 @@ export const getSuggestions = async (recipient: string) => {
     const prompt = GENERATE_QUESTIONS_PROMPT.replace(
       "{{CONVERSATION}}",
       messages.map((m) => m.message).join("\n")
-    ).replace("{{USER}}", JSON.stringify(client));
+    ).replace(
+      "{{USER}}",
+      JSON.stringify(getUserAnswerSummary(client?.all_answers ?? {}))
+    );
     return (await callGPT4(prompt, "")).split("||");
   } else {
     // Generate initial questions using GENERATE_INITIAL_QUESTIONS_PROMPT

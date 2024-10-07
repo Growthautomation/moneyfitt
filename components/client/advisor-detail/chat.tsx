@@ -3,7 +3,6 @@ import { User } from "@supabase/supabase-js";
 import Chat from "@/components/chat/chat-container";
 import { createClient } from "@/lib/supabase/server";
 import ComponentError from "@/components/utils/component-error";
-import { ShareContactDetailsComponent } from "@/components/share-contact-details";
 import ShareButton from "../share-contact/button";
 
 interface AdvisorChatProps {
@@ -23,7 +22,7 @@ export default async function AdvisorChat({ user, advisor }: AdvisorChatProps) {
     .order("created_at", { ascending: false });
 
   if (!messages) {
-    console.error("Error fetching messages:", error);
+    console.error("client/advisor-detail/chat: Error fetching messages:", error);
     return <ComponentError message="Error loading messages" />;
   }
   return (

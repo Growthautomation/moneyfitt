@@ -88,7 +88,7 @@ export async function AdvisorProfileCard({
             </div>
           </div>
         </div>
-        <div className="h-20">
+        <div className="h-20 mt-4">
           <h3 className="font-semibold mb-2 text-[#2E2C72]">Languages Spoken</h3>
           <p className="text-sm text-[#222222]">
             {(advisor.languages as string[])

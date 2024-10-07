@@ -17,7 +17,7 @@ export default async function Callback() {
     .eq("id", user.id);
 
   if (error) {
-    console.error(error);
+    console.error("app/redirect: error fetching client", error);
     return "An error occurred" + error.message;
   }
 
