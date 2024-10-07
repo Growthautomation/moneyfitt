@@ -3,7 +3,6 @@ import { User } from "@supabase/supabase-js";
 import Chat from "@/components/chat/chat-container";
 import { createClient } from "@/lib/supabase/server";
 import ComponentError from "@/components/utils/component-error";
-import { ShareContactDetailsComponent } from "@/components/share-contact-details";
 import ShareButton from "../share-contact/button";
 
 interface AdvisorChatProps {
