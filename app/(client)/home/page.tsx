@@ -17,26 +17,11 @@ export default async function HomePageRoute({ searchParams }) {
     return redirect("/sign-in");
   }
 
-  // Fetch client data using the user's ID
-  const { data: clientData, error: clientError } = await supabase
-    .from('client')
-    .select('*')
-    .eq('id', user.id)
-    .single();
-
-  if (clientError) {
-    console.error('Error fetching client data:', clientError);
-    // Handle the error appropriately
-  }
-
-  // Use client data if available, otherwise fallback to user data
-  const clientName = clientData?.name || user.email;
-
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="container mx-auto px-4 py-8">
         <header className="mb-8 flex items-center space-x-4">
-          <h1 className="text-2xl font-bold">{`Welcome, ${clientName}`}</h1>
+          <h1 className="text-2xl font-bold">Welcome</h1>
         </header>
 
         <section className="mb-12">

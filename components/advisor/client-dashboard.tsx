@@ -10,7 +10,7 @@ export default async function ClientDashboard({ client }) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    console.error("User not authenticated");
+    console.error("client-dashboard: User not authenticated");
     return null; // or handle this case appropriately
   }
 

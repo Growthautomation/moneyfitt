@@ -25,7 +25,7 @@ export default async function AgentHome({ searchParams }) {
     .eq("enabled", true);
 
   if (matchingsError) {
-    console.error("Error fetching matchings:", matchingsError);
+    console.error("app/advisor/home: Error fetching matchings:", matchingsError);
     return "Error fetching clients";
   }
 

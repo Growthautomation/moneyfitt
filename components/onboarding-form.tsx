@@ -129,8 +129,6 @@ export function OnboardingFormComponent({
     }));
   };
 
-  console.log(answers);
-
   const handleNext = () => {
     if (currentQuestion.required !== false && 
         (!answers[currentQuestion.key] || 

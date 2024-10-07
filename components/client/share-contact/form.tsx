@@ -9,7 +9,7 @@ export default async function Form() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    console.error("User not found");
+    console.error("client/share-contact: User not found");
     return <p>Problem with authentication.</p>;
   }
   const { data: client, error } = await supabase
@@ -19,7 +19,7 @@ export default async function Form() {
     .single();
 
   if (!client) {
-    console.error("Error fetching client data:", error);
+    console.error("client/share-contact: Error fetching client data:", error);
     return <p>Client not found</p>;
   }
 

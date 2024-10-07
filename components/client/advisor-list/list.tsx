@@ -17,7 +17,7 @@ export default async function AdvisorList({ user }: { user: User }) {
     )
     .eq("client_id", user.id);
   if (!advisors) {
-    console.error("Error fetching advisors", error);
+    console.error("client/advisor-list/list: Error fetching advisors", error);
     return <ComponentError message="Error loading advisors" />;
   }
   return (

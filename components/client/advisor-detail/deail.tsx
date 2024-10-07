@@ -28,7 +28,7 @@ export default async function AdvisorDetail({
     .single();
 
   if (!advisor) {
-    console.error(advisorError);
+    console.error("client/advisor-detail/detail:", advisorError);
     return <ComponentError message="Advisor not found" />;
   }
 

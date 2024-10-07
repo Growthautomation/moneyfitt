@@ -19,7 +19,7 @@ export default async function Header({ selectedAdvisor, user }) {
     .eq("client_id", user.id);
 
   if (!advisors) {
-    console.error(advisorsError);
+    console.error("client/chat-summary/summary-header: fail to fetch advisors", advisorsError);
     return <ComponentError message={"Fail to fetch advisors"} />;
   }
 
