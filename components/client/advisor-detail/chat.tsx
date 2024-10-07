@@ -3,6 +3,8 @@ import { User } from "@supabase/supabase-js";
 import Chat from "@/components/chat/chat-container";
 import { createClient } from "@/lib/supabase/server";
 import ComponentError from "@/components/utils/component-error";
+import { ShareContactDetailsComponent } from "@/components/share-contact-details";
+import ShareButton from "../share-contact/button";
 
 interface AdvisorChatProps {
   user: User;
@@ -25,11 +27,14 @@ export default async function AdvisorChat({ user, advisor }: AdvisorChatProps) {
     return <ComponentError message="Error loading messages" />;
   }
   return (
-    <Chat
-      messages={messages.reverse()}
-      recipentId={advisor.id}
-      recipentName={`${advisor.first_name} ${advisor.last_name}`}
-      showSuggestion
-    />
+    <>
+      <ShareButton advisorId={advisor.id} />
+      <Chat
+        messages={messages.reverse()}
+        recipentId={advisor.id}
+        recipentName={`${advisor.first_name} ${advisor.last_name}`}
+        showSuggestion
+      />
+    </>
   );
 }

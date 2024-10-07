@@ -1,8 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+
 import AdvisorDetail from "@/components/client/advisor-detail/deail";
 import { Suspense } from "react";
 import PageLoading from "@/components/utils/page-loading";
+
 
 interface ChatProps {
   params: {
@@ -33,6 +35,7 @@ export default async function ChatPage({ params, searchParams }: ChatProps) {
           messageOffset={searchParams?.offset}
         />
       </Suspense>
+
     </main>
   );
 }

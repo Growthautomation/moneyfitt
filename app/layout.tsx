@@ -1,5 +1,6 @@
 import Header from '@/components/header'
 import '@/styles/globals.css'
+import { Toaster } from '@/components/ui/toaster'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -31,6 +32,7 @@ export default function RootLayout({
         </div>
         <Header />
         {children}
+        <Toaster />
       </body>
     </html>
   )

@@ -98,8 +98,10 @@ export type Database = {
           id: string
           name: string | null
           narrow_scope: Json | null
+          phone_number: string | null
           preferred_advisor: Json | null
           preferred_age_group: Json | null
+          preferred_contact_email: string | null
           preferred_language: Json | null
           preferred_religion: Json | null
           preferred_sex: Json | null
@@ -111,8 +113,10 @@ export type Database = {
           id?: string
           name?: string | null
           narrow_scope?: Json | null
+          phone_number?: string | null
           preferred_advisor?: Json | null
           preferred_age_group?: Json | null
+          preferred_contact_email?: string | null
           preferred_language?: Json | null
           preferred_religion?: Json | null
           preferred_sex?: Json | null
@@ -124,8 +128,10 @@ export type Database = {
           id?: string
           name?: string | null
           narrow_scope?: Json | null
+          phone_number?: string | null
           preferred_advisor?: Json | null
           preferred_age_group?: Json | null
+          preferred_contact_email?: string | null
           preferred_language?: Json | null
           preferred_religion?: Json | null
           preferred_sex?: Json | null
@@ -162,6 +168,7 @@ export type Database = {
       matchings: {
         Row: {
           advisor_id: string | null
+          advisor_visibility: Json | null
           client_id: string | null
           created_at: string
           enabled: boolean | null
@@ -172,6 +179,7 @@ export type Database = {
         }
         Insert: {
           advisor_id?: string | null
+          advisor_visibility?: Json | null
           client_id?: string | null
           created_at?: string
           enabled?: boolean | null
@@ -182,6 +190,7 @@ export type Database = {
         }
         Update: {
           advisor_id?: string | null
+          advisor_visibility?: Json | null
           client_id?: string | null
           created_at?: string
           enabled?: boolean | null
