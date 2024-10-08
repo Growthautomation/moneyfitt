@@ -333,7 +333,7 @@ export const specializationNodes = {
 
 export const advisorReligionNode = () =>
   createNode(
-    "prefer_religion",
+    "preferReligion",
     "Advisor Preferences",
     "Do you have any prefernces for your advisors by religion?",
     "multiple",

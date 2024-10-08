@@ -83,7 +83,7 @@ function personalScore(advisor: Advisor, client: Client) {
   }
   if (
     client.preferred_religion &&
-    advisor.religion === client.preferred_religion
+    (client.preferred_religion as string[]).includes(advisor.religion as string)
   ) {
     score += 2;
   }

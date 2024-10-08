@@ -12,12 +12,13 @@ export default function CreateClient() {
       name: answers["userName"] as string,
       broad_scope: answers["broadScope"],
       narrow_scope: answers["specification"],
-      preferred_age_group: answers["age"],
-      preferred_advisor: answers["company"],
-      preferred_language: answers["language"],
-      preferred_religion: answers["religion"],
-      preferred_sex: answers["gender"],
+      preferred_age_group: answers["preferAge"],
+      preferred_advisor: answers["preferCompany"],
+      preferred_language: answers["preferLanguage"],
+      preferred_religion: answers["preferReligion"],
+      preferred_sex: answers["preferGender"],
       all_answers: answers,
+      contents: answers["contents"] as string[],
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

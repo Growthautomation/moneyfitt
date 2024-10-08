@@ -6,7 +6,14 @@ import { Client } from "@/types/client";
 import matchAdvisors from "../matching/match";
 
 export async function createUserClient(
-  data: Omit<Client, "created_at" | "id">
+  data: Omit<
+    Client,
+    | "created_at"
+    | "id"
+    | "phone_number"
+    | "preferred_contact_email"
+    | "telegram"
+  >
 ) {
   // TODO: Clean up this function, add validation, error handling to FE,
   const supabase = createClient();
@@ -114,7 +121,7 @@ export async function createMatching() {
 export async function shareContact(data: FormData) {
   const sharedScope: string[] = [];
   const payload = {} as any;
-  if(data.get('advisor_id')) {
+  if (data.get("advisor_id")) {
     return {
       success: false,
       error: "Advisor ID is missing",
@@ -203,7 +210,7 @@ export async function shareContact(data: FormData) {
     })
     .eq("client_id", user.id)
     .eq("enabled", true)
-    .eq("advisor_id", data.get("advisorId") || '');
+    .eq("advisor_id", data.get("advisorId") || "");
 
   if (updVisibilityErr) {
     console.error(updVisibilityErr);
