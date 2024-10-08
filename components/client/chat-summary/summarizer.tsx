@@ -67,16 +67,12 @@ export default async function Summarizer({ user, selectedAdvisor }) {
     )
     .join("\n");
 
-  console.log("Formatted conversation for summary:", conversation);
-
   const prompt = SUMMARY_PROMPT.replace("{{CONVERSATION}}", conversation)
     .replace(
       "{{USER}}",
       JSON.stringify(getUserAnswerSummary(client?.all_answers))
     )
     .replace("{{PREVIOUS_SUMMARY}}", previousSummary);
-
-  console.log("Generated summary prompt:", prompt);
 
   const response = await callGPT4(prompt, "");
 

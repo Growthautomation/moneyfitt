@@ -94,6 +94,7 @@ export type Database = {
         Row: {
           all_answers: Json | null
           broad_scope: Json | null
+          contents: Json[] | null
           created_at: string
           id: string
           name: string | null
@@ -105,10 +106,12 @@ export type Database = {
           preferred_language: Json | null
           preferred_religion: Json | null
           preferred_sex: Json | null
+          telegram: string | null
         }
         Insert: {
           all_answers?: Json | null
           broad_scope?: Json | null
+          contents?: Json[] | null
           created_at?: string
           id?: string
           name?: string | null
@@ -120,10 +123,12 @@ export type Database = {
           preferred_language?: Json | null
           preferred_religion?: Json | null
           preferred_sex?: Json | null
+          telegram?: string | null
         }
         Update: {
           all_answers?: Json | null
           broad_scope?: Json | null
+          contents?: Json[] | null
           created_at?: string
           id?: string
           name?: string | null
@@ -135,6 +140,7 @@ export type Database = {
           preferred_language?: Json | null
           preferred_religion?: Json | null
           preferred_sex?: Json | null
+          telegram?: string | null
         }
         Relationships: []
       }

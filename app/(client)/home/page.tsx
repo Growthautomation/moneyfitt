@@ -1,11 +1,10 @@
 import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
-import ResourceCard from "@/components/resource-card";
-import { BarChart2, PiggyBank, BookOpen } from "lucide-react";
 import { redirect } from "next/navigation";
 import ChatSummaryContainer from "@/components/client/chat-summary/container";
 import ComponentLoading from "@/components/utils/component-loading";
 import AdvisorList from "@/components/client/advisor-list/list";
+import Contents from "@/components/client/contents/main";
 
 export default async function HomePageRoute({ searchParams }) {
   const supabase = createClient();
@@ -23,40 +22,6 @@ export default async function HomePageRoute({ searchParams }) {
     .select("*")
     .eq("id", user.id)
     .single();
-
-
-
-
-  // Use client data if available, otherwise fallback to user data
-  const clientName = clientData?.name || user.email;
-
-  // Extract content IDs from all_answers
-  let contentIds: string[] = [];
-  if (clientData?.all_answers) {
-    // Check if all_answers is already an object
-    const allAnswers = typeof clientData.all_answers === 'object' 
-      ? clientData.all_answers 
-      : JSON.parse(clientData.all_answers);
-    
-    contentIds = allAnswers.contents || [];
-  }
-
-  // Define resource icons as strings
-  const resourceIcons = [
-    'BarChart2', 
-    'PiggyBank', 
-    'BookOpen', 
-    'Briefcase',
-    'CreditCard',
-    'DollarSign',
-    'LineChart',
-    'Percent',
-    'Wallet',
-    'ChevronRight'
-  ];
-
-  console.log('Content IDs:', contentIds); // Add this line for debugging
-
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -84,21 +49,9 @@ export default async function HomePageRoute({ searchParams }) {
             </Suspense>
           </div>
         </section>
-
-        {contentIds.length > 0 && (
-          <section>
-            <h2 className="text-xl font-semibold mb-4">Your Resources</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {contentIds.map((contentId, index) => (
-                <ResourceCard 
-                  key={contentId}
-                  contentId={contentId}
-                  iconName={resourceIcons[index % resourceIcons.length]}
-                />
-              ))}
-            </div>
-          </section>
-        )}
+        <Suspense fallback={<ComponentLoading />}>
+          <Contents user={user} />
+        </Suspense>
       </main>
     </div>
   );

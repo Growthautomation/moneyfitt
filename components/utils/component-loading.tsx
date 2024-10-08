@@ -4,10 +4,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 interface ComponentLoadingProps {
-  text: string;
+  text?: string;
 }
 
-export default function ComponentLoading({ text }: ComponentLoadingProps) {
+export default function ComponentLoading({ text = "Loading..." }: ComponentLoadingProps) {
   // Animation variants for the container
   const containerVariants = {
     animate: {

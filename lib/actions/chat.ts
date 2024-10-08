@@ -89,27 +89,19 @@ export const getSuggestions = async (recipient: string) => {
       `and(sender.eq.${user?.id},recipient.eq.${recipient}),and(sender.eq.${recipient},recipient.eq.${user?.id})`
     );
 
-  // Log the fetched messages
-  console.log("Fetched messages:", messages);
-
   const { data: client } = await supabase
     .from("client")
     .select()
     .eq("id", user.id)
     .single();
 
-  // Log the client data
-  console.log("Client data:", client);
-
   if (messages && messages.length > 0) {
     // Format the conversation text with speaker identification
     const conversationText = messages.map(m => 
       `${m.sender === user.id ? 'User' : 'Advisor'}: ${m.message}`
     ).join("\n");
-    console.log("Formatted conversation text:", conversationText);
 
     const userSummary = getUserAnswerSummary(client?.all_answers ?? {});
-    console.log("User answer summary:", userSummary);
 
     const prompt = GENERATE_QUESTIONS_PROMPT.replace(
       "{{CONVERSATION}}",
@@ -119,8 +111,6 @@ export const getSuggestions = async (recipient: string) => {
       JSON.stringify(userSummary)
     );
 
-    console.log("Generated prompt:", prompt);
-
     return (await callGPT4(prompt, "")).split("||");
   } else {
     // Generate initial questions using GENERATE_INITIAL_QUESTIONS_PROMPT
@@ -128,7 +118,6 @@ export const getSuggestions = async (recipient: string) => {
       "{{USER}}",
       JSON.stringify(client)
     );
-    console.log("Generated initial prompt:", prompt);
     return (await callGPT4(prompt, "")).split("||");
   }
 };
