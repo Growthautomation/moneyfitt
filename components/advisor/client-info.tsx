@@ -19,7 +19,7 @@ export default function UserInfoCard({ client }) {
             <strong>Name:</strong> {client?.name}
           </p>
           <p>
-            <strong>Email:</strong> {client?.email}
+            <strong>Email:</strong> {client?.preferred_contact_email}
           </p>
           <p>
             <strong>Phone:</strong> {client?.phone_number}

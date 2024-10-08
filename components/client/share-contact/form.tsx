@@ -50,7 +50,7 @@ export default async function Form() {
           id="email"
           name="email"
           type="email"
-          defaultValue={client.preferred_contact_email || ""}
+          defaultValue={client.preferred_contact_email || user.email || ""}
           className="col-span-3 border-[#9CABC2] focus:border-[#5C59E4] focus:ring-[#5C59E4]"
         />
         <Checkbox
