@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { getSuggestions } from "@/lib/actions/chat";
+import ComponentLoading from "@/components/utils/component-loading";
 
 export default function Suggestions({
   onClick,
@@ -25,22 +26,7 @@ export default function Suggestions({
   }, []);
 
   if (loading) {
-    return (
-      <div className="text-center text-gray-500 my-5">
-        {"Loading...".split("").map((char, index) => (
-          <span
-            key={index}
-            className={`inline-block animate-bounce`}
-            style={{
-              animationDelay: `${index * 0.1}s`,
-              animationDuration: "1s",
-            }}
-          >
-            {char}
-          </span>
-        ))}
-      </div>
-    );
+    return <ComponentLoading text="Writing up suggestions" />;
   }
 
   return (

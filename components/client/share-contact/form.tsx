@@ -50,7 +50,7 @@ export default async function Form() {
           id="email"
           name="email"
           type="email"
-          defaultValue={client.preferred_contact_email || ""}
+          defaultValue={client.preferred_contact_email || user.email || ""}
           className="col-span-3 border-[#9CABC2] focus:border-[#5C59E4] focus:ring-[#5C59E4]"
         />
         <Checkbox
@@ -74,6 +74,24 @@ export default async function Form() {
         <Checkbox
           id="include-phone"
           name="sharePhone"
+          defaultChecked
+          className="col-span-1 border-[#9CABC2] data-[state=checked]:bg-[#5C59E4] data-[state=checked]:border-[#5C59E4]"
+        />
+      </div>
+      <div className="grid grid-cols-5 items-center gap-4">
+        <Label htmlFor="telegram" className="text-right col-span-1 text-[#222222]">
+          Telegram
+        </Label>
+        <Input
+          id="telegram"
+          name="telegram"
+          defaultValue={client.telegram || ""}
+          placeholder="@username or t.me/username"
+          className="col-span-3 border-[#9CABC2] focus:border-[#5C59E4] focus:ring-[#5C59E4]"
+        />
+        <Checkbox
+          id="include-telegram"
+          name="shareTelegram"
           defaultChecked
           className="col-span-1 border-[#9CABC2] data-[state=checked]:bg-[#5C59E4] data-[state=checked]:border-[#5C59E4]"
         />

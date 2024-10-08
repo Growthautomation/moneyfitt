@@ -153,6 +153,17 @@ export async function shareContact(data: FormData) {
     payload.phone_number = data.get("phone");
   }
 
+  if (data.get("shareTelegram")) {
+    if (!data.get("telegram")) {
+      return {
+        success: false,
+        error: "Telegram is required if selected to share",
+      };
+    }
+    sharedScope.push("telegram");
+    payload.telegram = data.get("telegram");
+  }
+
   if (sharedScope.length === 0) {
     return {
       success: false,

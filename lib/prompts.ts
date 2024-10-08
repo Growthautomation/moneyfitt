@@ -111,13 +111,16 @@ Format your output as follows:
 </services_offered>
 
 <analysis>
-[Insert your analysis here]
+- [Main point 1]
+- [Main point 2]
+- [Main point 3]
 </analysis>
 
-Remember to base all your responses solely on the information provided in the conversation and user details. Do not make assumptions or include information not present in the given context. Lets do this while relating to the User instead of doing it in the third person. If the advisor has a name use that name to refer to the advisor.
+Remember to base all your responses solely on the information provided in the conversation and user details. Do not make assumptions or include information not present in the given context. Lets do this while relating to the User instead of doing it in the third person i.e talk to the user in second person such as you or your. If the advisor has a name use that name to refer to the advisor.
 
 The user should understand not only if its the right product but why that product. We are looking out for the user and making sure that there is transparency in the fees the advisor gets.
 
+The analysis should have a few short bulletpoints then a a short text analysis but make sure to split it into paragraphs, one or two sentances each.
 This is the previous summary we did for this conversation so you can keep things similar if they havent changed
 {{PREVIOUS_SUMMARY}}. - This will be blank if its the first summary.
 `

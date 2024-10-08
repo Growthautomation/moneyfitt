@@ -70,7 +70,9 @@ export const welcome = () =>
         name: "Help me identify where I need professional support",
       },
     ],
-    () => ({}),
+    (answers) => ({
+      contents: ["6601", "6651", "6701", ...((answers["contents"] as string[]) || [])]
+    }),
     ({ intro }) => !intro
   );
 
