@@ -144,7 +144,14 @@ export default function SummaryDisplay({ services, mainPoints, quickSummary, ana
             initial="closed"
             animate={activeSection === "analysis" ? "open" : "closed"}
           >
-            <p className="mt-4 text-[#222222]">{analysis}</p>
+            <ul className="mt-4 space-y-2">
+              {(Array.isArray(analysis) ? analysis : [analysis]).map((point, index) => (
+                <li key={index} className="flex items-start">
+                  <span className="inline-block w-2 h-2 rounded-full bg-[#5C59E4] mt-2 mr-2"></span>
+                  <span className="text-[#222222]">{point}</span>
+                </li>
+              ))}
+            </ul>
           </motion.div>
         </motion.div>
       </motion.div>

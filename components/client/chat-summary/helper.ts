@@ -3,7 +3,7 @@ export function parseSummaryResponse(response: string) {
     quickSummary: "",
     mainPoints: [],
     servicesOffered: [],
-    analysis: "",
+    analysis: [],
   };
 
   const summaryMatch = response.match(/<summary>([\s\S]*?)<\/summary>/);
@@ -17,7 +17,7 @@ export function parseSummaryResponse(response: string) {
       .split("\n")
       .map((point) => point.trim())
       .filter((point) => point.startsWith("-"))
-      .map((point) => point.slice(1).trim()) as never;
+      .map((point) => point.slice(1).trim());
   }
 
   const servicesMatch = response.match(
@@ -28,11 +28,17 @@ export function parseSummaryResponse(response: string) {
       .split("\n")
       .map((service) => service.trim())
       .filter((service) => service.startsWith("-"))
-      .map((service) => service.slice(1).trim()) as never;
+      .map((service) => service.slice(1).trim());
   }
 
   const analysisMatch = response.match(/<analysis>([\s\S]*?)<\/analysis>/);
-  if (analysisMatch) summary.analysis = analysisMatch[1].trim();
+  if (analysisMatch) {
+    summary.analysis = analysisMatch[1]
+      .split("\n")
+      .map((point) => point.trim())
+      .filter((point) => point.startsWith("-"))
+      .map((point) => point.slice(1).trim());
+  }
 
   return summary;
 }
