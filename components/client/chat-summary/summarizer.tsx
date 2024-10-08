@@ -8,6 +8,9 @@ import { parseSummaryResponse } from "./helper";
 import { getUserAnswerSummary } from "@/lib/utils/user-answer-summary";
 
 export default async function Summarizer({ user, selectedAdvisor }) {
+  if(!selectedAdvisor){
+    return null
+  }
   const supabase = createClient();
   const { data: summary, error: summaryError } = await supabase
     .from("conversation_summaries")

@@ -1,12 +1,11 @@
 export function parseSummaryResponse(response: string) {
+  const summary = {
+    quickSummary: "",
+    mainPoints: [],
+    servicesOffered: [],
+    analysis: [],
+  };
   try{
-    const summary = {
-      quickSummary: "",
-      mainPoints: [],
-      servicesOffered: [],
-      analysis: [],
-    };
-  
     const summaryMatch = response.match(/<summary>([\s\S]*?)<\/summary>/);
     if (summaryMatch) summary.quickSummary = summaryMatch[1].trim();
   
@@ -44,6 +43,6 @@ export function parseSummaryResponse(response: string) {
     return summary;
   } catch (e) {
     console.error("client/chat-summary/helper: Error parsing summary response", e);
-    throw e
+    return summary
   }
 }
