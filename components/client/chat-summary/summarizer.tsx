@@ -88,6 +88,10 @@ export default async function Summarizer({ user, selectedAdvisor }) {
     .select()
     .single();
 
+  if (error) {
+    console.error("client/chat-summary/summarizer: fail to upsert summary", error);
+  }
+
   return (
     <SummaryDisplay
       services={newSummary?.summary?.["servicesOffered"] || []}

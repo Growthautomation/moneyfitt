@@ -1,5 +1,3 @@
-// @ts-nocheck
-// TODO: please clean this up
 import Link from "next/link";
 import ChatSummary from "./summary-display";
 import { createClient } from "@/lib/supabase/server";
@@ -12,9 +10,6 @@ import ComponentLoading from "@/components/utils/component-loading";
 import Summarizer from "./summarizer";
 
 export default async function ChatSummaryContainer({ selectedAdvisor, user }) {
-  const supabase = createClient();
-  const summaryData = {};
-
   return (
     <div className="text-sm max-w-4xl mx-auto p-4 font-['Fira_Sans'] text-[#222222]">
       <Header selectedAdvisor={selectedAdvisor} user={user} />

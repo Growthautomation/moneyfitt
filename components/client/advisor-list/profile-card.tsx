@@ -29,7 +29,7 @@ export async function AdvisorProfileCard({
     .getPublicUrl(advisor.profile_img ?? "");
 
   return (
-    <Card className="w-full h-full flex flex-col bg-white shadow-lg border-t-4 border-[#5C59E4]">
+    <Card className="w-full flex flex-col bg-white shadow-lg border-t-4 border-[#5C59E4]">
       <CardHeader className="text-center flex-shrink-0 flex flex-col justify-between">
         <Avatar className="w-24 h-24 mx-auto border-4 border-[#D6D5F8]">
           <AvatarImage src={data.publicUrl || ""} alt="advisor-profile-pic" />
@@ -51,12 +51,14 @@ export async function AdvisorProfileCard({
       </CardHeader>
       <CardContent className="flex-grow flex flex-col justify-between">
         <div className="space-y-6">
-          <div className="h-32 flex flex-col">
-            <h3 className="font-semibold mb-2 text-[#2E2C72]">Specializations</h3>
+          <div className="flex flex-col">
+            <h3 className="font-semibold mb-2 text-[#2E2C72]">
+              Specializations
+            </h3>
             <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
               {(advisor?.narrow_scope as string[])?.map((scope, idx) => (
-                <Badge 
-                  key={idx} 
+                <Badge
+                  key={idx}
                   variant="secondary"
                   className="bg-[#D6D5F8] text-[#2E2C72] hover:bg-[#8583EB] hover:text-white"
                 >
@@ -65,12 +67,16 @@ export async function AdvisorProfileCard({
               ))}
             </div>
           </div>
-          <div className="h-40">
-            <h3 className="font-semibold mb-2 text-[#2E2C72]">Matching Criteria</h3>
+          <div>
+            <h3 className="font-semibold mb-2 text-[#2E2C72]">
+              Matching Criteria
+            </h3>
             <div className="grid grid-cols-1 gap-2">
               <div className="flex items-center">
                 <CheckCircle2 className="h-5 w-5 text-[#5C59E4] mr-2 flex-shrink-0" />
-                <span className="text-sm text-[#222222]">Similar age group to you</span>
+                <span className="text-sm text-[#222222]">
+                  Similar age group to you
+                </span>
               </div>
               <div className="flex items-center">
                 <CheckCircle2 className="h-5 w-5 text-[#5C59E4] mr-2 flex-shrink-0" />
@@ -87,18 +93,20 @@ export async function AdvisorProfileCard({
               </div>
             </div>
           </div>
-        </div>
-        <div className="h-20 mt-4">
-          <h3 className="font-semibold mb-2 text-[#2E2C72]">Languages Spoken</h3>
-          <p className="text-sm text-[#222222]">
-            {(advisor.languages as string[])
-              ?.map((lang) => languages.find((l) => l.code === lang)?.name)
-              .join(", ")}
-          </p>
+          <div className="mt-4">
+            <h3 className="font-semibold mb-2 text-[#2E2C72]">
+              Languages Spoken
+            </h3>
+            <p className="text-sm text-[#222222]">
+              {(advisor.languages as string[])
+                ?.map((lang) => languages.find((l) => l.code === lang)?.name)
+                .join(", ")}
+            </p>
+          </div>
         </div>
       </CardContent>
       <CardFooter className="flex-shrink-0">
-        <RedirectButton 
+        <RedirectButton
           className="w-full bg-[#5C59E4] hover:bg-[#4543AB] text-white font-semibold py-2 px-4 rounded transition-colors duration-300"
           href={redirectTo}
         >
