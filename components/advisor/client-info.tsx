@@ -24,6 +24,11 @@ export default function UserInfoCard({ client }) {
           <p>
             <strong>Phone:</strong> {client?.phone_number}
           </p>
+          
+          <p>
+            <strong>Telegram:</strong> {client?.telegram}
+          </p>
+          
         </div>
       )}
 
