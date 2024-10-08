@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/popover"
 
 type Option = {
-  value: string;
-  label: string;
+  code: string;
+  name: string;
 }
 
 type MultiSelectSearchableProps = {
@@ -32,25 +32,25 @@ export function MultiSelectSearchableComponent({
   const [open, setOpen] = React.useState(false)
   const [search, setSearch] = React.useState("")
 
-  const selectedOptions = options.filter(option => selected.includes(option.value))
+  const selectedOptions = options.filter(option => selected.includes(option.code))
 
   const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(search.toLowerCase())
+    option.name.toLowerCase().includes(search.toLowerCase())
   )
 
   const handleSelect = (option: Option) => {
-    const newSelected = selected.includes(option.value)
-      ? selectedOptions.filter(item => item.value !== option.value)
+    const newSelected = selected.includes(option.code)
+      ? selectedOptions.filter(item => item.code !== option.code)
       : [...selectedOptions, option]
     onChange(newSelected)
   }
 
   const handleRemove = (option: Option) => {
-    onChange(selectedOptions.filter(item => item.value !== option.value))
+    onChange(selectedOptions.filter(item => item.code !== option.code))
   }
 
   return (
-    <div className="w-full max-w-xs">
+    <div className="w-full">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -74,17 +74,17 @@ export function MultiSelectSearchableComponent({
             <div className="max-h-60 overflow-auto">
               {filteredOptions.map((option) => (
                 <div
-                  key={option.value}
+                  key={option.code}
                   className="flex items-center p-2 cursor-pointer hover:bg-gray-100"
                   onClick={() => handleSelect(option)}
                 >
                   <input
                     type="checkbox"
-                    checked={selected.includes(option.value)}
+                    checked={selected.includes(option.code)}
                     readOnly
                     className="mr-2"
                   />
-                  {option.label}
+                  {option.name}
                 </div>
               ))}
               {filteredOptions.length === 0 && (
@@ -96,8 +96,8 @@ export function MultiSelectSearchableComponent({
       </Popover>
       <div className="flex flex-wrap gap-2 mt-2">
         {selectedOptions.map((option) => (
-          <Badge key={option.value} variant="secondary">
-            {option.label}
+          <Badge key={option.code} variant="secondary">
+            {option.name}
             <Button
               variant="ghost"
               size="sm"

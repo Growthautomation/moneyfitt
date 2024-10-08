@@ -3,16 +3,16 @@ import {
   reviewInvestment,
   DTPDcoverageNode,
   emegencyFundNode,
-  genderNode,
+  advisorGenderNode,
   illnessCoverageNode,
   insuranceCoverageNode,
   investingNode,
   investmentAdvise,
-  languageNode,
+  advisorLanguageNode,
   planningArea,
   preferredCompanyNode,
   QNode,
-  religionNode,
+  advisorReligionNode,
   retiredQuestionNode,
   specializationNodes,
   startingFamilyNode,
@@ -26,6 +26,9 @@ import {
   DTPDProtection,
   insuranceFamilarity,
   retirementGoals,
+  advisorAgeNode,
+  personalQuestionsCover,
+  additionalSpecification,
 } from "./questions";
 
 export function getQuestions() {
@@ -51,8 +54,12 @@ export function getQuestions() {
 function getUnsupervisedQuestions() {
   // planning area
   // This one is complicated because of JS closures. We need to create a new function for each node
+  const ageN = ageNode();
   const planningNode = planningArea();
   const advisorPreference = getAdvisorPreferenceQuestions();
+  ageN.next = function (answer) {
+    return planningNode;
+  }
   planningNode.next = function (answer) {
     let current: QNode = advisorPreference;
     let prev: QNode = advisorPreference;
@@ -83,8 +90,11 @@ function getUnsupervisedQuestions() {
     };
     return current;
   };
+  planningNode.prev = function () {
+    return ageN;
+  }
 
-  return planningNode;
+  return ageN;
 }
 
 function getSupervisedQuestions() {
@@ -185,7 +195,7 @@ function getFreshEntranceQuestions() {
       };
       return cn;
     }
-    const invN = investmentAdvise();
+    const invN = investmentAdvise('15%+');
     invN.prev = function () {
       return investingN;
     };
@@ -246,7 +256,7 @@ function getStartingFamilyQuestions() {
       };
       return cn;
     }
-    const invN = investmentAdvise();
+    const invN = investmentAdvise('10%+');
     invN.prev = function () {
       return investingN;
     };
@@ -307,7 +317,7 @@ function getSupportingParentQuestions() {
       };
       return cn;
     }
-    const invN = investmentAdvise();
+    const invN = investmentAdvise('10%+');
     invN.prev = function () {
       return investingN;
     };
@@ -347,7 +357,7 @@ function getPreRetiredQuestions() {
       };
       return cn;
     }
-    const invN = investmentAdvise();
+    const invN = investmentAdvise('10%+', true);
     invN.prev = function () {
       return investingN;
     };
@@ -404,12 +414,20 @@ function getGoldenYearsQuestions() {
 }
 
 function getAdvisorPreferenceQuestions() {
-  const religionN = religionNode();
-  const genderN = genderNode();
-  const languageN = languageNode();
-  const ageN = ageNode();
+  const cover = personalQuestionsCover();
+  const religionN = advisorReligionNode();
+  const genderN = advisorGenderNode();
+  const languageN = advisorLanguageNode();
+  const ageN = advisorAgeNode();
   const preferredCompanyN = preferredCompanyNode();
   const userNameN = userNameNode();
+  const additionalScope = additionalSpecification();
+  cover.next = function (answer) {
+    return religionN;
+  };
+  religionN.prev = function () {
+    return cover;
+  }
   religionN.next = function (answer) {
     return genderN;
   };
@@ -425,11 +443,18 @@ function getAdvisorPreferenceQuestions() {
     return genderN;
   };
   languageN.next = function (answer) {
+    return additionalScope;
+  };
+
+  additionalScope.prev = function (answer) {
+    return languageN;
+  };
+  additionalScope.next = function (answer) {
     return ageN;
   };
 
   ageN.prev = function (answer) {
-    return languageN;
+    return additionalScope;
   };
   ageN.next = function (answer) {
     return preferredCompanyN;
@@ -446,7 +471,7 @@ function getAdvisorPreferenceQuestions() {
     return preferredCompanyN;
   };
 
-  return religionN;
+  return cover;
 }
 
 function getRetirementPlanningQuestions() {

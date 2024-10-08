@@ -2,6 +2,9 @@ import { QNode } from "@/resources/questions";
 import Select from "./select";
 import { SetStateAction } from "react";
 import { Input } from "../ui/input";
+import { Card } from "../ui/card";
+import { CircleCheckBig } from "lucide-react";
+import { MultiSelectSearchableComponent } from "../multi-select-searchable";
 
 export default function renderQuestions(
   question: QNode | null,
@@ -50,6 +53,33 @@ export default function renderQuestions(
           }
           className="w-full"
         />
+      );
+    case "cover":
+      return (
+        <div>
+          <h1 className="text-xl text-cente my-4 flex gap-3">
+            <CircleCheckBig className="text-green-500" />
+            {question.category}
+          </h1>
+          <p className="mb-4">{question.question}</p>
+          <p className="mb-4">{question.description}</p>
+        </div>
+      );
+    case "multipleDropdown":
+      return (
+        <div className="flex justify-center">
+          <MultiSelectSearchableComponent
+            options={question.options}
+            placeholder={`Select from dropdown`}
+            selected={(answer[question.key] as string[]) || []}
+            onChange={(values) =>
+              setAnswer({
+                ...answer,
+                [question.key]: values.map((v) => v.code),
+              })
+            }
+          />
+        </div>
       );
     default:
       return null;

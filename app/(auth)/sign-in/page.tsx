@@ -1,6 +1,7 @@
 "use client";
 
 import { OnboardingFormComponent } from "@/components/onboarding/form";
+import Welcome from "@/components/onboarding/welcome";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/client";
@@ -20,9 +21,11 @@ const Auth = () => {
   };
   const [_, setAnswers] = useLocalStorage("answers", {});
 
-  const [showLogin, setShowLogin] = useState(false);
+  const [step, setStep] = useState<"login" | "onboarding" | "welcome">(
+    "welcome"
+  );
 
-  if (showLogin) {
+  if (step === "login") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <Card className="w-full max-w-md">
@@ -52,13 +55,17 @@ const Auth = () => {
     );
   }
 
+  if (step === "welcome") {
+    return <Welcome onNext={() => setStep("onboarding")} />;
+  }
+
   return (
     <OnboardingFormComponent
       onComplete={(answers) => {
         setAnswers(answers);
-        setShowLogin(true);
+        setStep("login");
       }}
-      onSkip={() => setShowLogin(true)}
+      onSkip={() => setStep("login")}
     />
   );
 };

@@ -97,11 +97,7 @@ export const gender = [
   {
     code: "F",
     name: "Female",
-  },
-  {
-    code: "O",
-    name: "Other",
-  },
+  }
 ];
 
 export const languages = [
@@ -126,5 +122,4 @@ export const religion = [
   {code: "SIK", name: "Sikhism"},
   {code: "JUD", name: "Judaism"},
   {code: "ATH", name: "Atheism"},
-  {code: "OTH", name: "Other"},
 ];

@@ -8,6 +8,7 @@ import React from "react";
 import { QNode } from "@/resources/questions";
 import { getQuestions } from "@/resources/onboarding-question-v2";
 import renderQuestions from "./renderer";
+import { getRemaining } from "@/lib/utils/questions";
 
 interface OnboardingQuestionsProps {
   onComplete: (values: Record<string, string[]>) => void;
@@ -44,11 +45,33 @@ export function OnboardingFormComponent({
     onComplete(answers as never);
   };
 
+  const totalQuestions = useMemo(() => {
+    return numAnswers + getRemaining(currentQuestion, answers);
+  }, [answers, numAnswers, currentQuestion]);
+
+  if (currentQuestion?.type === "cover") {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+        <Card className="w-full max-w-4xl p-6 space-y-6 p-20">
+          <div className="space-y-4">
+            {renderQuestions(currentQuestion, answers, setAnswers)}
+          </div>
+          <div className="text-center">
+            <Button onClick={handleNext}>Next</Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl p-6 space-y-6">
         <h2 className="text-2xl font-bold">{currentQuestion?.category}</h2>
         <p className="text-lg whitespace-pre">{currentQuestion?.question}</p>
+        {currentQuestion?.description && (
+          <p className="text-sm">{currentQuestion?.description}</p>
+        )}
         <div className="space-y-4">
           {renderQuestions(currentQuestion, answers, setAnswers)}
         </div>
@@ -62,20 +85,28 @@ export function OnboardingFormComponent({
           </Button>
           <div className="h-2 flex-1 bg-gray-200 mx-4 rounded-full overflow-hidden">
             <div
-              className="h-full bg-purple-600 rounded-full"
+              className="h-full bg-primary rounded-full"
               style={{
-                width: `${(numAnswers / 12) * 100}%`,
+                width: `${(numAnswers / totalQuestions) * 100}%`,
               }}
             />
           </div>
-          <Button onClick={handleNext}>
-            {currentQuestion?.next(answers) ? "Next" : "Complete"}
+          <Button
+            onClick={handleNext}
+            disabled={currentQuestion?.required(answers)}
+          >
+            {currentQuestion?.next(answers)
+              ? !answers[currentQuestion.key] &&
+                !currentQuestion.required(answers)
+                ? "Skip"
+                : "Next"
+              : "Complete"}
           </Button>
         </div>
         <div className="flex justify-between">
           <p className="text-sm text-gray-500">
-            Progress: {((numAnswers / 12) * 100).toFixed()}% (Question{" "}
-            {numAnswers} of {12})
+            Progress: {((numAnswers / totalQuestions) * 100).toFixed()}%
+            (Question {numAnswers} of {totalQuestions})
           </p>
           <span
             onClickCapture={() => onSkip?.()}

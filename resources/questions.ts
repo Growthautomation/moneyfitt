@@ -4,15 +4,17 @@ import {
   gender,
   languages,
   ageGroups,
+  narrowScope,
 } from "@/lib/constants";
-import { create } from "lodash";
-import { spec } from "node:test/reporters";
+import { intersection } from "lodash";
 
 export type QNode = {
   key: string;
   category: string;
   question: string;
+  description?: string | null;
   options: { code: string; name: string; description?: string }[];
+  required: (answers: Record<string, string | string[]>) => boolean;
   answerModifier: (
     answers: Record<string, string | string[]>
   ) => Record<string, string | string[]>;
@@ -21,7 +23,8 @@ export type QNode = {
     | "multiple"
     | "text"
     | "multipleWithTags"
-    | "multipleDropdown";
+    | "multipleDropdown"
+    | "cover";
   next: (answer: Object) => QNode | null;
   prev: (answer: Object) => QNode | null;
 };
@@ -31,8 +34,10 @@ function createNode(
   category: string,
   question: string,
   type: QNode["type"],
+  description: string | null = null,
   options: QNode["options"] = [],
-  answerModifier: QNode["answerModifier"] = () => ({})
+  answerModifier: QNode["answerModifier"] = () => ({}),
+  required: QNode["required"] = () => false
 ): QNode {
   return {
     key,
@@ -40,7 +45,9 @@ function createNode(
     question,
     options,
     type,
+    description,
     answerModifier,
+    required,
     next: () => null,
     prev: () => null,
   };
@@ -49,9 +56,10 @@ function createNode(
 export const welcome = () =>
   createNode(
     "intro",
-    "Let's Get MoneyFitt",
-    "Welcome to MoneyFitt! Let's get started on your financial planning journey.",
+    "Let's understand your needs",
+    "How confident are you about knowing where you need help?",
     "single",
+    null,
     [
       {
         code: "KNOW",
@@ -61,16 +69,21 @@ export const welcome = () =>
         code: "HELP",
         name: "Help me identify where I need professional support",
       },
-    ]
+    ],
+    () => ({}),
+    ({ intro }) => !intro
   );
 
 export const planningArea = () =>
   createNode(
     "broadScope",
-    "Financial Planning Areas",
+    "Determining your needs",
     "What area of financial planning do you need help with?",
     "multiple",
-    broadScope
+    null,
+    broadScope,
+    () => ({}),
+    ({ broadScope }) => !Boolean(broadScope)
   );
 
 export const specializationNodes = {
@@ -78,8 +91,9 @@ export const specializationNodes = {
     createNode(
       "specification",
       "Insurance and Risk Management",
-      "Which aspects of Insurance and Risk Management do you need help with?",
+      "Which aspects of insurance and risk management do you need help with?",
       "multiple",
+      null,
       [
         {
           code: "CIIP",
@@ -113,14 +127,27 @@ export const specializationNodes = {
           code: "OTHER",
           name: "Other",
         },
-      ]
+      ],
+      () => ({}),
+      ({ specification }) =>
+        intersection(specification ?? [], [
+          "CIIP",
+          "HMC",
+          "CHS",
+          "LI",
+          "TI",
+          "PAP",
+          "PET",
+          "OTHER",
+        ]).length === 0
     ),
   IWM: () =>
     createNode(
       "specification",
-      "Investment and Wealth Management",
-      "Which aspects of Investment and Wealth Management do you need help with?",
+      "Investments and Wealth Management",
+      "Which aspects of investments and wealth management do you need help with?",
       "multiple",
+      null,
       [
         {
           code: "CPFIS",
@@ -142,14 +169,24 @@ export const specializationNodes = {
           code: "OTHER",
           name: "Other",
         },
-      ]
+      ],
+      () => ({}),
+      ({ specification }) =>
+        intersection(specification ?? [], [
+          "CPFIS",
+          "WCI",
+          "SII",
+          "HNWP",
+          "OTHER",
+        ]).length === 0
     ),
   RLP: () =>
     createNode(
       "specification",
-      "Retirement and Legacy Planning",
-      "Which aspects of Retirement and Legacy Planning do you need help with?",
+      "Retirement and Later-Life Planning",
+      "Which aspects of retirement and later life planning do you need help with?",
       "multiple",
+      null,
       [
         {
           code: "RCP",
@@ -171,55 +208,23 @@ export const specializationNodes = {
           code: "OTHER",
           name: "Other",
         },
-      ]
+      ],
+      () => ({}),
+      ({ specification }) =>
+        intersection(specification ?? [], ["RCP", "LEP", "PRP", "ECL", "OTHER"])
+          .length === 0
     ),
   FPP: () =>
     createNode(
       "specification",
-      "Financial Planning and Protection",
-      "Which aspects of Financial Planning and Protection do you need help with?",
+      "Family and Personal Planning",
+      "Which aspects of family and personal planning do you need help with?",
       "multiple",
+      null,
       [
         {
-          code: "HCP",
-          name: "Health and Critical Illness Protection",
-        },
-        {
-          code: "PIP",
-          name: "Personal Income Protection",
-        },
-        {
-          code: "DMSL",
-          name: "Debt Management and Student Loans",
-        },
-        {
-          code: "EFP",
-          name: "Expat Financial Planning",
-        },
-        {
-          code: "TP",
-          name: "Tax Planning",
-        },
-        {
-          code: "SO",
-          name: "Singaporeans Overseas",
-        },
-        {
-          code: "OTHER",
-          name: "Other",
-        },
-      ]
-    ),
-  BCP: () =>
-    createNode(
-      "specification",
-      "Business Continuity Planning",
-      "Which aspects of Business Continuity Planning do you need help with?",
-      "multiple",
-      [
-        {
-          code: "HCPFH",
-          name: "Housing & CPF for Homes",
+          code: "HCH",
+          name: "Housing, HDB and CPF for Homes",
         },
         {
           code: "FCP",
@@ -230,8 +235,8 @@ export const specializationNodes = {
           name: "Special Circumstances Planning",
         },
         {
-          code: "CE",
-          name: "Children (Education Savings, Child Insurance)",
+          code: "CEI",
+          name: "Children (Education Savings, Child Health Insurance)",
         },
         {
           code: "SNP",
@@ -245,14 +250,56 @@ export const specializationNodes = {
           code: "OTHER",
           name: "Other",
         },
-      ]
+      ],
+      () => ({}),
+      ({ specification }) =>
+        intersection(specification ?? [], [
+          "HCH",
+          "FCP",
+          "SCP",
+          "CEI",
+          "SNP",
+          "DFP",
+          "OTHER",
+        ]).length === 0
+    ),
+  BCP: () =>
+    createNode(
+      "specification",
+      "Business and Corporate Planning",
+      "Which aspects of business and corporate planning do you need help with?",
+      "multiple",
+      null,
+      [
+        {
+          code: "SEP",
+          name: "Succession and Exit Planning",
+        },
+        {
+          code: "CTP",
+          name: "Corporate Tax Planning",
+        },
+        {
+          code: "BIRM",
+          name: "Business Insurance and Risk Management",
+        },
+        {
+          code: "OTHER",
+          name: "Other",
+        },
+      ],
+      () => ({}),
+      ({ specification }) =>
+        intersection(specification ?? [], ["SEP", "CTP", "BIRM", "OTHER"])
+          .length === 0
     ),
   NSP: () =>
     createNode(
       "specification",
-      "Needs-based Selling Process",
-      "Which aspects of Needs-based Selling Process do you need help with?",
+      "Niche and Specialised Planning",
+      "Which aspects of niche and specialized planning do you need help with?",
       "multiple",
+      null,
       [
         {
           code: "DMSL",
@@ -274,49 +321,73 @@ export const specializationNodes = {
           code: "OTHER",
           name: "Other",
         },
-      ]
+      ],
+      () => ({}),
+      ({ specification }) =>
+        intersection(specification ?? [], ["DMSL", "EFP", "TP", "SO", "OTHER"])
+          .length === 0
     ),
 };
 
-export const religionNode = () =>
+export const advisorReligionNode = () =>
   createNode(
-    "religion",
-    "Advisor preferences",
-    "Do you have any prefernces for your advisors religous beliefs?",
-    "single",
+    "prefer_religion",
+    "Advisor Preferences",
+    "Do you have any prefernces for your advisors by religion?",
+    "multiple",
+    null,
     religion
   );
 
-export const genderNode = () =>
-  createNode("gender", "Advisor preferences", "What is your gender", "single", [
-    ...gender,
-    { code: "PNS", name: "Prefer not to say" },
-  ]);
-
-export const languageNode = () =>
+export const advisorGenderNode = () =>
   createNode(
-    "language",
-    "Advisor preferences",
-    "What language do you prefer to communicate in?",
+    "preferGender",
+    "Advisor Preferences",
+    "Do you have any prefernces for your advisors by gender?",
+    "single",
+    null,
+    gender
+  );
+
+export const advisorLanguageNode = () =>
+  createNode(
+    "preferLanguage",
+    "Advisor Preferences",
+    "Do you have any prefernces for your advisors by language spoken?",
     "multiple",
+    null,
     languages
   );
 
 export const ageNode = () =>
   createNode(
     "age",
-    "Advisor preferences",
+    "About You",
     "What is your age group?",
     "single",
+    null,
+    ageGroups,
+    () => ({}),
+    ({ age }) => !age
+  );
+
+export const advisorAgeNode = () =>
+  createNode(
+    "preferAge",
+    "Advisor Preferences",
+    "Do you have any preference in your advisors by age?",
+    "multiple",
+    null,
     ageGroups
   );
 
 export const preferredCompanyNode = () =>
   createNode(
-    "company",
-    "Advisor preferences",
-    "Do you have a preferred company or advisor?",
+    "preferCompany",
+    "Advisor Preferences",
+    "Do you have any preference in your advisors by company or agency?",
     "multiple",
+    null,
     [
       { code: "bank", name: "Bank" },
       { code: "independentFirmLarge", name: "Independent Firm (Large)" },
@@ -326,45 +397,70 @@ export const preferredCompanyNode = () =>
     ]
   );
 
+export const additionalSpecification = () => createNode(
+  'specification',
+  "Advisor Preferences",
+  "What is most important to you in a Financial Advisor?",
+  "multipleDropdown",
+  null,
+  narrowScope
+)
+
 export const userNameNode = () =>
   createNode("userName", "Personal Information", "What is your name?", "text");
 
 export const startingFamilyNode = () =>
   createNode(
     "haveFamily",
-    "Personal Information",
-    "Do you have family or starting one soon?",
+    "About You",
+    "Have you started a family or starting one soon?",
     "single",
+    null,
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
-    ]
+    ],
+    () => ({}),
+    ({ haveFamily }) => !haveFamily
   );
 
 export const supportingParentNode = () =>
   createNode(
     "haveParents",
-    "Investment Challenges",
-    "Are you supporting age parents?",
+    "About You",
+    "Are you supporting aged parents?",
     "single",
+    null,
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
-    ]
+    ],
+    () => ({}),
+    ({ haveParents }) => !haveParents
   );
 
 export const retiredQuestionNode = () =>
-  createNode("retired", "Investment Challenges", "Are you retired?", "single", [
-    { code: "YES", name: "Yes" },
-    { code: "NO", name: "No" },
-  ]);
+  createNode(
+    "retired",
+    "About You",
+    "Are you retired?",
+    "single",
+    null,
+    [
+      { code: "YES", name: "Yes" },
+      { code: "NO", name: "No" },
+    ],
+    () => ({}),
+    ({ retired }) => !retired
+  );
 
 export const emegencyFundNode = () =>
   createNode(
     "emergencyFund",
-    "Emergency Funds",
+    "Emergency Fund",
     "Do you have 3 to 6 months worth of take-home income saved?",
     "single",
+    null,
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
@@ -377,15 +473,17 @@ export const emegencyFundNode = () =>
           ? ["755"]
           : []),
       ],
-    })
+    }),
+    ({ emergencyFund }) => !emergencyFund
   );
 
 export const DTPDcoverageNode = () =>
   createNode(
     "DTPDCoverage",
     "Protection",
-    "Do you have Death and Total Permanent Disability Coverage worth 9x annual income?",
+    "Do you have Death and Total Permanent Disability coverage worth 9x annual income?",
     "single",
+    "Death and Total Permanent Disability (TPD) coverage is typically included in life insurance policy like whole life, term life and investment-linked plans, either as standard feature or optional rider.",
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
@@ -398,15 +496,17 @@ export const DTPDcoverageNode = () =>
           ? ["LI"]
           : []),
       ],
-    })
+    }),
+    ({ DTPDCoverage }) => !DTPDCoverage
   );
 
 export const illnessCoverageNode = () =>
   createNode(
     "illnessCoverage",
     "Protection",
-    "Do you have Critical Illness insurance coverage worth 4x annual income?",
+    "Do you have Critical Illness coverage worth 4x annual income?",
     "single",
+    null,
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
@@ -419,15 +519,17 @@ export const illnessCoverageNode = () =>
           ? ["CIIP"]
           : []),
       ],
-    })
+    }),
+    ({ illnessCoverage }) => !illnessCoverage
   );
 
 export const insuranceCoverageNode = () =>
   createNode(
     "insuranceCoverage",
     "Protection",
-    "Are you allocating 15% your take home income to insurance?",
+    "Are you allocating 15% your take home income (after CPF contributions) to insurance?",
     "single",
+    null,
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
@@ -440,27 +542,32 @@ export const insuranceCoverageNode = () =>
           ? ["IRM"]
           : []),
       ],
-    })
+    }),
+    ({ insuranceCoverage }) => !insuranceCoverage
   );
 
 export const investingNode = (investmentPercent: string) =>
   createNode(
     "investing",
-    "Investment",
-    `Are you investing ${investmentPercent} of your income(after CPF deduction) towards financial goals?`,
+    "Investing",
+    `Are you investing ${investmentPercent} of your take-home income (after CPF contributions) towards financial goals?`,
     "single",
+    null,
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
-    ]
+    ],
+    () => ({}),
+    ({ investing }) => !investing
   );
 
 export const reviewInvestment = () =>
   createNode(
     "professionalSupport",
-    "Professional Support",
-    "Congrat! Would you like professional support to optimise your portfolio.",
+    "Investing",
+    "Well done. Are you looking for professional support with portfolio optimization?",
     "single",
+    null,
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
@@ -473,26 +580,32 @@ export const reviewInvestment = () =>
           ? ["WCI"]
           : []),
       ],
-    })
+    }),
+    ({ professionalSupport }) => !professionalSupport
   );
 
-export const investmentAdvise = () =>
+export const investmentAdvise = (percent, skipBusy = false) =>
   createNode(
     "investmentAdvise",
-    "Investment",
-    "Would you like to receive investment advice?",
+    "Investing",
+    "What is your reason for answering no?",
     "single",
+    null,
     [
       {
         code: "LEARNMORE",
-        name: "I don't understand investing. Match me with an expert to learn more",
+        name: "Investing is too complicated for me and I would like professional help with it.",
       },
       {
         code: "HELP",
-        name: "I understand investing but I am not budgeting well enough to allocate 15%+",
+        name: `I understand investing but I am not budgeting well enough to allocate ${percent}`,
       },
-      { code: "BUSY", name: "Too busy building emergency fund." },
-      { code: "DEBT", name: "Proioring debt management" },
+      ...(skipBusy
+        ? []
+        : [
+            { code: "BUSY", name: "I am too busy building my emergency fund." },
+          ]),
+      { code: "DEBT", name: "I am prioritising debt management." },
     ],
     (answers) => {
       switch (answers["investmentAdvise"]) {
@@ -522,27 +635,32 @@ export const investmentAdvise = () =>
         default:
           return {};
       }
-    }
+    },
+    ({ investmentAdvise }) => !investmentAdvise
   );
 
 export const startRetirementNode = () =>
   createNode(
     "retirementPlaining",
     "Retirement Planning",
-    "Have you started retirement planning?",
+    "Have you started planning for retirement?",
     "single",
+    null,
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
-    ]
+    ],
+    () => ({}),
+    ({ retirementPlaining }) => !retirementPlaining
   );
 
 export const reviewRetirementNode = () =>
   createNode(
     "retirementReview",
     "Retirement Planning",
-    "Would you like to review your retirement plan?",
+    "Well done. Would you like a professional to review your retirement planning?",
     "single",
+    null,
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
@@ -555,15 +673,17 @@ export const reviewRetirementNode = () =>
           ? ["RLP"]
           : []),
       ],
-    })
+    }),
+    ({ retirementReview }) => !retirementReview
   );
 
 export const considerRetirementNode = () =>
   createNode(
     "retirementConsider",
     "Retirement Planning",
-    "Consider starting! Woould you like professional support on this metter?",
+    "Consider starting! Would you like professional support on this metter?",
     "single",
+    null,
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
@@ -576,18 +696,20 @@ export const considerRetirementNode = () =>
           ? ["RLP"]
           : []),
       ],
-    })
+    }),
+    ({ retirementConsider }) => !retirementConsider
   );
 
 export const lagacyPlanningNode = () =>
   createNode(
     "lagacyPlanning",
-    "Retirement Planning",
-    "Do you have the following addressed \n 1. A will \n 2.CPF nomination \n 3. Appointed trusted persons",
+    "Lagacy Planning",
+    "Have you made your will and CPF nomination, and appointed trusted persons?",
     "single",
+    null,
     [
       { code: "YES", name: "Yes" },
-      { code: "HELP", name: "No, I want professional helpth with this" },
+      { code: "HELP", name: "No, I want professional help with this" },
       { code: "RESOURCE", name: "No, give me resources for this" },
     ],
     (answers) => {
@@ -612,29 +734,31 @@ export const lagacyPlanningNode = () =>
         default:
           return {};
       }
-    }
+    },
+    ({ lagacyPlanning }) => !lagacyPlanning
   );
 
 export const DTPDProtection = () =>
   createNode(
     "DTPDProtection",
     "Protection",
-    "Make sure you have the following. \n Death and Total Disability Coverage: 9x annual income \n Critical Illness Insurance: 4x annual income",
+    "Make sure you have the following coverage. \n 1. Death and Total Permanent Disability(TPD): 9x annual income \n 2. Critical illness: 4x annual income",
     "single",
+    "Death and Total Permanent Disability (TPD) coverage is typically included in life insurance policy like whole life, term life and investment-linked plans, either as standard feature or optional rider.",
     [
       { code: "YES", name: "I am covered" },
       {
         code: "CRITAL_ILLNESS",
-        name: "I want help with Critical Illness Insurance",
+        name: "I want professional help with critical illness coverage",
       },
       {
         code: "DTPD",
-        name: "I want help with Death and Total Permanent Disability Coverage",
+        name: "I want professional help with death and TPD coverage",
       },
-      { code: "RESOURCE", name: "Give me resources for this" },
+      { code: "RESOURCE", name: "I want resources for this area" },
     ],
     (answers) => {
-      switch(answers['DTPDProtection']){
+      switch (answers["DTPDProtection"]) {
         case "CRITAL_ILLNESS":
           return {
             specification: [
@@ -648,7 +772,7 @@ export const DTPDProtection = () =>
               ...((answers["specification"] as string[]) || []),
               ...(!answers["specification"]?.includes("LI") ? ["LI"] : []),
             ],
-          } as never
+          } as never;
         case "RESOURCE":
           return {
             contents: [
@@ -658,33 +782,38 @@ export const DTPDProtection = () =>
             ],
           } as never;
         default:
-          return {}
+          return {};
       }
-    }
+    },
+    ({ DTPDProtection }) => !DTPDProtection
   );
 
 export const insuranceFamilarity = () =>
   createNode(
     "insuranceFamilarity",
-    "Insurance Familarity",
-    "Are you familiar with the following?\nHome Insurance\nFire and Home Content Insurance\nMediShield Life for large healthcare bill\nCareShield Life/Elder Shield for longterm case of severe disiability",
+    "Protection",
+    "Are you familiar with the following?\n1. Home Insurance\n2. Fire and home content insurance\n3. MediShield Life\n4. CareShield Life/Elder Shield",
     "single",
+    null,
     [
-      { code: "YES", name: "Yes, I am familier" },
-      { code: "NO", name: "No, Give me resources for this" },
-    ]
+      { code: "YES", name: "Yes, I am familiar" },
+      { code: "NO", name: "No, give me resources for this" },
+    ],
+    () => ({}),
+    ({ insuranceFamilarity }) => !insuranceFamilarity
   );
 
 export const retirementGoals = () =>
   createNode(
     "retirementGoals",
     "Retirement Goals",
-    "Do you need professional support with either of the following\n1. Unlocking the value of your assets\n2. CPF management, particularly CPF life",
+    "Do you need professional support with either of the following?\n1. Unlocking the value of your assets\n2. CPF management, particularly CPF Life",
     "single",
+    null,
     [
       {
         code: "YES",
-        name: "I want help with either CPF retirement schemes or asset management",
+        name: "I want help with both of these areas",
       },
       { code: "NO", name: "No help needed" },
     ],
@@ -696,5 +825,16 @@ export const retirementGoals = () =>
           ? ["RCP"]
           : []),
       ],
-    })
+    }),
+    ({ retirementGoals }) => !retirementGoals
+  );
+
+export const personalQuestionsCover = () =>
+  createNode(
+    "cover",
+    "Financial Needs Determined",
+    "We connect users with professionals who not only meet their financial needs but also understand and relate to their unique situations",
+    "cover",
+    "You're almost there! Let's take a moment to learn about any personal preference you have for matches.",
+    []
   );
