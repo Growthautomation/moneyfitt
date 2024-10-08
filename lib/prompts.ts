@@ -111,6 +111,10 @@ Format your output as follows:
 </services_offered>
 
 <analysis>
+- [Main point 1]
+- [Main point 2]
+- [Main point 3]
+
 [Insert your analysis here]
 </analysis>
 
@@ -118,6 +122,7 @@ Remember to base all your responses solely on the information provided in the co
 
 The user should understand not only if its the right product but why that product. We are looking out for the user and making sure that there is transparency in the fees the advisor gets.
 
+The analysis should have a few short bulletpoints then a a short text analysis but make sure to split it into paragraphs, one or two sentances each.
 This is the previous summary we did for this conversation so you can keep things similar if they havent changed
 {{PREVIOUS_SUMMARY}}. - This will be blank if its the first summary.
 `

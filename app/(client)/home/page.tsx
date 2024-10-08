@@ -25,10 +25,7 @@ export default async function HomePageRoute({ searchParams }) {
     .single();
 
 
-  if (clientError) {
-    console.error('Error fetching client data:', clientError);
-    // Handle the error appropriately
-  }
+
 
   // Use client data if available, otherwise fallback to user data
   const clientName = clientData?.name || user.email;
