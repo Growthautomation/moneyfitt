@@ -38,7 +38,7 @@ export default function ShareButton({ advisorId }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="bg-[#5C59E4] hover:bg-[#4543AB] text-white">
-          Share Contact Details
+          Share Contact
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
