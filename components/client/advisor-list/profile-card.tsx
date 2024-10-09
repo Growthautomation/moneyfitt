@@ -29,7 +29,7 @@ export async function AdvisorProfileCard({
     .getPublicUrl(advisor.profile_img ?? "");
 
   return (
-    <Card className="w-full flex flex-col bg-white shadow-lg border-t-4 border-[#5C59E4]">
+    <Card className="w-full h-full flex flex-col bg-white shadow-lg border-t-4 border-[#5C59E4]">
       <CardHeader className="text-center flex-shrink-0 flex flex-col justify-between">
         <Avatar className="w-24 h-24 mx-auto border-4 border-[#D6D5F8]">
           <AvatarImage src={data.publicUrl || ""} alt="advisor-profile-pic" />

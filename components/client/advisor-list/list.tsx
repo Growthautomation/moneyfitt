@@ -16,12 +16,14 @@ export default async function AdvisorList({ user }: { user: User }) {
       `
     )
     .eq("client_id", user.id);
+
   if (!advisors) {
     console.error("client/advisor-list/list: Error fetching advisors", error);
     return <ComponentError message="Error loading advisors" />;
   }
+
   return (
-    <div className="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
       {advisors.map(({ advisor_id, advisor }) => (
         <div key={advisor_id} className="h-full">
           <AdvisorProfileCard
