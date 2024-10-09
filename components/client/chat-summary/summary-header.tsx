@@ -31,7 +31,7 @@ export default async function Header({ selectedAdvisor, user }) {
   return (
     <div className="flex mb-6 border-b border-[#ECF0F3]">
       {advisors.map(({ advisor }) => (
-        <RedirectButton
+        <Link
           key={advisor?.id}
           href={`?advisorId=${advisor?.id}`}
           className={`px-4 py-2 text-lg bg-transparent hover:bg-gray-200 border-0 outline-none shadow-none ring-0 ${
@@ -41,7 +41,7 @@ export default async function Header({ selectedAdvisor, user }) {
           }`}
         >
           {`${advisor?.first_name} ${advisor?.last_name}`}
-        </RedirectButton>
+        </Link>
       ))}
     </div>
   );

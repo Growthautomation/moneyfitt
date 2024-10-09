@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Layout({
+export default async function Layout({
   children,
   advisors,
   summary,
@@ -17,7 +17,7 @@ export default function Layout({
         <div>{greeting}</div>
         <div className="flex flex-col lg:flex-row w-full gap-6">
           <div className="lg:w-3/5 w-full">{advisors}</div>
-          <div className="lg:w-2/5 w-full min-w-[20rem]">{summary}</div>
+          <div className="lg:w-2/5 w-full">{summary}</div>
         </div>
         {children}
       </main>
