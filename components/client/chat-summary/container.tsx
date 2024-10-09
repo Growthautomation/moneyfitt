@@ -1,11 +1,9 @@
 import Header from "./summary-header";
-import { Suspense } from "react";
-import ComponentLoading from "@/components/utils/component-loading";
-import Summarizer from "./summarizer";
 import ComponentError from "@/components/utils/component-error";
 import { createClient } from "@/lib/supabase/server";
+import Summary from "./summary";
 
-export default async function ChatSummaryContainer({ selectedAdvisor }) {
+export default async function ChatSummaryContainer() {
   const supabase = createClient();
   const {
     data: { user },
@@ -14,16 +12,29 @@ export default async function ChatSummaryContainer({ selectedAdvisor }) {
     return <ComponentError message="User not found" />;
   }
 
+  const { data: advisors, error: advisorsError } = await supabase
+    .from("matchings")
+    .select(
+      `
+      advisor_id,
+      advisor (
+        *
+      )
+    `
+    )
+    .eq("client_id", user.id);
+
+  if (!advisors) {
+    console.error(
+      "client/chat-summary/summary-header: fail to fetch advisors",
+      advisorsError
+    );
+    return <ComponentError message={"Fail to fetch advisors"} />;
+  }
+
   return (
     <div className="text-sm max-w-4xl mx-auto p-4 font-['Fira_Sans'] text-[#222222]">
-      <Header selectedAdvisor={selectedAdvisor} user={user} />
-
-      <Suspense
-        fallback={<ComponentLoading text="Writing up summary" />}
-        key={selectedAdvisor}
-      >
-        <Summarizer user={user} selectedAdvisor={selectedAdvisor} />
-      </Suspense>
+      <Summary advisors={advisors.map(({ advisor }) => advisor)} />
 
       <p className="mt-8 text-sm italic text-[#9CABC2]">
         Disclaimer: This summary is for informational purposes only and does not

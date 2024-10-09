@@ -11,12 +11,6 @@ export default async function Advisors() {
     return <ComponentError message="User not found" />;
   }
 
-  const { data: clientData } = await supabase
-    .from("client")
-    .select("*")
-    .eq("id", user.id)
-    .single();
-
   return (
     <div className="w-full">
       <AdvisorList user={user} />;
