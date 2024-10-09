@@ -17,6 +17,7 @@ export default async function Summarizer({ user, selectedAdvisor }) {
     .select()
     .eq("advisor_id", selectedAdvisor)
     .eq("client_id", user.id)
+    .limit(1)
     .maybeSingle();
 
   if (summaryError) {

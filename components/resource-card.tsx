@@ -72,7 +72,7 @@ export default function ResourceCard({ contentId, iconName }: ResourceCardProps)
           <Icon className="h-6 w-6 text-[#5C59E4]" />
         </div>
         <div className="flex-grow">
-          <h3 className="font-semibold text-[#2E2C72] truncate">{title}</h3>
+          <h3 className="font-semibold text-[#2E2C72] truncate text-wrap">{title}</h3>
         </div>
         <ChevronRight className="h-5 w-5 text-[#9CABC2] group-hover:text-[#5C59E4] transition-colors" />
       </CardContent>
