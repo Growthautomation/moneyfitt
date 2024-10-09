@@ -1,4 +1,5 @@
 import ChatContextProvider from "@/components/chat/chat-context";
+import Footer from "@/components/footer";
 import { createClient } from "@/lib/supabase/server";
 import "@/styles/globals.css";
 import { redirect } from "next/navigation";
@@ -25,6 +26,7 @@ export default async function ClientLayout({
   return (
     <ChatContextProvider userId={user?.id}>
       <Suspense fallback="Loading...">{children}</Suspense>
+      <Footer />
     </ChatContextProvider>
   );
 }
