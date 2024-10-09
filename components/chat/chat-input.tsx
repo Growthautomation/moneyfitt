@@ -144,6 +144,10 @@ export default function ChatInput({
                 onClick={(msg) => {
                   if (formRef.current?.message) {
                     formRef.current.message.value = msg;
+                    formRef.current.message.dispatchEvent(
+                      new Event("input", { bubbles: true })
+                    );
+                    formRef.current.message.focus();
                   }
                 }}
               />

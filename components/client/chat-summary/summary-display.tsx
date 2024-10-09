@@ -9,7 +9,12 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-export default function SummaryDisplay({ services, mainPoints, quickSummary, analysis }) {
+export default function SummaryDisplay({
+  services,
+  mainPoints,
+  quickSummary,
+  analysis,
+}) {
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
   const sectionVariants = {
@@ -80,8 +85,8 @@ export default function SummaryDisplay({ services, mainPoints, quickSummary, ana
           >
             <ul className="mt-4 space-y-2">
               {mainPoints.map((point, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="inline-block w-2 h-2 rounded-full bg-[#5C59E4] mt-2 mr-2"></span>
+                <li key={index} className="flex items-start space-x-2">
+                  <span className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-[#5C59E4]"></span>
                   <span className="text-[#222222]">{point}</span>
                 </li>
               ))}
@@ -113,8 +118,8 @@ export default function SummaryDisplay({ services, mainPoints, quickSummary, ana
           >
             <ul className="mt-4 space-y-2">
               {services.map((service, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="inline-block w-2 h-2 rounded-full bg-[#5C59E4] mt-2 mr-2"></span>
+                <li key={index} className="flex items-start space-x-2">
+                  <span className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-[#5C59E4]"></span>
                   <span className="text-[#222222]">{service}</span>
                 </li>
               ))}
@@ -145,12 +150,14 @@ export default function SummaryDisplay({ services, mainPoints, quickSummary, ana
             animate={activeSection === "analysis" ? "open" : "closed"}
           >
             <ul className="mt-4 space-y-2">
-              {(Array.isArray(analysis) ? analysis : [analysis]).map((point, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="inline-block w-2 h-2 rounded-full bg-[#5C59E4] mt-2 mr-2"></span>
-                  <span className="text-[#222222]">{point}</span>
-                </li>
-              ))}
+              {(Array.isArray(analysis) ? analysis : [analysis]).map(
+                (point, index) => (
+                  <li key={index} className="flex items-start space-x-2">
+                    <span className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-[#5C59E4]"></span>
+                    <span className="text-[#222222]">{point}</span>
+                  </li>
+                )
+              )}
             </ul>
           </motion.div>
         </motion.div>
