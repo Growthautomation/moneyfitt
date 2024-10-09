@@ -2,9 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
 import AdvisorDetail from "@/components/client/advisor-detail/deail";
-import { Suspense } from "react";
-import PageLoading from "@/components/utils/page-loading";
-
 
 interface ChatProps {
   params: {
@@ -28,14 +25,11 @@ export default async function ChatPage({ params, searchParams }: ChatProps) {
 
   return (
     <main className="container mx-auto px-4 py-8">
-      <Suspense fallback={<PageLoading />}>
-        <AdvisorDetail
-          advisorId={params.id}
-          user={user}
-          messageOffset={searchParams?.offset}
-        />
-      </Suspense>
-
+      <AdvisorDetail
+        advisorId={params.id}
+        user={user}
+        messageOffset={searchParams?.offset}
+      />
     </main>
   );
 }

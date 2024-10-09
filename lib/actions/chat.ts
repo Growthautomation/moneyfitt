@@ -107,7 +107,7 @@ export const getSuggestions = async (recipient: string) => {
   }
 
   if (suggestion?.last_message_id === messages[messages.length - 1]?.id) {
-    return suggestion.suggestions;
+    return (suggestion.suggestions as string[]) || [];
   }
   const { data: client } = await supabase
     .from("client")
@@ -155,5 +155,5 @@ export const getSuggestions = async (recipient: string) => {
   if (newSuggestionError) {
     throw newSuggestionError;
   }
-  return newSuggestion?.suggestions;
+  return (newSuggestion?.suggestions as string[]) || [];
 };
