@@ -38,7 +38,7 @@ export async function AdvisorProfileCard({
           </AvatarFallback>
         </Avatar>
         <div>
-          <CardTitle className="mt-4 text-2xl font-bold text-[#222222]">
+          <CardTitle className="mt-4 text-xl font-bold text-[#222222]">
             {`${advisor.first_name} ${advisor.last_name}`}
           </CardTitle>
           <CardDescription className="text-base font-medium text-[#4543AB]">
