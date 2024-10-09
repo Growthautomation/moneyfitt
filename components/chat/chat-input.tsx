@@ -92,7 +92,7 @@ export default function ChatInput({
             setExpand(false);
             setShowSuggestions(true);
           }}
-          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+          // onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
           className="flex-grow transition-all duration-300 ease-in-out min-h-[40px] max-h-[200px] resize-none overflow-y-auto h-[40px]"
           onInput={(e) => {
             const textarea = e.target as HTMLTextAreaElement;
@@ -131,7 +131,7 @@ export default function ChatInput({
         <div className="relative w-full">
           <div
             className={clsx(
-              "absolute top-0 left-0 right-0 mb-2 transition-all duration-300 ease-in-out",
+              "absolute top-[1rem] left-0 right-0 mb-2 transition-all duration-300 ease-in-out",
               {
                 "opacity-0 translate-y-4": !showSuggestion,
                 "opacity-100 translate-y-0": showSuggestion,

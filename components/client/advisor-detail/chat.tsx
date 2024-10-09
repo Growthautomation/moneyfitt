@@ -22,12 +22,17 @@ export default async function AdvisorChat({ user, advisor }: AdvisorChatProps) {
     .order("created_at", { ascending: false });
 
   if (!messages) {
-    console.error("client/advisor-detail/chat: Error fetching messages:", error);
+    console.error(
+      "client/advisor-detail/chat: Error fetching messages:",
+      error
+    );
     return <ComponentError message="Error loading messages" />;
   }
   return (
     <>
-      <ShareButton advisorId={advisor.id} />
+      <div className="m-2">
+        <ShareButton advisorId={advisor.id} />
+      </div>
       <Chat
         messages={messages.reverse()}
         recipentId={advisor.id}
