@@ -1,4 +1,5 @@
 import ComponentError from "@/components/utils/component-error";
+import { RedirectButton } from "@/components/utils/redirect-btn";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -30,20 +31,17 @@ export default async function Header({ selectedAdvisor, user }) {
   return (
     <div className="flex mb-6 border-b border-[#ECF0F3]">
       {advisors.map(({ advisor }) => (
-        <Link
+        <RedirectButton
           key={advisor?.id}
-          href={{
-            pathname: `/home`,
-            query: { advisorId: advisor?.id },
-          }}
-          className={`px-4 py-2 text-lg ${
+          href={`?advisorId=${advisor?.id}`}
+          className={`px-4 py-2 text-lg bg-transparent hover:bg-gray-200 border-0 outline-none shadow-none ring-0 ${
             selectedAdvisor === advisor?.id
               ? "text-[#5C59E4] border-b-2 border-[#5C59E4]"
               : "text-[#9CABC2]"
           }`}
         >
           {`${advisor?.first_name} ${advisor?.last_name}`}
-        </Link>
+        </RedirectButton>
       ))}
     </div>
   );

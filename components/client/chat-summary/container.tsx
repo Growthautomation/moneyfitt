@@ -1,14 +1,7 @@
-import Link from "next/link";
-import ChatSummary from "./summary-display";
-import { createClient } from "@/lib/supabase/server";
-import { callGPT4 } from "@/lib/utils";
-import { SUMMARY_PROMPT } from "@/lib/prompts";
-import ComponentError from "@/components/utils/component-error";
 import Header from "./summary-header";
 import { Suspense } from "react";
 import ComponentLoading from "@/components/utils/component-loading";
 import Summarizer from "./summarizer";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
 export default async function ChatSummaryContainer({ selectedAdvisor, user }) {
   return (
