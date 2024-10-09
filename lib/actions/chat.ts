@@ -87,37 +87,73 @@ export const getSuggestions = async (recipient: string) => {
     .select()
     .or(
       `and(sender.eq.${user?.id},recipient.eq.${recipient}),and(sender.eq.${recipient},recipient.eq.${user?.id})`
-    );
+    )
+    .order("created_at", { ascending: true });
 
+  if (error) {
+    throw error;
+  }
+
+  const { data: suggestion, error: suggestionError } = await supabase
+    .from("chat_suggestion")
+    .select()
+    .eq("client_id", user.id)
+    .eq("advisor_id", recipient)
+    .limit(1)
+    .maybeSingle();
+
+  if (suggestionError) {
+    throw suggestionError;
+  }
+
+  if (suggestion?.last_message_id === messages[messages.length - 1]?.id) {
+    return suggestion.suggestions;
+  }
   const { data: client } = await supabase
     .from("client")
     .select()
     .eq("id", user.id)
     .single();
 
+  let prompt = "";
+
   if (messages && messages.length > 0) {
     // Format the conversation text with speaker identification
-    const conversationText = messages.map(m => 
-      `${m.sender === user.id ? 'User' : 'Advisor'}: ${m.message}`
-    ).join("\n");
+    const conversationText = messages
+      .map((m) => `${m.sender === user.id ? "User" : "Advisor"}: ${m.message}`)
+      .join("\n");
 
     const userSummary = getUserAnswerSummary(client?.all_answers ?? {});
 
-    const prompt = GENERATE_QUESTIONS_PROMPT.replace(
+    prompt = GENERATE_QUESTIONS_PROMPT.replace(
       "{{CONVERSATION}}",
       conversationText
-    ).replace(
-      "{{USER}}",
-      JSON.stringify(userSummary)
-    );
-
-    return (await callGPT4(prompt, "")).split("||");
+    ).replace("{{USER}}", JSON.stringify(userSummary));
   } else {
     // Generate initial questions using GENERATE_INITIAL_QUESTIONS_PROMPT
-    const prompt = GENERATE_INITIAL_QUESTIONS_PROMPT.replace(
+    prompt = GENERATE_INITIAL_QUESTIONS_PROMPT.replace(
       "{{USER}}",
       JSON.stringify(client)
     );
-    return (await callGPT4(prompt, "")).split("||");
   }
+  const suggestions = (await callGPT4(prompt, "")).split("||");
+  const { data: newSuggestion, error: newSuggestionError } = await supabase
+    .from("chat_suggestion")
+    .upsert(
+      {
+        client_id: user.id,
+        advisor_id: recipient,
+        last_message_id: messages[messages.length - 1]?.id,
+        suggestions,
+      },
+      {
+        onConflict: "client_id,advisor_id",
+      }
+    )
+    .select()
+    .single();
+  if (newSuggestionError) {
+    throw newSuggestionError;
+  }
+  return newSuggestion?.suggestions;
 };

@@ -90,6 +90,33 @@ export type Database = {
         }
         Relationships: []
       }
+      chat_suggestion: {
+        Row: {
+          advisor_id: string
+          client_id: string
+          created_at: string
+          id: string
+          last_message_id: string | null
+          suggestions: Json[] | null
+        }
+        Insert: {
+          advisor_id?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          last_message_id?: string | null
+          suggestions?: Json[] | null
+        }
+        Update: {
+          advisor_id?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          last_message_id?: string | null
+          suggestions?: Json[] | null
+        }
+        Relationships: []
+      }
       client: {
         Row: {
           all_answers: Json | null
