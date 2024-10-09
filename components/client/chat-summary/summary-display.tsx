@@ -36,13 +36,13 @@ export default function SummaryDisplay({
         className="space-y-4"
       >
         <motion.div
-          className="bg-white rounded-lg p-6 cursor-pointer shadow-md border-l-4 border-[#5C59E4]"
+          className="bg-white rounded-lg p-3 cursor-pointer shadow-md border-l-4 border-[#5C59E4]"
           onClick={() => toggleSection("summary")}
           whileHover={{ scale: 1.01 }}
           transition={{ type: "spring", stiffness: 300 }}
         >
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold text-[#2E2C72] flex items-center">
+            <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
               <DollarSign className="mr-2 text-[#5C59E4]" />
               Quick Summary
             </h2>
@@ -62,13 +62,13 @@ export default function SummaryDisplay({
         </motion.div>
 
         <motion.div
-          className="bg-white rounded-lg p-6 cursor-pointer shadow-md border-l-4 border-[#5C59E4]"
+          className="bg-white rounded-lg p-3 cursor-pointer shadow-md border-l-4 border-[#5C59E4]"
           onClick={() => toggleSection("mainPoints")}
           whileHover={{ scale: 1.01 }}
           transition={{ type: "spring", stiffness: 300 }}
         >
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold text-[#2E2C72] flex items-center">
+            <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
               <BarChart className="mr-2 text-[#5C59E4]" />
               Main Points Discussed
             </h2>
@@ -95,13 +95,13 @@ export default function SummaryDisplay({
         </motion.div>
 
         <motion.div
-          className="bg-white rounded-lg p-6 cursor-pointer shadow-md border-l-4 border-[#5C59E4]"
+          className="bg-white rounded-lg p-3 cursor-pointer shadow-md border-l-4 border-[#5C59E4]"
           onClick={() => toggleSection("offered")}
           whileHover={{ scale: 1.01 }}
           transition={{ type: "spring", stiffness: 300 }}
         >
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold text-[#2E2C72] flex items-center">
+            <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
               <PieChart className="mr-2 text-[#5C59E4]" />
               Services Offered
             </h2>
@@ -128,13 +128,13 @@ export default function SummaryDisplay({
         </motion.div>
 
         <motion.div
-          className="bg-white rounded-lg p-6 cursor-pointer shadow-md border-l-4 border-[#5C59E4]"
+          className="bg-white rounded-lg p-3 cursor-pointer shadow-md border-l-4 border-[#5C59E4]"
           onClick={() => toggleSection("analysis")}
           whileHover={{ scale: 1.01 }}
           transition={{ type: "spring", stiffness: 300 }}
         >
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold text-[#2E2C72] flex items-center">
+            <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
               <TrendingUp className="mr-2 text-[#5C59E4]" />
               Analysis
             </h2>
