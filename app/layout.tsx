@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="absolute top-4 left-4 z-50">
+        <div className="absolute left-4 z-50 flex items-center h-[64px]"> {/* Adjusted positioning */}
           <Link href="/">
             <Image 
               src="https://xpjrqmknieuxbnpilskz.supabase.co/storage/v1/object/public/public-files/Full_colored@2x.webp" 

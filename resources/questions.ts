@@ -56,7 +56,7 @@ function createNode(
 export const welcome = () =>
   createNode(
     "intro",
-    "Let's understand your needs",
+    "Let's Understand Your Needs",
     "How confident are you about knowing where you need help?",
     "single",
     null,
@@ -79,8 +79,8 @@ export const welcome = () =>
 export const planningArea = () =>
   createNode(
     "broadScope",
-    "Determining your needs",
-    "What area of financial planning do you need help with?",
+    "Determining Your Needs",
+    "What areas of financial planning do you need help with?",
     "multiple",
     null,
     broadScope,
@@ -299,7 +299,7 @@ export const specializationNodes = {
     createNode(
       "specification",
       "Niche and Specialised Planning",
-      "Which aspects of niche and specialized planning do you need help with?",
+      "Which aspects of niche and specialised planning do you need help with?",
       "multiple",
       null,
       [
@@ -335,7 +335,7 @@ export const advisorReligionNode = () =>
   createNode(
     "preferReligion",
     "Advisor Preferences",
-    "Do you have any prefernces for your advisors by religion?",
+    "By religion?",
     "multiple",
     null,
     religion
@@ -345,7 +345,7 @@ export const advisorGenderNode = () =>
   createNode(
     "preferGender",
     "Advisor Preferences",
-    "Do you have any prefernces for your advisors by gender?",
+    "By gender?",
     "single",
     null,
     gender
@@ -355,7 +355,7 @@ export const advisorLanguageNode = () =>
   createNode(
     "preferLanguage",
     "Advisor Preferences",
-    "Do you have any prefernces for your advisors by language spoken?",
+    "By language spoken?",
     "multiple",
     null,
     languages
@@ -377,7 +377,7 @@ export const advisorAgeNode = () =>
   createNode(
     "preferAge",
     "Advisor Preferences",
-    "Do you have any preference in your advisors by age?",
+    "By age?",
     "multiple",
     null,
     ageGroups
@@ -387,7 +387,7 @@ export const preferredCompanyNode = () =>
   createNode(
     "preferCompany",
     "Advisor Preferences",
-    "Do you have any preference in your advisors by company or agency?",
+    "By company or agency?",
     "multiple",
     null,
     [
@@ -402,7 +402,7 @@ export const preferredCompanyNode = () =>
 export const additionalSpecification = () => createNode(
   'specification',
   "Advisor Preferences",
-  "What is most important to you in a Financial Advisor?",
+  "Do you request any of the following additional specialisations?",
   "multipleDropdown",
   null,
   narrowScope
@@ -415,7 +415,7 @@ export const startingFamilyNode = () =>
   createNode(
     "haveFamily",
     "About You",
-    "Have you started a family or starting one soon?",
+    "Have you started a family or are starting one soon?",
     "single",
     null,
     [
@@ -485,7 +485,7 @@ export const DTPDcoverageNode = () =>
     "Protection",
     "Do you have Death and Total Permanent Disability coverage worth 9x annual income?",
     "single",
-    "Death and Total Permanent Disability (TPD) coverage is typically included in life insurance policy like whole life, term life and investment-linked plans, either as standard feature or optional rider.",
+    "Death and Total Permanent Disability (TPD) coverage is typically included in life insurance policies like whole life, term life, and investment-linked plans, either as a standard feature or optional rider.",
     [
       { code: "YES", name: "Yes" },
       { code: "NO", name: "No" },
@@ -529,7 +529,7 @@ export const insuranceCoverageNode = () =>
   createNode(
     "insuranceCoverage",
     "Protection",
-    "Are you allocating 15% your take home income (after CPF contributions) to insurance?",
+    "Are you allocating 15% of your take home income (after CPF contributions) to insurance?",
     "single",
     null,
     [
@@ -596,7 +596,7 @@ export const investmentAdvise = (percent, skipBusy = false) =>
     [
       {
         code: "LEARNMORE",
-        name: "Investing is too complicated for me and I would like professional help with it.",
+        name: "Investing is too complicated for me and I would like professional help with it",
       },
       {
         code: "HELP",
@@ -605,9 +605,9 @@ export const investmentAdvise = (percent, skipBusy = false) =>
       ...(skipBusy
         ? []
         : [
-            { code: "BUSY", name: "I am too busy building my emergency fund." },
+            { code: "BUSY", name: "I am too busy building my emergency fund" },
           ]),
-      { code: "DEBT", name: "I am prioritising debt management." },
+      { code: "DEBT", name: "I am prioritising debt management" },
     ],
     (answers) => {
       switch (answers["investmentAdvise"]) {
@@ -660,7 +660,7 @@ export const reviewRetirementNode = () =>
   createNode(
     "retirementReview",
     "Retirement Planning",
-    "Well done. Would you like a professional to review your retirement planning?",
+    "Well done. Would you like a professional to review your retirement plan?",
     "single",
     null,
     [
@@ -683,7 +683,7 @@ export const considerRetirementNode = () =>
   createNode(
     "retirementConsider",
     "Retirement Planning",
-    "Consider starting! Would you like professional support on this metter?",
+    "Consider starting! Would you like professional support on this matter?",
     "single",
     null,
     [
@@ -705,7 +705,7 @@ export const considerRetirementNode = () =>
 export const lagacyPlanningNode = () =>
   createNode(
     "lagacyPlanning",
-    "Lagacy Planning",
+    "Legacy Planning",
     "Have you made your will and CPF nomination, and appointed trusted persons?",
     "single",
     null,
@@ -744,9 +744,9 @@ export const DTPDProtection = () =>
   createNode(
     "DTPDProtection",
     "Protection",
-    "Make sure you have the following coverage. \n 1. Death and Total Permanent Disability(TPD): 9x annual income \n 2. Critical illness: 4x annual income",
+    "Make sure you have the following coverage: \n 1. Death & Total Permanent Disability (TPD): 9x annual income. \n 2. Critical illness: 4x annual income",
     "single",
-    "Death and Total Permanent Disability (TPD) coverage is typically included in life insurance policy like whole life, term life and investment-linked plans, either as standard feature or optional rider.",
+    "Death and TPD coverage is typically included in life insurance policies like whole life, term life, and investment-linked plans, either as a standard feature or optional rider.",
     [
       { code: "YES", name: "I am covered" },
       {
@@ -794,7 +794,7 @@ export const insuranceFamilarity = () =>
   createNode(
     "insuranceFamilarity",
     "Protection",
-    "Are you familiar with the following?\n1. Home Insurance\n2. Fire and home content insurance\n3. MediShield Life\n4. CareShield Life/Elder Shield",
+    "Are you familiar with the following?:\n1. Home Insurance\n2. Fire and home content insurance\n3. MediShield Life\n4. CareShield Life/Elder Shield",
     "single",
     null,
     [
@@ -809,13 +809,13 @@ export const retirementGoals = () =>
   createNode(
     "retirementGoals",
     "Retirement Goals",
-    "Do you need professional support with either of the following?\n1. Unlocking the value of your assets\n2. CPF management, particularly CPF Life",
+    "Do you need professional support with either of the following?:\n1. Unlocking the value of your assets\n2. CPF management, particularly CPF Life",
     "single",
     null,
     [
       {
         code: "YES",
-        name: "I want help with both of these areas",
+        name: "I want help with one or both of these areas",
       },
       { code: "NO", name: "No help needed" },
     ],
@@ -835,8 +835,8 @@ export const personalQuestionsCover = () =>
   createNode(
     "cover",
     "Financial Needs Determined",
-    "We connect users with professionals who not only meet their financial needs but also understand and relate to their unique situations",
+    "We connect users with professionals who not only specialise in the financial support they need but also understand and relate to their unique situations.",
     "cover",
-    "You're almost there! Let's take a moment to learn about any personal preference you have for matches.",
+    "You're almost there! Let's take a moment to learn about any personal preferences you have for your advisor match. These steps are optional but will help us find a better fit for you.",
     []
   );
