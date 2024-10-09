@@ -43,6 +43,6 @@ export function parseSummaryResponse(response: string) {
     return summary;
   } catch (e) {
     console.error("client/chat-summary/helper: Error parsing summary response", e);
-    return summary
+    throw e;
   }
 }
