@@ -53,6 +53,8 @@ export const narrowScope = [
   { code: "MA", name: "Middle Aged (40-60)" },
   { code: "M", name: "Millennials" },
   { code: "P", name: "Pets" },
+  { code: "R", name: "Retirees" },
+  { code: "W", name: "Women" },
   { code: "PRP", name: "Pre-Retirement Planning" },
   { code: "PAP", name: "Property and Asset Protection" },
   { code: "RCP", name: "Retirement and CPF Planning" },

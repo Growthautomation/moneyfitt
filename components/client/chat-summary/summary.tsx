@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Header from "./summary-header";
-import { Advisor } from "@/types/advisor";
 import { getChatSummary } from "@/lib/actions/chat";
 import ComponentLoading from "@/components/utils/component-loading";
 import SummaryDisplay from "./summary-display";
