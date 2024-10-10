@@ -396,7 +396,7 @@ export const preferredCompanyNode = () =>
     "preferCompany",
     "Advisor Preferences",
     "Do you have any preference in your advisors by company or agency?",
-    "multiple",
+    "multipleDropdown",
     null,
     [
       { code: "bank", name: "Bank" },
