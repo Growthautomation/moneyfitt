@@ -74,7 +74,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
     setCurrentSlide((prevSlide) => (prevSlide - 1 + 3) % 3);
   };
 
-  const openWebsite = (url: string | undefined) => {
+  const openWebsite = (url: string | null | undefined) => {
     if (url) {
       window.open(ensureHttps(url), '_blank', 'noopener,noreferrer');
     }
@@ -98,7 +98,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
                   size="icon"
                   variant="outline"
                   className="rounded-full bg-[#FFFFFF] hover:bg-[#5C59E4] hover:text-white transition-colors"
-                  onClick={() => openWebsite(advisor.personal_website)}
+                  onClick={() => advisor.personal_website && openWebsite(advisor.personal_website)}
                 >
                   <Globe className="h-4 w-4" />
                   <span className="sr-only">Personal website</span>
@@ -109,7 +109,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
                   size="icon"
                   variant="outline"
                   className="rounded-full bg-[#FFFFFF] hover:bg-[#5C59E4] hover:text-white transition-colors"
-                  onClick={() => openWebsite(advisor.agency_website)}
+                  onClick={() => advisor.agency_website && openWebsite(advisor.agency_website)}
                 >
                   <Briefcase className="h-4 w-4" />
                   <span className="sr-only">Agency website</span>
