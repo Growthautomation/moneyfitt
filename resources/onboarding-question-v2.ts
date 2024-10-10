@@ -108,9 +108,17 @@ function getSupervisedQuestions() {
       };
       retiredN.next = function (answer) {
         if (answer[this.key] === "YES") {
-          return getGoldenYearsQuestions();
+          const n = getGoldenYearsQuestions();
+          n.prev = function () {
+            return retiredN;
+          };
+          return n;
         } else {
-          return getPreRetiredQuestions();
+          const n = getPreRetiredQuestions();
+          n.prev = function () {
+            return retiredN;
+          }
+          return n
         }
       };
       return retiredN;
@@ -131,7 +139,7 @@ function getSupervisedQuestions() {
     supportingParentN.next = function (answer) {
       if (answer["haveParents"] === "NO" && answer["haveFamily"] === "YES") {
         const n = getStartingFamilyQuestions();
-        // n.prev = function(){ return this}
+        n.prev = function(){ return supportingParentN}
         return n;
       }
       if (answer["haveParents"] === "NO" && answer["haveFamily"] === "NO") {
@@ -142,7 +150,7 @@ function getSupervisedQuestions() {
         return n;
       }
       const n = getSupportingParentQuestions();
-      // n.prev = function(){ return this}
+      n.prev = function(){ return supportingParentN}
       return n;
     };
     return startingFamilyN;

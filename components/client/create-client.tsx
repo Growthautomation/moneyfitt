@@ -4,14 +4,19 @@ import { useEffect } from "react";
 import { useLocalStorage } from "usehooks-ts";
 
 export default function CreateClient() {
-  const [answers, _] = useLocalStorage<Record<string, string | string[]>>("answers", {});
-
+  const [answers, _] = useLocalStorage<Record<string, string | string[]>>(
+    "answers",
+    {}
+  );
 
   useEffect(() => {
     createUserClient({
       name: answers["userName"] as string,
       broad_scope: answers["broadScope"],
-      narrow_scope: answers["specification"],
+      narrow_scope: [
+        ...((answers["specification"] as string[]) ?? []),
+        ...((answers["additionalSpecification"] as string[]) ?? []),
+      ],
       preferred_age_group: answers["preferAge"],
       preferred_advisor: answers["preferCompany"],
       preferred_language: answers["preferLanguage"],
@@ -20,7 +25,7 @@ export default function CreateClient() {
       all_answers: answers,
       contents: answers["contents"] as string[],
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return null;

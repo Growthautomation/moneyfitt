@@ -13,6 +13,7 @@ export type QNode = {
   category: string;
   question: string;
   description?: string | null;
+  title?: string | null;
   options: { code: string; name: string; description?: string }[];
   required: (answers: Record<string, string | string[]>) => boolean;
   answerModifier: (
@@ -37,7 +38,8 @@ function createNode(
   description: string | null = null,
   options: QNode["options"] = [],
   answerModifier: QNode["answerModifier"] = () => ({}),
-  required: QNode["required"] = () => false
+  required: QNode["required"] = () => false,
+  title: string | null = null
 ): QNode {
   return {
     key,
@@ -45,6 +47,7 @@ function createNode(
     question,
     options,
     type,
+    title,
     description,
     answerModifier,
     required,
@@ -71,7 +74,12 @@ export const welcome = () =>
       },
     ],
     (answers) => ({
-      contents: ["6601", "6651", "6701", ...((answers["contents"] as string[]) || [])]
+      contents: [
+        "6601",
+        "6651",
+        "6701",
+        ...((answers["contents"] as string[]) || []),
+      ],
     }),
     ({ intro }) => !intro
   );
@@ -399,14 +407,15 @@ export const preferredCompanyNode = () =>
     ]
   );
 
-export const additionalSpecification = () => createNode(
-  'specification',
-  "Advisor Preferences",
-  "What is most important to you in a Financial Advisor?",
-  "multipleDropdown",
-  null,
-  narrowScope
-)
+export const additionalSpecification = () =>
+  createNode(
+    "additionalSpecification",
+    "Advisor Preferences",
+    "What is most important to you in a Financial Advisor?",
+    "multipleDropdown",
+    null,
+    narrowScope.filter((item) => ["GZ", "MA", "M"].includes(item.code))
+  );
 
 export const userNameNode = () =>
   createNode("userName", "Personal Information", "What is your name?", "text");
@@ -476,7 +485,8 @@ export const emegencyFundNode = () =>
           : []),
       ],
     }),
-    ({ emergencyFund }) => !emergencyFund
+    ({ emergencyFund }) => !emergencyFund,
+    "Your Financial Planning"
   );
 
 export const DTPDcoverageNode = () =>
@@ -745,7 +755,7 @@ export const DTPDProtection = () =>
     "DTPDProtection",
     "Protection",
     "Make sure you have the following coverage. \n 1. Death and Total Permanent Disability(TPD): 9x annual income \n 2. Critical illness: 4x annual income",
-    "single",
+    "multiple",
     "Death and Total Permanent Disability (TPD) coverage is typically included in life insurance policy like whole life, term life and investment-linked plans, either as standard feature or optional rider.",
     [
       { code: "YES", name: "I am covered" },
@@ -760,32 +770,20 @@ export const DTPDProtection = () =>
       { code: "RESOURCE", name: "I want resources for this area" },
     ],
     (answers) => {
-      switch (answers["DTPDProtection"]) {
-        case "CRITAL_ILLNESS":
-          return {
-            specification: [
-              ...((answers["specification"] as string[]) || []),
-              ...(!answers["specification"]?.includes("CIIP") ? ["CIIP"] : []),
-            ],
-          } as never;
-        case "DTPD":
-          return {
-            specification: [
-              ...((answers["specification"] as string[]) || []),
-              ...(!answers["specification"]?.includes("LI") ? ["LI"] : []),
-            ],
-          } as never;
-        case "RESOURCE":
-          return {
-            contents: [
-              ...((answers["contents"] as string[]) || []),
-              "2851",
-              "3303",
-            ],
-          } as never;
-        default:
-          return {};
-      }
+      const ans = answers["DTPDProtection"] ?? [];
+      const modified = {
+        specification: [...((answers["specification"] as string[]) || [])],
+        contents: [...((answers["contents"] as string[]) || [])],
+      };
+      if (
+        ans.includes("CRITAL_ILLNESS") &&
+        !modified.specification.includes("CIIP")
+      )
+        modified.specification.push("CIIP");
+      if (ans.includes("DTPD") && !modified.specification.includes("LI"))
+        modified.specification.push("LI");
+      if (ans.includes("RESOURCE")) modified.contents.push("2851", "3303");
+      return modified;
     },
     ({ DTPDProtection }) => !DTPDProtection
   );
@@ -794,7 +792,7 @@ export const insuranceFamilarity = () =>
   createNode(
     "insuranceFamilarity",
     "Protection",
-    "Are you familiar with the following?\n1. Home Insurance\n2. Fire and home content insurance\n3. MediShield Life\n4. CareShield Life/Elder Shield",
+    "Are you familiar with the following?:\n1. Home Insurance\n2. Fire and home content insurance\n3. MediShield Life\n4. CareShield Life/Elder Shield",
     "single",
     null,
     [
