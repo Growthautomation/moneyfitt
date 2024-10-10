@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Globe,
   Image as ImageIcon,
+  FileCheck,
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -44,18 +45,7 @@ const ensureHttps = (url: string): string => {
   return url;
 };
 
-// Add this helper function at the top of the file, after other helper functions
-const renderTestimonial = (testimonial: Json): string => {
-  if (typeof testimonial === 'string') {
-    return testimonial;
-  } else if (typeof testimonial === 'object' && testimonial !== null) {
-    // Assuming the testimonial object has a 'text' field
-    return (testimonial as { text?: string }).text || '';
-  }
-  return '';
-};
-
-// Add this helper function at the top of the file
+// Helper function to parse image paths
 const parseImagePaths = (images: Json | null): string[] => {
   if (!images) return [];
   if (Array.isArray(images)) return images.filter(img => typeof img === 'string');
@@ -189,18 +179,18 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
               </h2>
               <div className="flex flex-wrap gap-2">
                 {parseField(advisor.broad_scope).map((spec: string) => (
-                  <Badge key={spec} variant="secondary" className="bg-[#4543AB] text-white">
+                  <Badge key={spec} variant="secondary" className="bg-[#5C59E4] text-white hover:bg-[#4543AB]">
                     {broadScope.find((s) => s.code === spec)?.name || spec}
                   </Badge>
                 ))}
                 {parseField(advisor.narrow_scope).map((spec: string) => (
-                  <Badge key={spec} variant="secondary" className="bg-[#8583EB] text-white">
+                  <Badge key={spec} variant="secondary" className="bg-[#8583EB] text-white hover:bg-[#4543AB]">
                     {narrowScope.find((s) => s.code === spec)?.name || spec}
                   </Badge>
                 ))}
               </div>
             </section>
-          )}
+          )}  
 
           {advisor.languages && (
             <section className="space-y-2">
@@ -252,7 +242,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
           {advisor.certifications && (
             <section className="space-y-2">
               <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-                <Award className="mr-2 text-[#5C59E4]" /> Certifications
+                <FileCheck className="mr-2 text-[#5C59E4]" /> Certifications
               </h2>
               <ul className="space-y-2 text-[#222222]">
                 {parseField(advisor.certifications).map((cert: string, index: number) => (
@@ -265,12 +255,36 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
             </section>
           )}
 
+          {advisor.awards && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
+                <Award className="mr-2 text-[#5C59E4]" /> Awards
+              </h2>
+              <ul className="space-y-2 text-[#222222]">
+                {parseField(advisor.awards).map((award: string, index: number) => (
+                  <li key={index} className="flex items-start">
+                    <span className="mr-2 text-[#5C59E4]">•</span>
+                    <span>{award}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
           {advisor.testinomial && (
             <section className="space-y-2">
-              <h2 className="text-xl font-semibold text-[#2E2C72]">Testimonial</h2>
-              <blockquote className="border-l-4 border-[#5C59E4] pl-4 italic text-[#222222] bg-[#ECF0F3] p-3 rounded">
-                <p>&ldquo;{renderTestimonial(advisor.testinomial)}&rdquo;</p>
-              </blockquote>
+              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
+                <Star className="mr-2 text-[#5C59E4]" /> Testimonials
+              </h2>
+              <ul className="space-y-2 text-[#222222]">
+                {parseField(advisor.testinomial).map((testimonial: string, index: number) => (
+                  <li key={index}>
+                    <blockquote className="border-l-4 border-[#5C59E4] pl-4 italic text-[#222222] bg-[#ECF0F3] p-3 rounded">
+                      <p>&ldquo;{testimonial}&rdquo;</p>
+                    </blockquote>
+                  </li>
+                ))}
+              </ul>
             </section>
           )}
 
