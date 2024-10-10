@@ -108,7 +108,7 @@ export const getSuggestions = async (recipient: string) => {
     throw suggestionError;
   }
 
-  if (suggestion?.last_message_id === messages[messages.length - 1]?.id) {
+  if (suggestion && suggestion?.last_message_id === messages[messages.length - 1]?.id) {
     return (suggestion.suggestions as string[]) || [];
   }
   const { data: client } = await supabase
