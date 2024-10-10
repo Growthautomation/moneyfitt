@@ -23,9 +23,9 @@ export default async function AdvisorList({ user }: { user: User }) {
   }
 
   return (
-    <div className="flex gap-6 flex-wrap flex-row auto-row-fr">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {advisors.map(({ advisor_id, advisor }) => (
-        <div key={advisor_id} className="h-full grow min-w-[10rem] w-[13rem]">
+        <div key={advisor_id}>
           <AdvisorProfileCard
             advisor={advisor as never}
             redirectTo={`/chat/${advisor_id}`}

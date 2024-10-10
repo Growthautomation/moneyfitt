@@ -45,7 +45,7 @@ export async function AdvisorProfileCard({
             {advisor.title}
           </CardDescription>
         </div>
-        <CardDescription className="mt-2 text-sm text-[#222222] max-h-24 overflow-y-auto">
+        <CardDescription className="mt-2 text-sm text-[#222222] line-clamp-3">
           {advisor.bio}
         </CardDescription>
       </CardHeader>
@@ -55,8 +55,8 @@ export async function AdvisorProfileCard({
             <h3 className="font-semibold mb-2 text-[#2E2C72]">
               Specializations
             </h3>
-            <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
-              {(advisor?.narrow_scope as string[])?.map((scope, idx) => (
+            <div className="flex flex-wrap gap-2">
+              {(advisor?.narrow_scope as string[])?.slice(0, 3).map((scope, idx) => (
                 <Badge
                   key={idx}
                   variant="secondary"
@@ -65,6 +65,11 @@ export async function AdvisorProfileCard({
                   {narrowScope.find((n) => n.code === scope)?.name ?? scope}
                 </Badge>
               ))}
+              {(advisor?.narrow_scope as string[])?.length > 3 && (
+                <Badge variant="secondary" className="bg-[#D6D5F8] text-[#2E2C72]">
+                  +{(advisor?.narrow_scope as string[]).length - 3} more
+                </Badge>
+              )}
             </div>
           </div>
           <div>
@@ -86,9 +91,8 @@ export async function AdvisorProfileCard({
               </div>
               <div className="flex items-center">
                 <CheckCircle2 className="h-5 w-5 text-[#5C59E4] mr-2 flex-shrink-0" />
-                <span className="text-sm text-[#222222]">
-                  Shares interests in Health & Wellness and Family-Oriented
-                  Planning
+                <span className="text-sm text-[#222222] line-clamp-2">
+                  Shares interests in Health & Wellness and Family-Oriented Planning
                 </span>
               </div>
             </div>
