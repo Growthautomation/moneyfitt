@@ -12,14 +12,36 @@ import {
   User,
   ChevronLeft,
   ChevronRight,
-  Linkedin,
-  Twitter,
+  Globe,
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Advisor } from "@/types/advisor";
 import { createClient } from "@/lib/supabase/client";
-import { languages, narrowScope } from "@/lib/constants";
+import { languages, narrowScope, broadScope, religion } from "@/lib/constants";
+
+// Helper function to safely parse JSON or split comma-separated strings
+const parseField = (field: any): string[] => {
+  if (!field) return [];
+  if (Array.isArray(field)) return field;
+  if (typeof field === 'string') {
+    try {
+      const parsed = JSON.parse(field);
+      return Array.isArray(parsed) ? parsed : [parsed];
+    } catch {
+      return field.split(',').map(item => item.trim());
+    }
+  }
+  return [String(field)];
+};
+
+// Helper function to ensure URL has a protocol
+const ensureHttps = (url: string): string => {
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    return `https://${url}`;
+  }
+  return url;
+};
 
 export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -52,6 +74,12 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
     setCurrentSlide((prevSlide) => (prevSlide - 1 + 3) % 3);
   };
 
+  const openWebsite = (url: string | undefined) => {
+    if (url) {
+      window.open(ensureHttps(url), '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <div className="h-full">
       <Card className="bg-[#FFFFFF] h-full overflow-hidden shadow-lg border-[#5C59E4] border-t-4">
@@ -65,185 +93,197 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
               className="rounded-full border-4 border-[#FFFFFF] shadow-lg"
             />
             <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
-              <Button
-                size="icon"
-                variant="outline"
-                className="rounded-full bg-[#FFFFFF] hover:bg-[#5C59E4] hover:text-white transition-colors"
-              >
-                <Linkedin className="h-4 w-4" />
-                <span className="sr-only">LinkedIn profile</span>
-              </Button>
-              <Button
-                size="icon"
-                variant="outline"
-                className="rounded-full bg-[#FFFFFF] hover:bg-[#5C59E4] hover:text-white transition-colors"
-              >
-                <Twitter className="h-4 w-4" />
-                <span className="sr-only">Twitter profile</span>
-              </Button>
+              {advisor.personal_website && (
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className="rounded-full bg-[#FFFFFF] hover:bg-[#5C59E4] hover:text-white transition-colors"
+                  onClick={() => openWebsite(advisor.personal_website)}
+                >
+                  <Globe className="h-4 w-4" />
+                  <span className="sr-only">Personal website</span>
+                </Button>
+              )}
+              {advisor.agency_website && (
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className="rounded-full bg-[#FFFFFF] hover:bg-[#5C59E4] hover:text-white transition-colors"
+                  onClick={() => openWebsite(advisor.agency_website)}
+                >
+                  <Briefcase className="h-4 w-4" />
+                  <span className="sr-only">Agency website</span>
+                </Button>
+              )}
             </div>
           </div>
           <div className="text-center sm:text-left flex-grow">
             <CardTitle className="text-3xl font-bold break-words text-[#222222]">{`${advisor.first_name} ${advisor.last_name}`}</CardTitle>
-            <p className="text-sm text-[#4543AB] font-medium break-words mt-1">
-              Certified Financial Planner & Chartered Financial Consultant(Dummy)
-            </p>
+            {advisor.tagline && (
+              <p className="text-sm text-[#4543AB] font-medium break-words mt-1">
+                {advisor.tagline}
+              </p>
+            )}
+            <div className="mt-2 flex flex-wrap gap-2">
+              {advisor.current_company && (
+                <Badge variant="secondary" className="bg-[#5C59E4] text-white hover:bg-[#4543AB]">
+                  {advisor.current_company}
+                </Badge>
+              )}
+              {advisor.religion && (
+                <Badge variant="outline" className="border-[#5C59E4] text-[#2E2C72]">
+                  {religion.find(r => r.code === advisor.religion)?.name || advisor.religion}
+                </Badge>
+              )}
+            </div>
           </div>
         </CardHeader>
         <CardContent className="grid gap-6 p-6">
-          <section className="space-y-2">
-            <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-              <User className="mr-2 flex-shrink-0 text-[#5C59E4]" /> Professional Summary
-            </h2>
-            <p className="text-[#222222] break-words">{advisor.bio}</p>
-          </section>
+          {advisor.bio && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
+                <User className="mr-2 flex-shrink-0 text-[#5C59E4]" /> Bio
+              </h2>
+              <p className="text-[#222222] break-words">{advisor.bio}</p>
+            </section>
+          )}
 
-          <section className="space-y-2">
-            <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-              <Star className="mr-2 flex-shrink-0 text-[#5C59E4]" /> Specializations
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {(advisor.narrow_scope as string[])?.map((spec) => (
-                <Badge key={spec} variant="secondary" className="bg-[#8583EB] text-white hover:bg-[#4543AB]">
-                  {narrowScope.find((s) => s.code === spec)?.name}
-                </Badge>
-              ))}
-            </div>
-          </section>
-
-          <section className="space-y-2">
-            <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-              <Languages className="mr-2 text-[#5C59E4]" /> Languages Spoken
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {(advisor.languages as string[])?.map((lang) => (
-                <Badge key={lang} variant="outline" className="border-[#5C59E4] text-[#2E2C72]">
-                  {languages.find((l) => l.code === lang)?.name}
-                </Badge>
-              ))}
-            </div>
-          </section>
-
-          <section className="space-y-2">
-            <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-              <GraduationCap className="mr-2 text-[#5C59E4]" /> Education
-            </h2>
-            <ul className="list-disc list-inside text-[#222222] space-y-1">
-              {(advisor.education as string[]).map((e) => (
-                <li key={e}>{e}</li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="space-y-2">
-            <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-              <Briefcase className="mr-2 text-[#5C59E4]" /> Professional Experience
-            </h2>
-            <ul className="space-y-2 text-[#222222]">
-              {(advisor.professional_background as string[])?.map((exp) => (
-                <li key={exp} className="flex items-start">
-                  <span className="mr-2 text-[#5C59E4]">•</span>
-                  <span>{exp}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="space-y-2">
-            <h2 className="text-xl font-semibold text-[#2E2C72]">Approach & Philosophy</h2>
-            <blockquote className="border-l-4 border-[#5C59E4] pl-4 italic text-[#222222] bg-[#ECF0F3] p-3 rounded">
-              &ldquo;I believe in creating personalized, long-term strategies
-              that align with my clients&apos; values and goals. By taking a
-              holistic approach, I help clients navigate life&apos;s financial
-              complexities and ensure they are well-prepared for the
-              future.&rdquo;(dummy)
-            </blockquote>
-          </section>
-
-          <section className="space-y-2">
-            <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-              <Award className="mr-2 text-[#5C59E4]" /> Awards & Recognition
-            </h2>
-            <ul className="list-disc list-inside text-[#222222] space-y-1">
-              <li>
-                &ldquo;Top Financial Advisor in Singapore 2022&rdquo; by
-                Financial Times
-              </li>
-              <li>
-                &ldquo;Best Client Service Award&rdquo; by Wealth Management
-                Asia
-              </li>
-            </ul>
-          </section>
-
-          <section className="space-y-2">
-            <h2 className="text-xl font-semibold text-[#2E2C72]">Personal Interests & Hobbies</h2>
-            <ul className="text-[#222222] flex flex-wrap gap-2 my-2">
-              {(advisor?.personal_interests as string[]).map((interest) => (
-                <li key={interest} className="bg-[#D6D5F8] text-[#2E2C72] rounded-full px-3 py-1 text-sm font-medium">
-                  {interest}
-                </li>
-              ))}
-            </ul>
-            <div className="relative w-full h-64 overflow-hidden rounded-lg shadow-md">
-              <div
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-              >
-                <Image
-                  src="/lib/images/Pacific-Beach-Half-Marathon-Start-Line-3200x2133.jpg"
-                  alt="John Doe hiking"
-                  width={384}
-                  height={256}
-                  className="flex-shrink-0 object-cover"
-                />
-                <Image
-                  src="/lib/images/images (3).jpg"
-                  alt="John Doe running a marathon"
-                  width={384}
-                  height={256}
-                  className="flex-shrink-0 object-cover"
-                />
-                <Image
-                  src="/lib/images/happy-three-generation-asian-family-600nw-2226442045.webp"
-                  alt="John Doe with family"
-                  width={384}
-                  height={256}
-                  className="flex-shrink-0 object-cover"
-                />
-              </div>
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-[#5C59E4] hover:text-white transition-colors"
-                onClick={prevSlide}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                <span className="sr-only">Previous slide</span>
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-[#5C59E4] hover:text-white transition-colors"
-                onClick={nextSlide}
-              >
-                <ChevronRight className="h-4 w-4" />
-                <span className="sr-only">Next slide</span>
-              </Button>
-              <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                {[0, 1, 2].map((index) => (
-                  <button
-                    key={index}
-                    className={`w-2 h-2 rounded-full transition-colors ${
-                      currentSlide === index ? "bg-[#5C59E4]" : "bg-[#9CABC2]"
-                    }`}
-                    onClick={() => setCurrentSlide(index)}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
+          {(advisor.broad_scope || advisor.narrow_scope) && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
+                <Star className="mr-2 flex-shrink-0 text-[#5C59E4]" /> Specializations
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {parseField(advisor.broad_scope).map((spec: string) => (
+                  <Badge key={spec} variant="secondary" className="bg-[#4543AB] text-white">
+                    {broadScope.find((s) => s.code === spec)?.name || spec}
+                  </Badge>
+                ))}
+                {parseField(advisor.narrow_scope).map((spec: string) => (
+                  <Badge key={spec} variant="secondary" className="bg-[#8583EB] text-white">
+                    {narrowScope.find((s) => s.code === spec)?.name || spec}
+                  </Badge>
                 ))}
               </div>
-            </div>
-          </section>
+            </section>
+          )}
+
+          {advisor.languages && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
+                <Languages className="mr-2 text-[#5C59E4]" /> Languages
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {parseField(advisor.languages).map((lang: string) => (
+                  <Badge key={lang} variant="outline" className="border-[#5C59E4] text-[#2E2C72]">
+                    {languages.find((l) => l.code === lang)?.name || lang}
+                  </Badge>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {advisor.education && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
+                <GraduationCap className="mr-2 text-[#5C59E4]" /> Education
+              </h2>
+              <ul className="space-y-2 text-[#222222]">
+                {parseField(advisor.education).map((edu: string, index: number) => (
+                  <li key={index} className="flex items-start">
+                    <span className="mr-2 text-[#5C59E4]">•</span>
+                    <span>{edu}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {advisor.professional_background && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
+                <Briefcase className="mr-2 text-[#5C59E4]" /> Professional Background
+              </h2>
+              <ul className="space-y-2 text-[#222222]">
+                {parseField(advisor.professional_background).map((exp: string, index: number) => (
+                  <li key={index} className="flex items-start">
+                    <span className="mr-2 text-[#5C59E4]">•</span>
+                    <span>{exp}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {advisor.certifications && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
+                <Award className="mr-2 text-[#5C59E4]" /> Certifications
+              </h2>
+              <ul className="space-y-2 text-[#222222]">
+                {parseField(advisor.certifications).map((cert: string, index: number) => (
+                  <li key={index} className="flex items-start">
+                    <span className="mr-2 text-[#5C59E4]">•</span>
+                    <span>{cert}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {advisor.testinomial && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72]">Testimonial</h2>
+              <blockquote className="border-l-4 border-[#5C59E4] pl-4 italic text-[#222222] bg-[#ECF0F3] p-3 rounded">
+                <p>&ldquo;{advisor.testinomial}&rdquo;</p>
+              </blockquote>
+            </section>
+          )}
+
+          {advisor.personal_interests && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72]">Personal Interests</h2>
+              <ul className="text-[#222222] flex flex-wrap gap-2 my-2">
+                {parseField(advisor.personal_interests).map((interest: string, index: number) => (
+                  <li key={index} className="bg-[#D6D5F8] text-[#2E2C72] rounded-full px-3 py-1 text-sm font-medium">
+                    {interest}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {advisor.images && advisor.images.length > 0 && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72]">Personal Interests & Hobbies</h2>
+              <div className="relative w-full h-64 overflow-hidden rounded-lg shadow-md">
+                {advisor.images.map((image, index) => (
+                  <Image
+                    key={index}
+                    src={image}
+                    alt={`Advisor interest ${index + 1}`}
+                    layout="fill"
+                    objectFit="cover"
+                    className={`absolute top-0 left-0 transition-opacity duration-500 ${
+                      index === currentSlide ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
+                ))}
+                <button
+                  onClick={prevSlide}
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
+                >
+                  <ChevronLeft size={24} />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
+                >
+                  <ChevronRight size={24} />
+                </button>
+              </div>
+            </section>
+          )}
         </CardContent>
       </Card>
     </div>
