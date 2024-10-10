@@ -14,6 +14,7 @@ export type Database = {
           age_group: string | null
           agency_website: string | null
           awards: Json | null
+          tagline: string | null
           bio: string | null
           broad_scope: Json | null
           certifications: Json | null
@@ -31,6 +32,7 @@ export type Database = {
           personal_website: string | null
           professional_background: Json | null
           profile_img: string | null
+          secondary_images: Json | null
           religion: string | null
           social_profiles: Json | null
           testinomial: Json | null
@@ -40,6 +42,7 @@ export type Database = {
           age_group?: string | null
           agency_website?: string | null
           awards?: Json | null
+          tagline?: string | null
           bio?: string | null
           broad_scope?: Json | null
           certifications?: Json | null
@@ -57,6 +60,7 @@ export type Database = {
           personal_website?: string | null
           professional_background?: Json | null
           profile_img?: string | null
+          secondary_images?: Json | null
           religion?: string | null
           social_profiles?: Json | null
           testinomial?: Json | null
@@ -66,6 +70,7 @@ export type Database = {
           age_group?: string | null
           agency_website?: string | null
           awards?: Json | null
+          tagline?: string | null
           bio?: string | null
           broad_scope?: Json | null
           certifications?: Json | null
@@ -83,6 +88,7 @@ export type Database = {
           personal_website?: string | null
           professional_background?: Json | null
           profile_img?: string | null
+          secondary_images?: Json | null
           religion?: string | null
           social_profiles?: Json | null
           testinomial?: Json | null
