@@ -51,7 +51,6 @@ export function Faq() {
 
   return (
     <div className="w-full mt-8">
-      
       <div className="space-y-6">
         {faqs.map((faq, index) => (
           <div key={index} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">

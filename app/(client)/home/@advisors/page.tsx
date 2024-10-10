@@ -13,7 +13,7 @@ export default async function Advisors() {
 
   return (
     <div className="w-full">
-      <AdvisorList user={user} />;
+      <AdvisorList user={user} />
     </div>
   );
 }

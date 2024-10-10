@@ -414,7 +414,7 @@ export const additionalSpecification = () =>
     "What is most important to you in a Financial Advisor?",
     "multipleDropdown",
     null,
-    narrowScope.filter((item) => ["GZ", "MA", "M"].includes(item.code))
+    narrowScope.filter((item) => ["GZ", "MA", "M", "W"].includes(item.code))
   );
 
 export const userNameNode = () =>
