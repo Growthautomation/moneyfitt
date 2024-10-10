@@ -55,6 +55,14 @@ const renderTestimonial = (testimonial: Json): string => {
   return '';
 };
 
+// Add this helper function at the top of the file
+const parseImagePaths = (images: Json | null): string[] => {
+  if (!images) return [];
+  if (Array.isArray(images)) return images.filter(img => typeof img === 'string');
+  if (typeof images === 'string') return [images];
+  return [];
+};
+
 export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [profile, setProfile] = useState<string | null>(null);
@@ -75,10 +83,11 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
 
   useEffect(() => {
     const fetchSecondaryImages = async () => {
-      if (advisor.secondary_images && Array.isArray(advisor.secondary_images)) {
+      const imagePaths = parseImagePaths(advisor.secondary_images);
+      if (imagePaths.length > 0) {
         const supabase = createClient();
         const imageUrls = await Promise.all(
-          advisor.secondary_images.map(async (imagePath) => {
+          imagePaths.map(async (imagePath) => {
             const { data } = await supabase.storage
               .from("public-files")
               .getPublicUrl(imagePath);
