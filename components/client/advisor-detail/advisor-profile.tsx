@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Globe,
+  Image as ImageIcon,
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -57,32 +58,45 @@ const renderTestimonial = (testimonial: Json): string => {
 export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [profile, setProfile] = useState<string | null>(null);
+  const [secondaryImages, setSecondaryImages] = useState<string[]>([]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % 3);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const supabase = createClient();
-      const { data } = await supabase.storage
-        .from("public-files")
-        .getPublicUrl(advisor.profile_img ?? "");
-      setProfile(data?.publicUrl);
+    const fetchProfileImage = async () => {
+      if (advisor.profile_img) {
+        const supabase = createClient();
+        const { data } = await supabase.storage
+          .from("public-files")
+          .getPublicUrl(advisor.profile_img);
+        setProfile(data?.publicUrl || null);
+      }
     };
-    fetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    fetchProfileImage();
+  }, [advisor.profile_img]);
+
+  useEffect(() => {
+    const fetchSecondaryImages = async () => {
+      if (advisor.secondary_images && Array.isArray(advisor.secondary_images)) {
+        const supabase = createClient();
+        const imageUrls = await Promise.all(
+          advisor.secondary_images.map(async (imagePath) => {
+            const { data } = await supabase.storage
+              .from("public-files")
+              .getPublicUrl(imagePath);
+            return data?.publicUrl || "";
+          })
+        );
+        setSecondaryImages(imageUrls.filter(url => url !== ""));
+      }
+    };
+    fetchSecondaryImages();
+  }, [advisor.secondary_images]);
 
   const nextSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % 3);
+    setCurrentSlide((prev) => (prev + 1) % secondaryImages.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide - 1 + 3) % 3);
+    setCurrentSlide((prev) => (prev - 1 + secondaryImages.length) % secondaryImages.length);
   };
 
   const openWebsite = (url: string | null | undefined) => {
@@ -264,37 +278,56 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
             </section>
           )}
 
-          {advisor.images && advisor.images.length > 0 && (
-            <section className="space-y-2">
-              <h2 className="text-xl font-semibold text-[#2E2C72]">Personal Interests & Hobbies</h2>
-              <div className="relative w-full h-64 overflow-hidden rounded-lg shadow-md">
-                {advisor.images.map((image, index) => (
-                  <Image
-                    key={index}
-                    src={image}
-                    alt={`Advisor interest ${index + 1}`}
-                    layout="fill"
-                    objectFit="cover"
-                    className={`absolute top-0 left-0 transition-opacity duration-500 ${
-                      index === currentSlide ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  />
-                ))}
-                <button
-                  onClick={prevSlide}
-                  className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-                <button
-                  onClick={nextSlide}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
-                >
-                  <ChevronRight size={24} />
-                </button>
-              </div>
-            </section>
-          )}
+          <section className="space-y-2">
+            <div className="relative w-full h-64 overflow-hidden rounded-lg shadow-md">
+              {secondaryImages.length > 0 ? (
+                <>
+                  <div 
+                    className="flex transition-transform duration-300 ease-in-out" 
+                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                  >
+                    {secondaryImages.map((image, index) => (
+                      <Image
+                        key={index}
+                        src={image}
+                        alt={`Advisor interest ${index + 1}`}
+                        width={400}
+                        height={300}
+                        objectFit="cover"
+                        className="flex-shrink-0 w-full h-64"
+                      />
+                    ))}
+                  </div>
+                  <button
+                    onClick={prevSlide}
+                    className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+                  <button
+                    onClick={nextSlide}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                  <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                    {secondaryImages.map((_, index) => (
+                      <div
+                        key={index}
+                        className={`w-2 h-2 rounded-full ${
+                          index === currentSlide ? 'bg-white' : 'bg-gray-400'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="flex items-center justify-center w-full h-full bg-gray-100">
+                  <ImageIcon className="w-16 h-16 text-gray-400" />
+                </div>
+              )}
+            </div>
+          </section>
         </CardContent>
       </Card>
     </div>
