@@ -79,7 +79,8 @@ export async function AdvisorProfileCard({
             </h3>
             <p className="text-sm text-[#222222]">
               {(advisor.languages as string[])
-                ?.map((lang) => languages.find((l) => l.code === lang)?.name)
+                ?.map((lang) => languages.find((l) => l.code === lang)?.name || lang)
+                .filter(Boolean)
                 .join(", ")}
             </p>
           </div>
