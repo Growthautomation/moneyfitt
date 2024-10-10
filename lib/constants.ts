@@ -66,6 +66,14 @@ export const narrowScope = [
   { code: "WCI", name: "Wealth Creation and Investments" },
 ];
 
+export const subNarrowScope = [
+  { code: "GZ", name: "Gen Z" },
+  { code: "MA", name: "Middle Aged (40-60)" },
+  { code: "M", name: "Millennials" },
+  { code: "RCP", name: "Retirement and CPF Planning" }, // Using this as a proxy for "Retirees"
+  { code: "FCP", name: "Family and Child Planning" }, // Using this as a proxy for "Young Families"
+];
+
 export const ageGroups = [
   {
     code: "A1",

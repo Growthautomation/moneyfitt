@@ -5,6 +5,7 @@ import {
   languages,
   ageGroups,
   narrowScope,
+  subNarrowScope,
 } from "@/lib/constants";
 import { intersection } from "lodash";
 
@@ -405,7 +406,7 @@ export const additionalSpecification = () => createNode(
   "Do you request any of the following additional specialisations?",
   "multipleDropdown",
   null,
-  narrowScope
+  subNarrowScope
 )
 
 export const userNameNode = () =>
