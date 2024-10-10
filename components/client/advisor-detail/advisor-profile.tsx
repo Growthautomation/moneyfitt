@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Advisor } from "@/types/advisor";
+import { Advisor, Json } from "@/types/advisor";
 import { createClient } from "@/lib/supabase/client";
 import { languages, narrowScope, broadScope, religion } from "@/lib/constants";
 
@@ -41,6 +41,17 @@ const ensureHttps = (url: string): string => {
     return `https://${url}`;
   }
   return url;
+};
+
+// Add this helper function at the top of the file, after other helper functions
+const renderTestimonial = (testimonial: Json): string => {
+  if (typeof testimonial === 'string') {
+    return testimonial;
+  } else if (typeof testimonial === 'object' && testimonial !== null) {
+    // Assuming the testimonial object has a 'text' field
+    return (testimonial as { text?: string }).text || '';
+  }
+  return '';
 };
 
 export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
@@ -235,7 +246,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
             <section className="space-y-2">
               <h2 className="text-xl font-semibold text-[#2E2C72]">Testimonial</h2>
               <blockquote className="border-l-4 border-[#5C59E4] pl-4 italic text-[#222222] bg-[#ECF0F3] p-3 rounded">
-                <p>&ldquo;{advisor.testinomial}&rdquo;</p>
+                <p>&ldquo;{renderTestimonial(advisor.testinomial)}&rdquo;</p>
               </blockquote>
             </section>
           )}
