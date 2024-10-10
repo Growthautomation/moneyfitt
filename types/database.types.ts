@@ -14,6 +14,7 @@ export type Database = {
           age_group: string | null
           agency_website: string | null
           awards: Json | null
+          tagline: string | null
           bio: string | null
           broad_scope: Json | null
           certifications: Json | null
