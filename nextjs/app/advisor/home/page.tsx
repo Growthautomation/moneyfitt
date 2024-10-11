@@ -25,7 +25,10 @@ export default async function AgentHome({ searchParams }) {
     .eq("enabled", true);
 
   if (matchingsError) {
-    console.error("app/advisor/home: Error fetching matchings:", matchingsError);
+    console.error(
+      "app/advisor/home: Error fetching matchings:",
+      matchingsError
+    );
     return "Error fetching clients";
   }
 
@@ -39,15 +42,13 @@ export default async function AgentHome({ searchParams }) {
         <main className="container mx-auto px-4 py-8">
           <section className="mb-12">
             <h2 className="text-xl font-semibold mb-4">Your Clients</h2>
-            <div className="flex flex-nowrap overflow-x-auto gap-4 pb-4">
-              <div>
-                <ChatList
-                  clients={matchings.map((m) => annonomiseMatching(m))}
-                  selectedClientId={searchParams?.clientId}
-                />
-              </div>
+            <div className="flex h-[100vh] flex-nowrap overflow-x-auto gap-4 pb-4">
+              <ChatList
+                clients={matchings.map((m) => annonomiseMatching(m))}
+                selectedClientId={searchParams?.clientId}
+              />
               <Suspense
-                key={selectedClient.client_id}
+                key={selectedClient?.client_id}
                 fallback={<ComponentLoading />}
               >
                 {selectedClient && (
