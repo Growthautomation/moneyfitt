@@ -42,7 +42,7 @@ export default async function AgentHome({ searchParams }) {
         <main className="container mx-auto px-4 py-8">
           <section className="mb-12">
             <h2 className="text-xl font-semibold mb-4">Your Clients</h2>
-            <div className="flex h-[100vh] flex-nowrap overflow-x-auto gap-4 pb-4">
+            <div className="flex min-h-[100vh] flex-nowrap gap-4 pb-4">
               <ChatList
                 clients={matchings.map((m) => annonomiseMatching(m))}
                 selectedClientId={searchParams?.clientId}
@@ -51,10 +51,14 @@ export default async function AgentHome({ searchParams }) {
                 key={selectedClient?.client_id}
                 fallback={<ComponentLoading />}
               >
-                {selectedClient && (
+                {selectedClient ? (
                   <ClientDashboard
                     client={annonomiseMatching(selectedClient)}
                   />
+                ) : (
+                  <div className="flex justify-center items-center grow">
+                    We will email when we find client for you
+                  </div>
                 )}
               </Suspense>
             </div>

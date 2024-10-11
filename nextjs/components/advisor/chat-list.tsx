@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function ChatList({ clients, selectedClientId }) {
   return (
-    <div className="bg-gray-200 flex-shrink-0 w-64 overflow-y-auto rounded p-2">
+    <div className="bg-gray-100 flex-shrink-0 w-64 overflow-y-auto rounded p-2">
       {!clients.length && <div className="mt-10">You have no client at the moment</div>}
       {clients.length
         ? clients

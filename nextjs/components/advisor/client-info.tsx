@@ -16,19 +16,18 @@ export default function UserInfoCard({ client }) {
         <div className="mb-6 bg-blue-50 p-4 rounded-lg">
           <h3 className="font-semibold text-lg mb-2">Contact Information</h3>
           <p>
-            <strong>Name:</strong> {client?.name}
+            <strong>Name:</strong> {client?.name || "N/A"}
           </p>
           <p>
-            <strong>Email:</strong> {client?.preferred_contact_email}
+            <strong>Email:</strong> {client?.preferred_contact_email || "N/A"}
           </p>
           <p>
-            <strong>Phone:</strong> {client?.phone_number}
+            <strong>Phone:</strong> {client?.phone_number || "N/A"}
           </p>
-          
+
           <p>
-            <strong>Telegram:</strong> {client?.telegram}
+            <strong>Telegram:</strong> {client?.telegram || "N/A"}
           </p>
-          
         </div>
       )}
 
