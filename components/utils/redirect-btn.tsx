@@ -1,25 +1,30 @@
+"use client"
 import React from "react";
-import Link from "next/link";
 import clsx from "clsx";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 export function RedirectButton({
   href,
   children,
-  variant = "default",
-  size = "default",
   className,
   ...props
 }) {
+  const router = useRouter();
+  const handleClick = (e) => {
+    e.preventDefault();
+    router.push(href);
+  };
   return (
-    <Link
+    <Button
       className={clsx(
         "bg-primary p-2 rounded text-white text-center",
         className
       )}
-      href={href}
       {...props}
+      onClick={handleClick}
     >
       {children}
-    </Link>
+    </Button>
   );
 }

@@ -92,7 +92,7 @@ export default function ChatInput({
             setExpand(false);
             setShowSuggestions(true);
           }}
-          // onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
           className="flex-grow transition-all duration-300 ease-in-out min-h-[40px] max-h-[200px] resize-none overflow-y-auto h-[40px]"
           onInput={(e) => {
             const textarea = e.target as HTMLTextAreaElement;
