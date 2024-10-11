@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Globe,
   Image as ImageIcon,
+  ChurchIcon,
   FileCheck,
 } from "lucide-react";
 import Image from "next/image";
@@ -22,24 +23,9 @@ import { Advisor, Json } from "@/types/advisor";
 import { createClient } from "@/lib/supabase/client";
 import { languages, narrowScope, broadScope, religion } from "@/lib/constants";
 
-// Helper function to safely parse JSON or split comma-separated strings
-const parseField = (field: any): string[] => {
-  if (!field) return [];
-  if (Array.isArray(field)) return field;
-  if (typeof field === 'string') {
-    try {
-      const parsed = JSON.parse(field);
-      return Array.isArray(parsed) ? parsed : [parsed];
-    } catch {
-      return field.split(',').map(item => item.trim());
-    }
-  }
-  return [String(field)];
-};
-
 // Helper function to ensure URL has a protocol
 const ensureHttps = (url: string): string => {
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
     return `https://${url}`;
   }
   return url;
@@ -48,8 +34,9 @@ const ensureHttps = (url: string): string => {
 // Helper function to parse image paths
 const parseImagePaths = (images: Json | null): string[] => {
   if (!images) return [];
-  if (Array.isArray(images)) return images.filter(img => typeof img === 'string');
-  if (typeof images === 'string') return [images];
+  if (Array.isArray(images))
+    return images.filter((img) => typeof img === "string");
+  if (typeof images === "string") return [images];
   return [];
 };
 
@@ -84,7 +71,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
             return data?.publicUrl || "";
           })
         );
-        setSecondaryImages(imageUrls.filter(url => url !== ""));
+        setSecondaryImages(imageUrls.filter((url) => url !== ""));
       }
     };
     fetchSecondaryImages();
@@ -95,12 +82,14 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + secondaryImages.length) % secondaryImages.length);
+    setCurrentSlide(
+      (prev) => (prev - 1 + secondaryImages.length) % secondaryImages.length
+    );
   };
 
   const openWebsite = (url: string | null | undefined) => {
     if (url) {
-      window.open(ensureHttps(url), '_blank', 'noopener,noreferrer');
+      window.open(ensureHttps(url), "_blank", "noopener,noreferrer");
     }
   };
 
@@ -122,7 +111,10 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
                   size="icon"
                   variant="outline"
                   className="rounded-full bg-[#FFFFFF] hover:bg-[#5C59E4] hover:text-white transition-colors"
-                  onClick={() => advisor.personal_website && openWebsite(advisor.personal_website)}
+                  onClick={() =>
+                    advisor.personal_website &&
+                    openWebsite(advisor.personal_website)
+                  }
                 >
                   <Globe className="h-4 w-4" />
                   <span className="sr-only">Personal website</span>
@@ -133,7 +125,10 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
                   size="icon"
                   variant="outline"
                   className="rounded-full bg-[#FFFFFF] hover:bg-[#5C59E4] hover:text-white transition-colors"
-                  onClick={() => advisor.agency_website && openWebsite(advisor.agency_website)}
+                  onClick={() =>
+                    advisor.agency_website &&
+                    openWebsite(advisor.agency_website)
+                  }
                 >
                   <Briefcase className="h-4 w-4" />
                   <span className="sr-only">Agency website</span>
@@ -150,13 +145,11 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
             )}
             <div className="mt-2 flex flex-wrap gap-2">
               {advisor.current_company && (
-                <Badge variant="secondary" className="bg-[#5C59E4] text-white hover:bg-[#4543AB]">
+                <Badge
+                  variant="secondary"
+                  className="bg-[#5C59E4] text-white hover:bg-[#4543AB]"
+                >
                   {advisor.current_company}
-                </Badge>
-              )}
-              {advisor.religion && (
-                <Badge variant="outline" className="border-[#5C59E4] text-[#2E2C72]">
-                  {religion.find(r => r.code === advisor.religion)?.name || advisor.religion}
                 </Badge>
               )}
             </div>
@@ -175,22 +168,31 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
           {(advisor.broad_scope || advisor.narrow_scope) && (
             <section className="space-y-2">
               <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-                <Star className="mr-2 flex-shrink-0 text-[#5C59E4]" /> Specializations
+                <Star className="mr-2 flex-shrink-0 text-[#5C59E4]" />{" "}
+                Specializations
               </h2>
               <div className="flex flex-wrap gap-2">
-                {parseField(advisor.broad_scope).map((spec: string) => (
-                  <Badge key={spec} variant="secondary" className="bg-[#5C59E4] text-white hover:bg-[#4543AB]">
+                {(advisor.broad_scope as string[])?.map((spec: string) => (
+                  <Badge
+                    key={spec}
+                    variant="secondary"
+                    className="bg-[#5C59E4] text-white hover:bg-[#4543AB]"
+                  >
                     {broadScope.find((s) => s.code === spec)?.name || spec}
                   </Badge>
                 ))}
-                {parseField(advisor.narrow_scope).map((spec: string) => (
-                  <Badge key={spec} variant="secondary" className="bg-[#8583EB] text-white hover:bg-[#4543AB]">
+                {(advisor.narrow_scope as string[])?.map((spec: string) => (
+                  <Badge
+                    key={spec}
+                    variant="secondary"
+                    className="bg-[#5C59E4] text-white hover:bg-[#4543AB]"
+                  >
                     {narrowScope.find((s) => s.code === spec)?.name || spec}
                   </Badge>
                 ))}
               </div>
             </section>
-          )}  
+          )}
 
           {advisor.languages && (
             <section className="space-y-2">
@@ -198,11 +200,32 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
                 <Languages className="mr-2 text-[#5C59E4]" /> Languages
               </h2>
               <div className="flex flex-wrap gap-2">
-                {parseField(advisor.languages).map((lang: string) => (
-                  <Badge key={lang} variant="outline" className="border-[#5C59E4] text-[#2E2C72]">
+                {(advisor.languages as string[])?.map((lang: string) => (
+                  <Badge
+                    key={lang}
+                    variant="outline"
+                    className="border-[#5C59E4] text-[#2E2C72]"
+                  >
                     {languages.find((l) => l.code === lang)?.name || lang}
                   </Badge>
                 ))}
+              </div>
+            </section>
+          )}
+
+          {advisor.religion && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
+                <ChurchIcon className="mr-2 text-[#5C59E4]" /> Religion
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                <Badge
+                  variant="outline"
+                  className="border-[#5C59E4] text-[#2E2C72]"
+                >
+                  {religion.find((r) => r.code === advisor.religion)?.name ||
+                    advisor.religion}
+                </Badge>
               </div>
             </section>
           )}
@@ -213,12 +236,14 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
                 <GraduationCap className="mr-2 text-[#5C59E4]" /> Education
               </h2>
               <ul className="space-y-2 text-[#222222]">
-                {parseField(advisor.education).map((edu: string, index: number) => (
-                  <li key={index} className="flex items-start">
-                    <span className="mr-2 text-[#5C59E4]">•</span>
-                    <span>{edu}</span>
-                  </li>
-                ))}
+                {(advisor.education as string[])?.map(
+                  (edu: string, index: number) => (
+                    <li key={index} className="flex items-start">
+                      <span className="mr-2 text-[#5C59E4]">•</span>
+                      <span>{edu}</span>
+                    </li>
+                  )
+                )}
               </ul>
             </section>
           )}
@@ -226,15 +251,18 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
           {advisor.professional_background && (
             <section className="space-y-2">
               <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-                <Briefcase className="mr-2 text-[#5C59E4]" /> Professional Background
+                <Briefcase className="mr-2 text-[#5C59E4]" /> Professional
+                Background
               </h2>
               <ul className="space-y-2 text-[#222222]">
-                {parseField(advisor.professional_background).map((exp: string, index: number) => (
-                  <li key={index} className="flex items-start">
-                    <span className="mr-2 text-[#5C59E4]">•</span>
-                    <span>{exp}</span>
-                  </li>
-                ))}
+                {(advisor.professional_background as string[])?.map(
+                  (exp: string, index: number) => (
+                    <li key={index} className="flex items-start">
+                      <span className="mr-2 text-[#5C59E4]">•</span>
+                      <span>{exp}</span>
+                    </li>
+                  )
+                )}
               </ul>
             </section>
           )}
@@ -245,12 +273,14 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
                 <FileCheck className="mr-2 text-[#5C59E4]" /> Certifications
               </h2>
               <ul className="space-y-2 text-[#222222]">
-                {parseField(advisor.certifications).map((cert: string, index: number) => (
-                  <li key={index} className="flex items-start">
-                    <span className="mr-2 text-[#5C59E4]">•</span>
-                    <span>{cert}</span>
-                  </li>
-                ))}
+                {(advisor.certifications as string[])?.map(
+                  (cert: string, index: number) => (
+                    <li key={index} className="flex items-start">
+                      <span className="mr-2 text-[#5C59E4]">•</span>
+                      <span>{cert}</span>
+                    </li>
+                  )
+                )}
               </ul>
             </section>
           )}
@@ -261,12 +291,14 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
                 <Award className="mr-2 text-[#5C59E4]" /> Awards
               </h2>
               <ul className="space-y-2 text-[#222222]">
-                {parseField(advisor.awards).map((award: string, index: number) => (
-                  <li key={index} className="flex items-start">
-                    <span className="mr-2 text-[#5C59E4]">•</span>
-                    <span>{award}</span>
-                  </li>
-                ))}
+                {(advisor.awards as string[])?.map(
+                  (award: string, index: number) => (
+                    <li key={index} className="flex items-start">
+                      <span className="mr-2 text-[#5C59E4]">•</span>
+                      <span>{award}</span>
+                    </li>
+                  )
+                )}
               </ul>
             </section>
           )}
@@ -277,26 +309,35 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
                 <Star className="mr-2 text-[#5C59E4]" /> Testimonials
               </h2>
               <ul className="space-y-2 text-[#222222]">
-                {parseField(advisor.testinomial).map((testimonial: string, index: number) => (
-                  <li key={index}>
-                    <blockquote className="border-l-4 border-[#5C59E4] pl-4 italic text-[#222222] bg-[#ECF0F3] p-3 rounded">
-                      <p>&ldquo;{testimonial}&rdquo;</p>
-                    </blockquote>
-                  </li>
-                ))}
+                {(advisor.testinomial as string[])?.map(
+                  (testimonial: string, index: number) => (
+                    <li key={index}>
+                      <blockquote className="border-l-4 border-[#5C59E4] pl-4 italic text-[#222222] bg-[#ECF0F3] p-3 rounded">
+                        <p>&ldquo;{testimonial}&rdquo;</p>
+                      </blockquote>
+                    </li>
+                  )
+                )}
               </ul>
             </section>
           )}
 
           {advisor.personal_interests && (
             <section className="space-y-2">
-              <h2 className="text-xl font-semibold text-[#2E2C72]">Personal Interests</h2>
+              <h2 className="text-xl font-semibold text-[#2E2C72]">
+                Personal Interests
+              </h2>
               <ul className="text-[#222222] flex flex-wrap gap-2 my-2">
-                {parseField(advisor.personal_interests).map((interest: string, index: number) => (
-                  <li key={index} className="bg-[#D6D5F8] text-[#2E2C72] rounded-full px-3 py-1 text-sm font-medium">
-                    {interest}
-                  </li>
-                ))}
+                {(advisor.personal_interests as string[])?.map(
+                  (interest: string, index: number) => (
+                    <li
+                      key={index}
+                      className="bg-[#D6D5F8] text-[#2E2C72] rounded-full px-3 py-1 text-sm font-medium"
+                    >
+                      {interest}
+                    </li>
+                  )
+                )}
               </ul>
             </section>
           )}
@@ -305,8 +346,8 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
             <div className="relative w-full h-64 overflow-hidden rounded-lg shadow-md">
               {secondaryImages.length > 0 ? (
                 <>
-                  <div 
-                    className="flex transition-transform duration-300 ease-in-out" 
+                  <div
+                    className="flex transition-transform duration-300 ease-in-out"
                     style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                   >
                     {secondaryImages.map((image, index) => (
@@ -338,7 +379,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
                       <div
                         key={index}
                         className={`w-2 h-2 rounded-full ${
-                          index === currentSlide ? 'bg-white' : 'bg-gray-400'
+                          index === currentSlide ? "bg-white" : "bg-gray-400"
                         }`}
                       />
                     ))}
