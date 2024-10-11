@@ -56,7 +56,9 @@ const Auth = () => {
   }
 
   if (step === "welcome") {
-    return <Welcome onNext={() => setStep("onboarding")} />;
+    return (
+      <Welcome onNext={() => setStep("onboarding")} onSkip={() => setStep("login")} />
+    );
   }
 
   return (
