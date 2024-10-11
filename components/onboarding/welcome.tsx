@@ -6,10 +6,10 @@ export default function Welcome({ onNext }) {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl p-6 space-y-6 p-20">
         <h1 className="text-xl text-center">Let&apos;s Get MoneyFitt</h1>
-        <p>Our commitment to you</p>
+        <p>Our commitment to you:</p>
         <ul className="ml-10 list-disc">
           <li>Expertly matched with the right professional for your needs</li>
-          <li>No commisions, no bias-just objective recommandations</li>
+          <li>No commissions, no bias, just objective recommendations</li>
           <li>Anonymous identity until you decide to share a contact card</li>
         </ul>
         <p>
