@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-export default async function Redirect({ param }) {
+export default async function Redirect() {
   const supabase = createClient();
   const {
     data: { user },
