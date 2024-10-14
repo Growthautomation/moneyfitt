@@ -1,19 +1,18 @@
-import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 import ChatList from "@/components/advisor/chat-list";
-import ClientDashboard from "@/components/advisor/client-dashboard";
 import ChatContextProvider from "@/components/chat/chat-context";
+import { createClient } from "@/lib/supabase/server";
 import { annonomiseMatching } from "@/lib/utils/annonomize";
-import { Suspense } from "react";
-import ComponentLoading from "@/components/utils/component-loading";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default async function AgentHome({ searchParams }) {
+export default async function Layout({ children }) {
   const supabase = createClient();
   const {
     data: { user },
+    error,
   } = await supabase.auth.getUser();
-
   if (!user) {
+    console.error("advisor/chat/layout: Error fetching user:", error);
     return redirect("/agent/sign-in");
   }
 
@@ -31,11 +30,6 @@ export default async function AgentHome({ searchParams }) {
     );
     return "Error fetching clients";
   }
-
-  const selectedClient =
-    matchings.find((m) => m.client_id === searchParams.clientId) ??
-    matchings[0];
-
   return (
     <ChatContextProvider userId={user?.id}>
       <div className="min-h-screen bg-gray-50">
@@ -43,24 +37,8 @@ export default async function AgentHome({ searchParams }) {
           <section className="mb-12">
             <h2 className="text-xl font-semibold mb-4">Your Clients</h2>
             <div className="flex min-h-[100vh] flex-nowrap gap-4 pb-4">
-              <ChatList
-                clients={matchings.map((m) => annonomiseMatching(m))}
-                // selectedClientId={searchParams?.clientId}
-              />
-              <Suspense
-                key={selectedClient?.client_id}
-                fallback={<ComponentLoading />}
-              >
-                {selectedClient ? (
-                  <ClientDashboard
-                    client={annonomiseMatching(selectedClient)}
-                  />
-                ) : (
-                  <div className="flex justify-center items-center grow">
-                    We will email when we find client for you
-                  </div>
-                )}
-              </Suspense>
+              <ChatList clients={matchings.map((m) => annonomiseMatching(m))} />
+              {children}
             </div>
           </section>
         </main>
