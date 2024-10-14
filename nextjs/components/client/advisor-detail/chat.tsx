@@ -4,6 +4,7 @@ import Chat from "@/components/chat/chat-container";
 import { createClient } from "@/lib/supabase/server";
 import ComponentError from "@/components/utils/component-error";
 import ShareButton from "../share-contact/button";
+import InfoDialog from "@/components/client/InfoDialog";
 
 interface AdvisorChatProps {
   user: User;
@@ -30,7 +31,8 @@ export default async function AdvisorChat({ user, advisor }: AdvisorChatProps) {
   }
   return (
     <>
-      <div className="m-2">
+      <div className="m-2 flex justify-between items-center">
+        <InfoDialog />
         <ShareButton advisorId={advisor.id} />
       </div>
       <Chat
