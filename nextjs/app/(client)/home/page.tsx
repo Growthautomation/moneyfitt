@@ -8,10 +8,10 @@ export default async function Page() {
     data: { user },
   } = await supabase.auth.getUser();
   return (
-    <div>
+    <div className="space-y-16">
       <Contents user={user} />
-      <div className="w-full mt-8">
-        <h2 className="text-2xl font-bold text-[#222222] mb-6">
+      <div className="w-full">
+        <h2 className="text-2xl font-bold text-[#222222] mb-8">
           Frequently Asked Questions
         </h2>
         <Faq />
