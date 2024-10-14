@@ -1,4 +1,5 @@
 import ClientDashboard from "@/components/advisor/client-dashboard";
+import Revalidate from "@/components/utils/cache-revalidate";
 import { createClient } from "@/lib/supabase/server";
 import { annonomiseMatching } from "@/lib/utils/annonomize";
 import { redirect } from "next/navigation";
@@ -31,5 +32,10 @@ export default async function Chat({ params }) {
     return "Error fetching clients";
   }
 
-  return <ClientDashboard client={annonomiseMatching(match)} />;
+  return (
+    <div>
+      <ClientDashboard client={annonomiseMatching(match)} />;
+      <Revalidate path="/advisor/chat/[id]" />
+    </div>
+  );
 }
