@@ -67,15 +67,15 @@ export function OnboardingFormComponent({
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
       {currentQuestion?.title && (
-        <div className="text-3xl my-8 max-w-4xl">
+        <div className="text-3xl my-8 max-w-4xl text-center">
           {currentQuestion.title}
         </div>
       )}
       <Card className="w-full max-w-4xl p-6 space-y-6">
         <h2 className="text-2xl font-bold">{currentQuestion?.category}</h2>
-        <p className="text-lg whitespace-pre">{currentQuestion?.question}</p>
+        <p className="text-lg whitespace-normal break-words">{currentQuestion?.question}</p>
         {currentQuestion?.description && (
-          <p className="text-sm">{currentQuestion?.description}</p>
+          <p className="text-sm whitespace-normal break-words">{currentQuestion?.description}</p>
         )}
         <div className="space-y-4">
           {renderQuestions(currentQuestion, answers, setAnswers)}

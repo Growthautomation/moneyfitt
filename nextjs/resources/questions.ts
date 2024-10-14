@@ -88,7 +88,7 @@ export const planningArea = () =>
   createNode(
     "broadScope",
     "Determining Your Needs",
-    "What areas of financial planning do you need help with?",
+    "Which areas of financial planning do you need help with?",
     "multiple",
     null,
     broadScope,
@@ -343,7 +343,7 @@ export const advisorReligionNode = () =>
   createNode(
     "preferReligion",
     "Advisor Preferences",
-    "By religion?",
+    "By religion:",
     "multiple",
     null,
     religion
@@ -353,7 +353,7 @@ export const advisorGenderNode = () =>
   createNode(
     "preferGender",
     "Advisor Preferences",
-    "By gender?",
+    "By gender:",
     "single",
     null,
     gender
@@ -363,7 +363,7 @@ export const advisorLanguageNode = () =>
   createNode(
     "preferLanguage",
     "Advisor Preferences",
-    "By language spoken?",
+    "By language spoken:",
     "multiple",
     null,
     languages
@@ -385,7 +385,7 @@ export const advisorAgeNode = () =>
   createNode(
     "preferAge",
     "Advisor Preferences",
-    "By age?",
+    "By age:",
     "multiple",
     null,
     ageGroups
@@ -395,7 +395,7 @@ export const preferredCompanyNode = () =>
   createNode(
     "preferCompany",
     "Advisor Preferences",
-    "By company or agency?",
+    "By company or agency:",
     "multipleDropdown",
     null,
     [
@@ -539,7 +539,7 @@ export const insuranceCoverageNode = () =>
   createNode(
     "insuranceCoverage",
     "Protection",
-    "Are you allocating 15% of your take home income (after CPF contributions) to insurance?",
+    "Are you allocating 15% of your take-home income (after CPF contributions) to insurance?",
     "single",
     null,
     [
@@ -577,7 +577,7 @@ export const reviewInvestment = () =>
   createNode(
     "professionalSupport",
     "Investing",
-    "Well done. Are you looking for professional support with portfolio optimization?",
+    "Well done. Are you looking for professional support with portfolio optimisation?",
     "single",
     null,
     [
@@ -792,7 +792,7 @@ export const insuranceFamilarity = () =>
   createNode(
     "insuranceFamilarity",
     "Protection",
-    "Are you familiar with the following?:\n1. Home Insurance\n2. Fire and home content insurance\n3. MediShield Life\n4. CareShield Life/Elder Shield",
+    "Are you familiar with the following?:\n1. Home insurance\n2. Fire and home content insurance\n3. MediShield Life\n4. CareShield Life/Elder Shield",
     "single",
     null,
     [

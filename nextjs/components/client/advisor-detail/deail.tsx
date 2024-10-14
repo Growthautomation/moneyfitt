@@ -7,6 +7,7 @@ import ComponentLoading from "@/components/utils/component-loading";
 import AdvisorChat from "./chat";
 import ComponentError from "@/components/utils/component-error";
 import { AdvisorProfile } from "./advisor-profile";
+import MobileToggle from "./mobile-toggle";
 
 interface AdvisorDetailProps {
   advisorId: string;
@@ -45,11 +46,14 @@ export default async function AdvisorDetail({
         </RedirectButton>
         <h1 className="text-2xl font-bold">{`Chat with ${advisor.first_name} ${advisor.last_name}`}</h1>
       </div>
-      <div className="flex flex-row gap-8">
-        <div className="w-[60%]">
+      <div className="md:hidden mb-4">
+        <MobileToggle />
+      </div>
+      <div className="flex flex-col md:flex-row gap-8">
+        <div className="w-full md:w-[60%]">
           <AdvisorProfile advisor={advisor} />
         </div>
-        <div className="w-[40%] sticky top-8">
+        <div className="w-full md:w-[40%] md:sticky md:top-8">
           <Suspense fallback={<ComponentLoading />}>
             <AdvisorChat user={user} advisor={advisor} />
           </Suspense>

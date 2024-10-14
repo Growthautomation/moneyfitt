@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -57,22 +56,22 @@ export default function ShareButton({ advisorId }) {
             <Suspense fallback={<ComponentLoading />}>
               <Form />
             </Suspense>
-            <DialogFooter>
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-4 sm:mt-6">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setOpen(false)}
-                className="border-[#9CABC2] text-[#222222] hover:bg-[#ECF0F3]"
+                className="w-full sm:w-auto border-[#9CABC2] text-[#222222] hover:bg-[#ECF0F3]"
               >
                 Cancel
               </Button>
               <SubmitButton
                 pendingText="Sharing..."
-                className="bg-[#5C59E4] hover:bg-[#4543AB] text-white"
+                className="w-full sm:w-auto bg-[#5C59E4] hover:bg-[#4543AB] text-white"
               >
                 Share
               </SubmitButton>
-            </DialogFooter>
+            </div>
             {state?.error && (
               <div className="border my-2 p-3 rounded bg-red-200 text-red-500 text-sm">
                 {state.error}
