@@ -81,14 +81,15 @@ export function OnboardingFormComponent({
           {renderQuestions(currentQuestion, answers, setAnswers)}
         </div>
         {error && <Alert variant="destructive">{error}</Alert>}
-        <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+        <div className="flex justify-between items-center space-x-4">
           <Button
             onClick={handleBack}
             disabled={!currentQuestion?.prev(answers)}
+            className="flex-shrink-0"
           >
             Back
           </Button>
-          <div className="h-2 flex-1 bg-gray-200 mx-4 rounded-full overflow-hidden">
+          <div className="flex-grow h-2 bg-gray-200 rounded-full overflow-hidden">
             <div
               className="h-full bg-primary rounded-full"
               style={{
@@ -99,6 +100,7 @@ export function OnboardingFormComponent({
           <Button
             onClick={handleNext}
             disabled={currentQuestion?.required(answers)}
+            className="flex-shrink-0"
           >
             {currentQuestion?.next(answers)
               ? !answers[currentQuestion.key] &&
