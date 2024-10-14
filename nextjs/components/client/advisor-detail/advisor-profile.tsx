@@ -169,7 +169,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
             <section className="space-y-2">
               <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
                 <Star className="mr-2 flex-shrink-0 text-[#5C59E4]" />{" "}
-                Specializations
+                Specialisations
               </h2>
               <div className="flex flex-wrap gap-2">
                 {(advisor.broad_scope as string[])?.map((spec: string) => (

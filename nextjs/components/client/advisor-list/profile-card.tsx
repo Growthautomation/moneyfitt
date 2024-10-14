@@ -53,7 +53,7 @@ export async function AdvisorProfileCard({
         <div className="space-y-6">
           <div className="flex flex-col">
             <h3 className="font-semibold mb-2 text-[#2E2C72]">
-              Specializations
+              Specialisations
             </h3>
             <div className="flex flex-wrap gap-2">
               {(advisor?.narrow_scope as string[])?.slice(0, 3).map((scope, idx) => (
