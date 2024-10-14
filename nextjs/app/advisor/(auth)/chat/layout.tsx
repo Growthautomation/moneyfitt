@@ -25,7 +25,7 @@ export default async function Layout({ children }) {
 
   if (matchingsError) {
     console.error(
-      "app/advisor/home: Error fetching matchings:",
+      "app/advisor/chat/layout: Error fetching matchings:",
       matchingsError
     );
     return "Error fetching clients";

@@ -26,7 +26,7 @@ export default async function Chat({ params }) {
 
   if (matchingsError) {
     console.error(
-      "app/advisor/home: Error fetching matchings:",
+      "app/advisor/chat/page: Error fetching matchings:",
       matchingsError
     );
     return "Error fetching clients";
