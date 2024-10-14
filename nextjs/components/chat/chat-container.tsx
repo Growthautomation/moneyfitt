@@ -97,12 +97,12 @@ export default function Chat({
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Chat with {recipentName}</CardTitle>
+        <CardTitle className="text-lg md:text-xl">Chat with {recipentName}</CardTitle>
       </CardHeader>
       <CardContent>
         <ScrollArea
           ref={scrollRef}
-          className="h-[400px] pr-4 scroll-smooth"
+          className="h-[300px] md:h-[400px] pr-4 scroll-smooth"
           onScrollCapture={handleScroll}
         >
           {isPending && (

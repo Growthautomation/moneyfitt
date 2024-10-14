@@ -30,7 +30,7 @@ export default async function AdvisorChat({ user, advisor }: AdvisorChatProps) {
     return <ComponentError message="Error loading messages" />;
   }
   return (
-    <>
+    <div className="md:block" id="advisor-chat" style={{ display: 'none' }}>
       <div className="m-2 flex justify-between items-center">
         <InfoDialog />
         <ShareButton advisorId={advisor.id} />
@@ -41,6 +41,6 @@ export default async function AdvisorChat({ user, advisor }: AdvisorChatProps) {
         recipentName={`${advisor.first_name} ${advisor.last_name}`}
         showSuggestion
       />
-    </>
+    </div>
   );
 }

@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-
 import AdvisorDetail from "@/components/client/advisor-detail/deail";
 
 interface ChatProps {
