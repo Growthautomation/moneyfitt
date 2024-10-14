@@ -45,7 +45,7 @@ export default async function AgentHome({ searchParams }) {
             <div className="flex min-h-[100vh] flex-nowrap gap-4 pb-4">
               <ChatList
                 clients={matchings.map((m) => annonomiseMatching(m))}
-                selectedClientId={searchParams?.clientId}
+                // selectedClientId={searchParams?.clientId}
               />
               <Suspense
                 key={selectedClient?.client_id}

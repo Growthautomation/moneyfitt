@@ -47,7 +47,7 @@ export const createAgent = async (form: FormData) => {
     };
   }
 
-  return redirect("/agent/home");
+  return redirect("/agent/chat");
 };
 
 export const agentSignIn = async (form: FormData) => {
