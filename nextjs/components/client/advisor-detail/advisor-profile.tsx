@@ -94,7 +94,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
   };
 
   return (
-    <div className="h-full md:block" id="advisor-profile" style={{ display: 'block' }}>
+    <div className="h-full lg:block" id="advisor-profile" style={{ display: 'block' }}>
       <Card className="bg-[#FFFFFF] h-full overflow-hidden shadow-lg border-[#5C59E4] border-t-4">
         <CardHeader className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 bg-gradient-to-r from-[#D6D5F8] to-[#FFFFFF] p-6">
           <div className="relative flex-shrink-0">
@@ -343,7 +343,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
           )}
 
           <section className="space-y-2">
-            <div className="relative w-full h-64 overflow-hidden rounded-lg shadow-md">
+            <div className="relative w-full h-64 lg:h-80 overflow-hidden rounded-lg shadow-md">
               {secondaryImages.length > 0 ? (
                 <>
                   <div
@@ -358,7 +358,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
                         width={400}
                         height={300}
                         objectFit="cover"
-                        className="flex-shrink-0 w-full h-64"
+                        className="flex-shrink-0 w-full h-64 lg:h-80"
                       />
                     ))}
                   </div>
