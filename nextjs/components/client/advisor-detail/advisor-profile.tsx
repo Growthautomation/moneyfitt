@@ -94,7 +94,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
   };
 
   return (
-    <div className="h-full lg:block" id="advisor-profile" style={{ display: 'block' }}>
+    <div className="h-full lg:block" id="advisor-profile">
       <Card className="bg-[#FFFFFF] h-full overflow-hidden shadow-lg border-[#5C59E4] border-t-4">
         <CardHeader className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 bg-gradient-to-r from-[#D6D5F8] to-[#FFFFFF] p-6">
           <div className="relative flex-shrink-0">

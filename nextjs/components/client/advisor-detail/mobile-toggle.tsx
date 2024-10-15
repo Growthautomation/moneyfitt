@@ -22,7 +22,6 @@ export default function MobileToggle() {
   }, [showProfile]);
 
   return (
-    // Changed from md:hidden to lg:hidden
     <div className="flex justify-center space-x-2 mobile-toggle lg:hidden">
       <Button
         variant={showProfile ? "default" : "outline"}
