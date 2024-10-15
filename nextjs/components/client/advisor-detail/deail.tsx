@@ -46,16 +46,14 @@ export default async function AdvisorDetail({
         </RedirectButton>
         <h1 className="text-2xl font-bold">{`Chat with ${advisor.first_name} ${advisor.last_name}`}</h1>
       </div>
-      {/* Changed from md:hidden to lg:hidden */}
       <div className="lg:hidden mb-4">
         <MobileToggle />
       </div>
-      {/* Updated flex classes for better responsiveness */}
       <div className="flex flex-col lg:flex-row gap-8">
-        <div className="w-full lg:w-[60%]">
+        <div className="w-full lg:w-[60%]" id="advisor-profile">
           <AdvisorProfile advisor={advisor} />
         </div>
-        <div className="w-full lg:w-[40%] lg:sticky lg:top-8">
+        <div className="w-full lg:w-[40%] lg:sticky lg:top-8" id="advisor-chat">
           <Suspense fallback={<ComponentLoading />}>
             <AdvisorChat user={user} advisor={advisor} />
           </Suspense>
