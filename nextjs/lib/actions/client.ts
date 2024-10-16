@@ -233,6 +233,21 @@ export async function shareContact(data: FormData) {
     };
   }
 
+  const { error: msgErr } = await supabase.from("messages").insert({
+    message: "[SYSTEM]User shared contact info with advisor",
+    sender: user.id,
+    recipient: data.get("advisorId") as string || "",
+    files: []
+  })
+
+  if (msgErr) {
+    console.error(msgErr);
+    return {
+      success: false,
+      error: "Error sending message",
+    };
+  }
+
   return {
     success: true,
     error: null,

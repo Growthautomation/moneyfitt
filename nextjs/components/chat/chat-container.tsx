@@ -11,7 +11,6 @@ import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { Message } from "@/types/chat";
 import { useChatContext } from "./chat-context";
-import { filter } from "rxjs/operators";
 import clsx from "clsx";
 import MessageComponent from "./message";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -28,7 +27,7 @@ export default function Chat({
   recipentId,
   recipentName,
   messages,
-  showSuggestion = false
+  showSuggestion = false,
 }: ChatProps) {
   const [streamingMessages, setStreamingMessages] = useState(messages);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -40,16 +39,14 @@ export default function Chat({
   // message streaming
   useEffect(() => {
     if (obs) {
-      const subscription = obs
-        .pipe(filter((message) => message.sender === recipentId))
-        .subscribe({
-          next: (payload) => {
-            setStreamingMessages((prev) => [...prev, payload]);
-          },
-          error: (error) => {
-            console.error("Error in chat context subscription:", error);
-          },
-        });
+      const subscription = obs.subscribe({
+        next: (payload) => {
+          setStreamingMessages((prev) => [...prev, payload]);
+        },
+        error: (error) => {
+          console.error("Error in chat context subscription:", error);
+        },
+      });
 
       return () => {
         subscription.unsubscribe();
@@ -97,7 +94,9 @@ export default function Chat({
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-lg md:text-xl">Chat with {recipentName}</CardTitle>
+        <CardTitle className="text-lg md:text-xl">
+          Chat with {recipentName}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ScrollArea
@@ -111,44 +110,17 @@ export default function Chat({
             </p>
           )}
           {streamingMessages.map((message) => (
-            <div key={message.id} className="mb-4">
-              <div
-                className={clsx("flex", {
-                  "justify-end": message.sender !== recipentId,
-                })}
-              >
-                <div
-                  className={clsx("flex items-center gap-1 mb-1", {
-                    "flex-row-reverse": message.sender !== recipentId,
-                  })}
-                >
-                  {message.sender !== recipentId ? (
-                    <UserCircle className="w-4 h-4" />
-                  ) : (
-                    <Bot className="w-4 h-4" />
-                  )}
-                  <span className="text-xs font-semibold">
-                    {message.sender !== recipentId ? "You" : recipentName}
-                  </span>
-                  <span className="text-xs ml-2 text-gray-500">
-                    {new Date(message.created_at!).toLocaleTimeString()}
-                  </span>
-                </div>
-              </div>
-              <MessageComponent
-                message={message}
-                ismine={message.sender !== recipentId}
-              />
-            </div>
+            <MessageComponent
+              key={message.id}
+              message={message}
+              ismine={message.sender !== recipentId}
+              senderName={recipentName}
+            />
           ))}
         </ScrollArea>
       </CardContent>
       <CardFooter className="flex flex-col items-center">
-        <ChatInput
-          enableSuggestion={showSuggestion}
-          recipientId={recipentId}
-          onSuccess={(msg) => setStreamingMessages((prev) => [...prev, msg])}
-        />
+        <ChatInput enableSuggestion={showSuggestion} recipientId={recipentId} />
       </CardFooter>
     </Card>
   );
