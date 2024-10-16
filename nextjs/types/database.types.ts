@@ -9,12 +9,41 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      activities: {
+        Row: {
+          advisor_id: string | null
+          client_id: string | null
+          created_at: string
+          id: number
+          message: string | null
+          output: string | null
+          prompt: string | null
+        }
+        Insert: {
+          advisor_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          id?: number
+          message?: string | null
+          output?: string | null
+          prompt?: string | null
+        }
+        Update: {
+          advisor_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          id?: number
+          message?: string | null
+          output?: string | null
+          prompt?: string | null
+        }
+        Relationships: []
+      }
       advisor: {
         Row: {
           age_group: string | null
           agency_website: string | null
           awards: Json | null
-          tagline: string | null
           bio: string | null
           broad_scope: Json | null
           certifications: Json | null
@@ -32,9 +61,10 @@ export type Database = {
           personal_website: string | null
           professional_background: Json | null
           profile_img: string | null
-          secondary_images: Json | null
           religion: string | null
+          secondary_images: Json | null
           social_profiles: Json | null
+          tagline: string | null
           testinomial: Json | null
           title: string | null
         }
@@ -42,7 +72,6 @@ export type Database = {
           age_group?: string | null
           agency_website?: string | null
           awards?: Json | null
-          tagline?: string | null
           bio?: string | null
           broad_scope?: Json | null
           certifications?: Json | null
@@ -60,9 +89,10 @@ export type Database = {
           personal_website?: string | null
           professional_background?: Json | null
           profile_img?: string | null
-          secondary_images?: Json | null
           religion?: string | null
+          secondary_images?: Json | null
           social_profiles?: Json | null
+          tagline?: string | null
           testinomial?: Json | null
           title?: string | null
         }
@@ -70,7 +100,6 @@ export type Database = {
           age_group?: string | null
           agency_website?: string | null
           awards?: Json | null
-          tagline?: string | null
           bio?: string | null
           broad_scope?: Json | null
           certifications?: Json | null
@@ -88,9 +117,10 @@ export type Database = {
           personal_website?: string | null
           professional_background?: Json | null
           profile_img?: string | null
-          secondary_images?: Json | null
           religion?: string | null
+          secondary_images?: Json | null
           social_profiles?: Json | null
+          tagline?: string | null
           testinomial?: Json | null
           title?: string | null
         }
@@ -378,4 +408,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
