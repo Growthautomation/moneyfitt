@@ -27,6 +27,18 @@ export default function ChatContextProvider({ children, userId }) {
           observer.next(payload);
         }
       )
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `sender=eq.${userId}`,
+        },
+        (payload) => {
+          observer.next(payload);
+        }
+      )
       .subscribe();
 
     return () => {
