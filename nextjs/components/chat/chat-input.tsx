@@ -143,7 +143,9 @@ export default function ChatInput({
                 recipientId={recipientId}
                 onClick={(msg) => {
                   if (formRef.current?.message) {
-                    formRef.current.message.value = msg;
+                    // Remove leading and trailing quotation marks
+                    const cleanedMsg = msg.replace(/^"|"$/g, '');
+                    formRef.current.message.value = cleanedMsg;
                     formRef.current.message.dispatchEvent(
                       new Event("input", { bubbles: true })
                     );
