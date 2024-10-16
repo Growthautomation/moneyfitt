@@ -1,6 +1,5 @@
 "use server";
 
-import { Json } from "@/types/database.types";
 import { v4 as uuid } from "uuid";
 import {
   GENERATE_INITIAL_QUESTIONS_PROMPT,
@@ -157,6 +156,16 @@ export const getSuggestions = async (recipient: string) => {
   if (newSuggestionError) {
     throw newSuggestionError;
   }
+  const {error: activitiesErr} = await supabase.from('activities').insert({
+    client_id: user.id,
+    advisor_id: recipient,
+    prompt,
+    output: suggestions.join("||"),
+    message: 'User created new suggestions'
+  })
+  if(activitiesErr){
+    console.error("client/chat-summary/suggestions: fail to insert activities", activitiesErr);
+  }
   return (newSuggestion?.suggestions as string[]) || [];
 };
 
@@ -243,6 +252,18 @@ export const getChatSummary = async (advisorId: string) => {
   if (error) {
     console.error("client/chat-summary/summarizer: fail to upsert summary", error);
     throw error
+  }
+
+  const { error: activitiesErr } = await supabase.from('activities').insert({
+    client_id: user.id,
+    advisor_id: advisorId,
+    prompt,
+    output: response,
+    message: 'User created new summary'
+  })
+
+  if(activitiesErr){
+    console.error("client/chat-summary/summarizer: fail to insert activities", activitiesErr);
   }
 
   return newSummary.summary ?? {}
