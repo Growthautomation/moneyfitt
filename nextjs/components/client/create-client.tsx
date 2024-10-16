@@ -13,10 +13,7 @@ export default function CreateClient() {
     createUserClient({
       name: answers["userName"] as string,
       broad_scope: answers["broadScope"],
-      narrow_scope: [
-        ...((answers["specification"] as string[]) ?? []),
-        ...((answers["additionalSpecification"] as string[]) ?? []),
-      ],
+      narrow_scope: answers["specification"] ?? [],
       preferred_age_group: answers["preferAge"],
       preferred_advisor: answers["preferCompany"],
       preferred_language: answers["preferLanguage"],

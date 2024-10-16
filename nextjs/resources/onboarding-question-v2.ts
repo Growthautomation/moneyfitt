@@ -451,18 +451,11 @@ function getAdvisorPreferenceQuestions() {
     return genderN;
   };
   languageN.next = function (answer) {
-    return additionalScope;
-  };
-
-  additionalScope.prev = function (answer) {
-    return languageN;
-  };
-  additionalScope.next = function (answer) {
     return ageN;
   };
 
   ageN.prev = function (answer) {
-    return additionalScope;
+    return languageN;
   };
   ageN.next = function (answer) {
     return preferredCompanyN;
@@ -472,11 +465,18 @@ function getAdvisorPreferenceQuestions() {
     return ageN;
   };
   preferredCompanyN.next = function (answer) {
+    return additionalScope;
+  };
+  
+  additionalScope.prev = function (answer) {
+    return preferredCompanyN;
+  };
+  additionalScope.next = function (answer) {
     return userNameN;
   };
 
   userNameN.prev = function (answer) {
-    return preferredCompanyN;
+    return additionalScope;
   };
 
   return cover;

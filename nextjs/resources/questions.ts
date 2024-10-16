@@ -409,12 +409,12 @@ export const preferredCompanyNode = () =>
 
 export const additionalSpecification = () =>
   createNode(
-    "additionalSpecification",
-    "Advisor Preferences",
-    "Do you request any of the following additional specialisations?",
+    "specification",
+    "Have we missed anything?",
+    "Please select any additional specialisations that you need help with:",
     "multipleDropdown",
     null,
-    narrowScope.filter((item) => ["GZ", "MA", "M", "W"].includes(item.code))
+    narrowScope
   );
 
 export const userNameNode = () =>

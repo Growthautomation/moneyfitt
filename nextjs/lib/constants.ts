@@ -65,7 +65,10 @@ export const narrowScope = [
   { code: "SII", name: "Sustainable and Impact Investing" },
   { code: "TP", name: "Tax Planning" },
   { code: "TI", name: "Travel Insurance" },
-  { code: "WCI", name: "Wealth Creation and Investments" },
+  { code: "WCI", name: "Wealth Creation and Investments" }, 
+  { code: "GEW", name: "Gig Economy Worker" },
+  { code: "MG", name: "Merdeka Generation" },
+  { code: "NP", name: "New Parent" },
 ];
 
 export const ageGroups = [
@@ -117,6 +120,7 @@ export const languages = [
 
 export const religion = [
   {code: "CHR", name: "Christianity"},
+  {code: "CAT", name: "Catholicism"},
   {code: "ISL", name: "Islam"},
   {code: "BUD", name: "Buddhism"},
   {code: "HIN", name: "Hinduism"},
