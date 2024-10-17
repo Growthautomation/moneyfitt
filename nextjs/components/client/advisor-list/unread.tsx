@@ -2,6 +2,7 @@
 
 import { useChatContext } from "@/components/chat/chat-context";
 import { Badge } from "@/components/ui/badge";
+import { getUnread } from "@/lib/actions/chat";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { filter } from "rxjs";
@@ -12,16 +13,9 @@ export default function Unread({ sender }) {
   const { obs } = useChatContext();
 
   useEffect(() => {
-    const fetchUnread = async () => {
-      const { data: unread } = await supabase
-        .from("messages")
-        .select("id")
-        .eq("sender", sender)
-        .eq("is_read", false);
-
-      setUnread(unread?.length ?? 0);
-    };
-    fetchUnread();
+    getUnread(sender).then((unread) => {
+      setUnread(unread);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sender]);
 

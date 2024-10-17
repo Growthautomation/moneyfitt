@@ -287,3 +287,23 @@ export const markAsRead = async (messageIds: string[]) => {
   }
   return { success: true }
 }
+
+export const getUnread = async (recipient) => {
+  const supabase = createClient();
+  const { data: { user }, error: userError} = await supabase.auth.getUser();
+  if(!user){
+    console.error("client/chat-summary/getUnread: fail to fetch user", userError);
+    throw userError
+  }
+  const { data: messages, error } = await supabase
+    .from("messages")
+    .select()
+    .eq("recipient", user.id)
+    .eq("sender", recipient)
+    .eq("is_read", false)
+  if(error){
+    console.error("client/chat-summary/getUnread: fail to fetch messages", error);
+    throw error;
+  }
+  return messages.length ?? 0
+}
