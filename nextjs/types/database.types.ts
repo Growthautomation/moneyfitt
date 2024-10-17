@@ -290,6 +290,7 @@ export type Database = {
           created_at: string | null
           files: Json | null
           id: string
+          is_read: boolean | null
           message: string
           recipient: string
           sender: string
@@ -298,6 +299,7 @@ export type Database = {
           created_at?: string | null
           files?: Json | null
           id?: string
+          is_read?: boolean | null
           message: string
           recipient?: string
           sender?: string
@@ -306,6 +308,7 @@ export type Database = {
           created_at?: string | null
           files?: Json | null
           id?: string
+          is_read?: boolean | null
           message?: string
           recipient?: string
           sender?: string

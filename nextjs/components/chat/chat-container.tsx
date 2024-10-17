@@ -11,10 +11,9 @@ import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { Message } from "@/types/chat";
 import { useChatContext } from "./chat-context";
-import clsx from "clsx";
 import MessageComponent from "./message";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Bot, UserCircle } from "lucide-react";
+import { markAsRead } from "@/lib/actions/chat";
 
 interface ChatProps {
   recipentId: string;
@@ -66,6 +65,15 @@ export default function Chat({
       }
     }
   }, [streamingMessages]);
+
+  useEffect(() => {
+    const unreads = streamingMessages
+      .filter((message) => message.sender === recipentId && !message.is_read)
+      .map((m) => m.id);
+      if(unreads.length > 0){
+        markAsRead(unreads);
+      }
+  }, [streamingMessages, recipentId]);
 
   // update messages when new messages are received
   useEffect(() => {

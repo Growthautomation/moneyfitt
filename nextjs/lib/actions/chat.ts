@@ -268,3 +268,22 @@ export const getChatSummary = async (advisorId: string) => {
 
   return newSummary.summary ?? {}
 }
+
+export const markAsRead = async (messageIds: string[]) => {
+  const supabase = createClient();
+  const { data: { user }, error: userError} = await supabase.auth.getUser();
+  if(!user){
+    console.error("client/chat-summary/markAsRead: fail to fetch user", userError);
+    throw userError
+  }
+  const { error } = await supabase
+    .from("messages")
+    .update({ is_read: true })
+    .eq("recipient", user.id)
+    .in("id", messageIds)
+  if(error){
+    console.error("client/chat-summary/markAsRead: fail to update messages", error);
+    throw error;
+  }
+  return { success: true }
+}
