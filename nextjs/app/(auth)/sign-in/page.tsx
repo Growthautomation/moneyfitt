@@ -13,7 +13,15 @@ const Auth = () => {
   const superbase = createClient();
   const handleGoogleSignIn = () => {
     superbase.auth.signInWithOAuth({
-      provider: "google",
+      provider: "google", 
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback`,
+      },
+    });
+  };
+  const handleFacebookSignIn = () => {
+    superbase.auth.signInWithOAuth({
+      provider: "facebook", 
       options: {
         redirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback`,
       },
@@ -47,6 +55,19 @@ const Auth = () => {
                 height={20}
               />
               <span>Sign in with Google</span>
+            </Button>
+            <Button
+              onClick={handleFacebookSignIn}
+              variant="outline"
+              className="w-full flex items-center justify-center space-x-2"
+            >
+              <Image
+                src="/google-logo.png"
+                alt="Google logo"
+                width={20}
+                height={20}
+              />
+              <span>Sign in with Facebook</span>
             </Button>
             {/* Add more SSO buttons here */}
           </CardContent>

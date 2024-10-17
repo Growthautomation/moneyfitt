@@ -17,7 +17,7 @@ export default function ChatList({ clients }) {
               (a, b) => Number(b["name"] != null) - Number(a["name"] != null)
             )
             .map((client, index) => {
-              const displayName = client?.name ? client.name : `annonomous`;
+              const displayName = client?.name ? client.name : `anonymous`;
               return (
                 <Link
                   key={client.id}
