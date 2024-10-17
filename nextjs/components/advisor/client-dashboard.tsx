@@ -19,7 +19,8 @@ export default async function ClientDashboard({ client }) {
     .select()
     .or(
       `and(sender.eq.${user.id},recipient.eq.${client.id}),and(sender.eq.${client.id},recipient.eq.${user.id})`
-    );
+    )
+    .order("created_at", { ascending: false });;
 
   return (
     <div className="flex w-full gap-5">
@@ -28,7 +29,7 @@ export default async function ClientDashboard({ client }) {
       </div>
       <div className="grow-1 min-w-[40rem]">
         <Chat
-          messages={messages ?? []}
+          messages={messages?.reverse() ?? []}
           userId={user.id}
           recipentId={client.id}
           recipentName={client.shared_details ? client.name : `Client`}

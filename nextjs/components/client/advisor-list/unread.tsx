@@ -3,13 +3,11 @@
 import { useChatContext } from "@/components/chat/chat-context";
 import { Badge } from "@/components/ui/badge";
 import { getUnread } from "@/lib/actions/chat";
-import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { filter } from "rxjs";
 
 export default function Unread({ sender }) {
   const [unread, setUnread] = useState(0);
-  const supabase = createClient();
   const { obs } = useChatContext();
 
   useEffect(() => {
