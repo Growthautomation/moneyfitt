@@ -1,8 +1,6 @@
 "use client";
-import clsx from "clsx";
-import { User } from "lucide-react";
-import Link from "next/link";
 import { useParams } from "next/navigation";
+import ListItem from "./chat-list-item";
 
 export default function ChatList({ clients }) {
   const param = useParams<{ id?: string }>();
@@ -19,17 +17,13 @@ export default function ChatList({ clients }) {
             .map((client, index) => {
               const displayName = client?.name ? client.name : `anonymous`;
               return (
-                <Link
+                <ListItem
                   key={client.id}
-                  className={clsx(
-                    "flex items-center p-3 cursor-pointer hover:bg-gray-300 rounded",
-                    { "bg-gray-200": param?.id === client.id }
-                  )}
                   href={`${process.env.NEXT_PUBLIC_ORIGIN}/advisor/chat/${client.id}`}
-                >
-                  <User className="w-8 h-8 mr-2 text-gray-500" />
-                  <span>{displayName}</span>
-                </Link>
+                  displayName={displayName}
+                  selectedClientId={param?.id}
+                  clientId={client.id}
+                />
               );
             })
         : null}

@@ -1,4 +1,3 @@
-import { CheckCircle2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -13,6 +12,7 @@ import { RedirectButton } from "@/components/utils/redirect-btn";
 import { languages, narrowScope } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 import { Advisor } from "@/types/advisor";
+import Unread from "./unread";
 
 interface AdvisorProfileCardProps {
   advisor: Advisor;
@@ -30,6 +30,7 @@ export async function AdvisorProfileCard({
 
   return (
     <Card className="w-full h-full flex flex-col bg-white shadow-lg border-t-4 border-[#5C59E4]">
+      <Unread sender={advisor.id} />
       <CardHeader className="text-center flex-shrink-0 flex flex-col justify-between">
         <Avatar className="w-24 h-24 mx-auto border-4 border-[#D6D5F8]">
           <AvatarImage src={data.publicUrl || ""} alt="advisor-profile-pic" />
@@ -56,30 +57,37 @@ export async function AdvisorProfileCard({
               Specialisations
             </h3>
             <div className="flex flex-wrap gap-2">
-              {(advisor?.narrow_scope as string[])?.slice(0, 3).map((scope, idx) => (
-                <Badge
-                  key={idx}
-                  variant="secondary"
-                  className="bg-[#D6D5F8] text-[#2E2C72] hover:bg-[#8583EB] hover:text-white"
-                >
-                  {narrowScope.find((n) => n.code === scope)?.name ?? scope}
-                </Badge>
-              ))}
+              {(advisor?.narrow_scope as string[])
+                ?.slice(0, 3)
+                .map((scope, idx) => (
+                  <Badge
+                    key={idx}
+                    variant="secondary"
+                    className="bg-[#D6D5F8] text-[#2E2C72] hover:bg-[#8583EB] hover:text-white"
+                  >
+                    {narrowScope.find((n) => n.code === scope)?.name ?? scope}
+                  </Badge>
+                ))}
               {(advisor?.narrow_scope as string[])?.length > 3 && (
-                <Badge variant="secondary" className="bg-[#D6D5F8] text-[#2E2C72]">
+                <Badge
+                  variant="secondary"
+                  className="bg-[#D6D5F8] text-[#2E2C72]"
+                >
                   +{(advisor?.narrow_scope as string[]).length - 3} more
                 </Badge>
               )}
             </div>
           </div>
-          
+
           <div className="mt-4">
             <h3 className="font-semibold mb-2 text-[#2E2C72]">
               Languages Spoken
             </h3>
             <p className="text-sm text-[#222222]">
               {(advisor.languages as string[])
-                ?.map((lang) => languages.find((l) => l.code === lang)?.name || lang)
+                ?.map(
+                  (lang) => languages.find((l) => l.code === lang)?.name || lang
+                )
                 .filter(Boolean)
                 .join(", ")}
             </p>
