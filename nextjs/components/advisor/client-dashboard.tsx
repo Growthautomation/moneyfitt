@@ -29,6 +29,7 @@ export default async function ClientDashboard({ client }) {
       <div className="grow-1 min-w-[40rem]">
         <Chat
           messages={messages ?? []}
+          userId={user.id}
           recipentId={client.id}
           recipentName={client.shared_details ? client.name : `Client`}
         />

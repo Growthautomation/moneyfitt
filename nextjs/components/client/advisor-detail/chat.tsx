@@ -37,6 +37,7 @@ export default async function AdvisorChat({ user, advisor }: AdvisorChatProps) {
       </div>
       <Chat
         messages={messages.reverse()}
+        userId={user.id}
         recipentId={advisor.id}
         recipentName={`${advisor.first_name} ${advisor.last_name}`}
         showSuggestion

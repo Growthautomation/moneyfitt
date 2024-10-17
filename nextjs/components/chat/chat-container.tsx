@@ -14,9 +14,11 @@ import { useChatContext } from "./chat-context";
 import MessageComponent from "./message";
 import { useRouter, useSearchParams } from "next/navigation";
 import { markAsRead } from "@/lib/actions/chat";
+import { filter } from "rxjs";
 
 interface ChatProps {
   recipentId: string;
+  userId: string;
   recipentName: string;
   messages: Message[];
   showSuggestion?: boolean;
@@ -24,6 +26,7 @@ interface ChatProps {
 
 export default function Chat({
   recipentId,
+  userId,
   recipentName,
   messages,
   showSuggestion = false,
@@ -38,14 +41,21 @@ export default function Chat({
   // message streaming
   useEffect(() => {
     if (obs) {
-      const subscription = obs.subscribe({
-        next: (payload) => {
-          setStreamingMessages((prev) => [...prev, payload]);
-        },
-        error: (error) => {
-          console.error("Error in chat context subscription:", error);
-        },
-      });
+      const subscription = obs
+        .pipe(
+          filter(
+            (message) =>
+              message.sender === recipentId || message.sender === userId
+          )
+        )
+        .subscribe({
+          next: (payload) => {
+            setStreamingMessages((prev) => [...prev, payload]);
+          },
+          error: (error) => {
+            console.error("Error in chat context subscription:", error);
+          },
+        });
 
       return () => {
         subscription.unsubscribe();
@@ -70,9 +80,9 @@ export default function Chat({
     const unreads = streamingMessages
       .filter((message) => message.sender === recipentId && !message.is_read)
       .map((m) => m.id);
-      if(unreads.length > 0){
-        markAsRead(unreads);
-      }
+    if (unreads.length > 0) {
+      markAsRead(unreads);
+    }
   }, [streamingMessages, recipentId]);
 
   // update messages when new messages are received
