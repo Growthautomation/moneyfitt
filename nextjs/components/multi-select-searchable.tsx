@@ -63,7 +63,7 @@ export function MultiSelectSearchableComponent({
             <span className="ml-2">▼</span>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full p-0">
+        <PopoverContent className="w-full p-0" style={{ width: 'var(--radix-popover-trigger-width)' }}>
           <div className="p-2">
             <Input
               placeholder={`Search ${placeholder.toLowerCase()}...`}
