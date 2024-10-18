@@ -56,7 +56,8 @@ export function OnboardingFormComponent({
           <div className="space-y-4">
             {renderQuestions(currentQuestion, answers, setAnswers)}
           </div>
-          <div className="text-center">
+          <div className="flex flex-row gap-2 justify-center">
+            <Button onClick={handleBack}>Back</Button>
             <Button onClick={handleNext}>Next</Button>
           </div>
         </Card>
