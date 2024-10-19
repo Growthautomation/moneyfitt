@@ -31,7 +31,10 @@ export default async function Contents({ user }) {
 
   // Filter out duplicate contentIds based on their URLs
   const uniqueContents = client.contents?.filter((contentId, index, self) =>
-    index === self.findIndex((t) => getUrlForContentId(t) === getUrlForContentId(contentId))
+    index === self.findIndex((t) => 
+      typeof t === 'string' && typeof contentId === 'string' && 
+      getUrlForContentId(t) === getUrlForContentId(contentId)
+    )
   );
 
   return (
