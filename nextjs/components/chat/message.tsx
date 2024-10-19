@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import { Message as MsgT } from "@/types/chat";
 import FileMsg from "./file-message-display";
-import { User, UserCircle } from "lucide-react";
+import { User, UserCircle, Settings } from "lucide-react";
 
 export default function Message({
   message,

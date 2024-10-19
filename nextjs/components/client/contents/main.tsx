@@ -31,23 +31,29 @@ export default async function Contents({ user }) {
 
   // Filter out duplicate contentIds based on their URLs
   const uniqueContents = client.contents?.filter((contentId, index, self) =>
-    index === self.findIndex((t) => getUrlForContentId(t) === getUrlForContentId(contentId))
+    index === self.findIndex((t) => 
+      typeof t === 'string' && typeof contentId === 'string' && 
+      getUrlForContentId(t) === getUrlForContentId(contentId)
+    )
   );
 
+  // Check if uniqueContents exists and has items
+  if (!uniqueContents || uniqueContents.length === 0) {
+    return null; // Or return some placeholder content
+  }
+
   return (
-    uniqueContents?.length > 0 && (
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Your Resources</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {uniqueContents.map((contentId, index) => (
-            <ResourceCard
-              key={contentId as string}
-              contentId={contentId as string}
-              iconName={resourceIcons[index % resourceIcons.length]}
-            />
-          ))}
-        </div>
-      </section>
-    )
+    <section>
+      <h2 className="text-xl font-semibold mb-4">Your Resources</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {uniqueContents.map((contentId, index) => (
+          <ResourceCard
+            key={contentId as string}
+            contentId={contentId as string}
+            iconName={resourceIcons[index % resourceIcons.length]}
+          />
+        ))}
+      </div>
+    </section>
   );
 }
