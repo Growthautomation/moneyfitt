@@ -35,6 +35,10 @@ export default async function Contents({ user }) {
       typeof t === 'string' && typeof contentId === 'string' && 
       getUrlForContentId(t) === getUrlForContentId(contentId)
     )
+    index === self.findIndex((t) => 
+      typeof t === 'string' && typeof contentId === 'string' && 
+      getUrlForContentId(t) === getUrlForContentId(contentId)
+    )
   );
 
   // Check if uniqueContents exists and has items
