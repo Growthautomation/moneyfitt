@@ -410,7 +410,7 @@ export const preferredCompanyNode = () =>
 export const additionalSpecification = () =>
   createNode(
     "specification",
-    "Have we missed anything?",
+    "Have We Missed Anything?",
     "Please select any additional specialisations that you need help with:",
     "multipleDropdown",
     null,

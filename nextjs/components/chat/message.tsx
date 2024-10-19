@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import { Message as MsgT } from "@/types/chat";
 import FileMsg from "./file-message-display";
-import { Bot, Settings, UserCircle } from "lucide-react";
+import { User, UserCircle } from "lucide-react";
 
 export default function Message({
   message,
@@ -43,10 +43,11 @@ export default function Message({
             "flex-row-reverse": ismine,
           })}
         >
+          {/* Use UserCircle for user and User for advisor with exact color codes */}
           {ismine ? (
-            <UserCircle className="w-4 h-4" />
+            <UserCircle style={{ color: "#5C59E4" }} className="w-4 h-4" />
           ) : (
-            <Bot className="w-4 h-4" />
+            <User style={{ color: "#2E2C72" }} className="w-4 h-4" />
           )}
           <span className="text-xs font-semibold">
             {ismine ? "You" : senderName}
