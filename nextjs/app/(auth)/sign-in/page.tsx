@@ -30,9 +30,8 @@ const Auth = () => {
   };
   const [_, setAnswers] = useLocalStorage("answers", {});
 
-  const [step, setStep] = useState<"login" | "onboarding" | "welcome">(
-    "welcome"
-  );
+  const [step, setStep] = useState<"login" | "onboarding" | "welcome">("welcome");
+  const [isOnboardingComplete, setIsOnboardingComplete] = useState(false);
 
   if (step === "login") {
     return (
@@ -40,13 +39,21 @@ const Auth = () => {
         <Card className="w-auto px-16 py-10">
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
-              <CircleCheckBig className="text-green-500" />
-              <span className="text-2xl font-bold text-center">Onboarding Complete</span>
+              {isOnboardingComplete ? (
+                <>
+                  <CircleCheckBig className="text-green-500" />
+                  <span className="text-2xl font-bold text-center">Onboarding Complete</span>
+                </>
+              ) : (
+                <span className="text-2xl font-bold text-center">Log in</span>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              Sign in to your account or register with MoneyFitt to view your matches.
+              {isOnboardingComplete
+                ? "Sign in to your account or register with MoneyFitt to view your matches."
+                : "Sign in to your account or register with MoneyFitt."}
             </div>
             <Button
               onClick={handleGoogleSignIn}
@@ -85,7 +92,10 @@ const Auth = () => {
     return (
       <Welcome
         onNext={() => setStep("onboarding")}
-        onSkip={() => setStep("login")}
+        onSkip={() => {
+          setStep("login");
+          setIsOnboardingComplete(false);
+        }}
       />
     );
   }
@@ -95,8 +105,12 @@ const Auth = () => {
       onComplete={(answers) => {
         setAnswers(answers);
         setStep("login");
+        setIsOnboardingComplete(true);
       }}
-      onSkip={() => setStep("login")}
+      onSkip={() => {
+        setStep("login");
+        setIsOnboardingComplete(false);
+      }}
     />
   );
 };
