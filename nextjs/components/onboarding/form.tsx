@@ -86,8 +86,8 @@ export function OnboardingFormComponent({
 
     // Add more conditions here based on other questions and answers
 
-    // Remove duplicates
-    return [...new Set(contentIds)];
+    // Remove duplicates using Array.from() and Set
+    return Array.from(new Set(contentIds));
   }
 
   if (currentQuestion?.type === "cover") {
