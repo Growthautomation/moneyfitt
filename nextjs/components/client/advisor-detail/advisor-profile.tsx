@@ -168,8 +168,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
           {(advisor.broad_scope || advisor.narrow_scope) && (
             <section className="space-y-2">
               <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-                <Star className="mr-2 flex-shrink-0 text-[#5C59E4]" />{" "}
-                Specialisations
+                <Star className="mr-2 flex-shrink-0 text-[#5C59E4]" /> Specialisations
               </h2>
               <div className="flex flex-wrap gap-2">
                 {(advisor.broad_scope as string[])?.map((spec: string) => (
@@ -194,65 +193,10 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
             </section>
           )}
 
-          {advisor.languages && (
-            <section className="space-y-2">
-              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-                <Languages className="mr-2 text-[#5C59E4]" /> Languages
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {(advisor.languages as string[])?.map((lang: string) => (
-                  <Badge
-                    key={lang}
-                    variant="outline"
-                    className="border-[#5C59E4] text-[#2E2C72]"
-                  >
-                    {languages.find((l) => l.code === lang)?.name || lang}
-                  </Badge>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {advisor.religion && (
-            <section className="space-y-2">
-              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-                <ChurchIcon className="mr-2 text-[#5C59E4]" /> Religion
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                <Badge
-                  variant="outline"
-                  className="border-[#5C59E4] text-[#2E2C72]"
-                >
-                  {religion.find((r) => r.code === advisor.religion)?.name ||
-                    advisor.religion}
-                </Badge>
-              </div>
-            </section>
-          )}
-
-          {advisor.education && (
-            <section className="space-y-2">
-              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-                <GraduationCap className="mr-2 text-[#5C59E4]" /> Education
-              </h2>
-              <ul className="space-y-2 text-[#222222]">
-                {(advisor.education as string[])?.map(
-                  (edu: string, index: number) => (
-                    <li key={index} className="flex items-start">
-                      <span className="mr-2 text-[#5C59E4]">•</span>
-                      <span>{edu}</span>
-                    </li>
-                  )
-                )}
-              </ul>
-            </section>
-          )}
-
           {advisor.professional_background && (
             <section className="space-y-2">
               <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-                <Briefcase className="mr-2 text-[#5C59E4]" /> Professional
-                Background
+                <Briefcase className="mr-2 text-[#5C59E4]" /> Professional Background
               </h2>
               <ul className="space-y-2 text-[#222222]">
                 {(advisor.professional_background as string[])?.map(
@@ -260,24 +204,6 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
                     <li key={index} className="flex items-start">
                       <span className="mr-2 text-[#5C59E4]">•</span>
                       <span>{exp}</span>
-                    </li>
-                  )
-                )}
-              </ul>
-            </section>
-          )}
-
-          {advisor.certifications && (
-            <section className="space-y-2">
-              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
-                <FileCheck className="mr-2 text-[#5C59E4]" /> Certifications
-              </h2>
-              <ul className="space-y-2 text-[#222222]">
-                {(advisor.certifications as string[])?.map(
-                  (cert: string, index: number) => (
-                    <li key={index} className="flex items-start">
-                      <span className="mr-2 text-[#5C59E4]">•</span>
-                      <span>{cert}</span>
                     </li>
                   )
                 )}
@@ -303,6 +229,78 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
             </section>
           )}
 
+          {advisor.certifications && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
+                <FileCheck className="mr-2 text-[#5C59E4]" /> Certifications
+              </h2>
+              <ul className="space-y-2 text-[#222222]">
+                {(advisor.certifications as string[])?.map(
+                  (cert: string, index: number) => (
+                    <li key={index} className="flex items-start">
+                      <span className="mr-2 text-[#5C59E4]">•</span>
+                      <span>{cert}</span>
+                    </li>
+                  )
+                )}
+              </ul>
+            </section>
+          )}
+
+          {advisor.languages && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
+                <Languages className="mr-2 text-[#5C59E4]" /> Languages
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {(advisor.languages as string[])?.map((lang: string) => (
+                  <Badge
+                    key={lang}
+                    variant="outline"
+                    className="border-[#5C59E4] text-[#2E2C72]"
+                  >
+                    {languages.find((l) => l.code === lang)?.name || lang}
+                  </Badge>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {advisor.education && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
+                <GraduationCap className="mr-2 text-[#5C59E4]" /> Education
+              </h2>
+              <ul className="space-y-2 text-[#222222]">
+                {(advisor.education as string[])?.map(
+                  (edu: string, index: number) => (
+                    <li key={index} className="flex items-start">
+                      <span className="mr-2 text-[#5C59E4]">•</span>
+                      <span>{edu}</span>
+                    </li>
+                  )
+                )}
+              </ul>
+            </section>
+          )}
+
+          {advisor.religion && (
+            <section className="space-y-2">
+              <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
+                <ChurchIcon className="mr-2 text-[#5C59E4]" /> Religion
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                <Badge
+                  variant="outline"
+                  className="border-[#5C59E4] text-[#2E2C72]"
+                >
+                  {religion.find((r) => r.code === advisor.religion)?.name ||
+                    advisor.religion}
+                </Badge>
+              </div>
+            </section>
+          )}
+
           {advisor.testinomial && (
             <section className="space-y-2">
               <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
@@ -324,9 +322,7 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
 
           {advisor.personal_interests && (
             <section className="space-y-2">
-              <h2 className="text-xl font-semibold text-[#2E2C72]">
-                Personal Interests
-              </h2>
+              <h2 className="text-xl font-semibold text-[#2E2C72]">Personal Interests</h2>
               <ul className="text-[#222222] flex flex-wrap gap-2 my-2">
                 {(advisor.personal_interests as string[])?.map(
                   (interest: string, index: number) => (
