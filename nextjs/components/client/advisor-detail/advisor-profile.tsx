@@ -138,9 +138,9 @@ export function AdvisorProfile({ advisor }: { advisor: Advisor }) {
           </div>
           <div className="text-center sm:text-left flex-grow">
             <CardTitle className="text-3xl font-bold break-words text-[#222222]">{`${advisor.first_name} ${advisor.last_name}`}</CardTitle>
-            {advisor.tagline && (
+            {advisor.title && (
               <p className="text-sm text-[#4543AB] font-medium break-words mt-1">
-                {advisor.tagline}
+                {advisor.title}
               </p>
             )}
             <div className="mt-2 flex flex-wrap gap-2">

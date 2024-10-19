@@ -1,7 +1,7 @@
 import ResourceCard from "@/components/resource-card";
 import ComponentError from "@/components/utils/component-error";
 import { createClient } from "@/lib/supabase/server";
-import { BarChart2, PiggyBank, BookOpen } from "lucide-react";
+import { getUrlForContentId } from "@/resources/contentid-url";
 
 export default async function Contents({ user }) {
   const supabase = createClient();
@@ -28,12 +28,18 @@ export default async function Contents({ user }) {
     "Wallet",
     "ChevronRight",
   ];
+
+  // Filter out duplicate contentIds based on their URLs
+  const uniqueContents = client.contents?.filter((contentId, index, self) =>
+    index === self.findIndex((t) => getUrlForContentId(t) === getUrlForContentId(contentId))
+  );
+
   return (
-    client.contents?.length && (
+    uniqueContents?.length > 0 && (
       <section>
         <h2 className="text-xl font-semibold mb-4">Your Resources</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {client.contents.map((contentId, index) => (
+          {uniqueContents.map((contentId, index) => (
             <ResourceCard
               key={contentId as string}
               contentId={contentId as string}
