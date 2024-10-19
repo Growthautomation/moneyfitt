@@ -29,17 +29,16 @@ export default async function Contents({ user }) {
     "ChevronRight",
   ];
 
+  // Ensure client.contents is an array and filter out non-string values
+  const safeContents = Array.isArray(client.contents) ? client.contents.filter((item): item is string => typeof item === 'string') : [];
+
   // Filter out duplicate contentIds based on their URLs
-  const uniqueContents = client.contents?.filter((contentId, index, self) =>
-    index === self.findIndex((t) => 
-      typeof t === 'string' && typeof contentId === 'string' && 
-      getUrlForContentId(t) === getUrlForContentId(contentId)
-    )
+  const uniqueContents = safeContents.filter((contentId, index, self) =>
+    index === self.findIndex((t) => getUrlForContentId(t) === getUrlForContentId(contentId))
   );
 
-  // Check if uniqueContents exists and has items
-  if (!uniqueContents || uniqueContents.length === 0) {
-    return null; // Or return some placeholder content
+  if (uniqueContents.length === 0) {
+    return <p>No resources available.</p>;
   }
 
   return (
@@ -48,8 +47,8 @@ export default async function Contents({ user }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {uniqueContents.map((contentId, index) => (
           <ResourceCard
-            key={contentId as string}
-            contentId={contentId as string}
+            key={contentId}
+            contentId={contentId}
             iconName={resourceIcons[index % resourceIcons.length]}
           />
         ))}
