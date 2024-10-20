@@ -46,6 +46,10 @@ export function Faq() {
     {
       question: "How many leads can advisors get and how do you share the leads amongst different advisors?",
       answer: "We've developed a points-based system where the top three scoring advisors will be your first three matches. Very soon, users will be able to hit refresh on their three matched advisors once every 24 hours. If multiple advisors score the same, the leads will be distributed randomly to ensure fairness."
+    },
+    {
+      question: "Can I delete my MoneyFitt account?",
+      answer: "You can delete your MoneyFitt account at any time by sending an email to feedback@moneyfitt.co from the email address associated with your account. We aim to process account deletion requests within 30 days. All personal data associated with your account will be permanently removed, except where legal obligations require us to retain certain information. Please note that if you change your mind after deletion, you will need to create a new account to access our services again. If you have further questions, feel free to reach out to us at the same email address."
     }
   ];
 
