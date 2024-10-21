@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      activities: {
+        Row: {
+          advisor_id: string | null
+          client_id: string | null
+          created_at: string
+          id: number
+          message: string | null
+          output: string | null
+          prompt: string | null
+        }
+        Insert: {
+          advisor_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          id?: number
+          message?: string | null
+          output?: string | null
+          prompt?: string | null
+        }
+        Update: {
+          advisor_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          id?: number
+          message?: string | null
+          output?: string | null
+          prompt?: string | null
+        }
+        Relationships: []
+      }
       advisor: {
         Row: {
           age_group: string | null
@@ -177,6 +207,30 @@ export type Database = {
         }
         Relationships: []
       }
+      communications: {
+        Row: {
+          created_at: string
+          id: number
+          message: string | null
+          meta: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          message?: string | null
+          meta?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          message?: string | null
+          meta?: Json | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       conversation_summaries: {
         Row: {
           advisor_id: string
@@ -260,6 +314,7 @@ export type Database = {
           created_at: string | null
           files: Json | null
           id: string
+          is_read: boolean | null
           message: string
           recipient: string
           sender: string
@@ -268,6 +323,7 @@ export type Database = {
           created_at?: string | null
           files?: Json | null
           id?: string
+          is_read?: boolean | null
           message: string
           recipient?: string
           sender?: string
@@ -276,6 +332,7 @@ export type Database = {
           created_at?: string | null
           files?: Json | null
           id?: string
+          is_read?: boolean | null
           message?: string
           recipient?: string
           sender?: string
@@ -378,4 +435,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
