@@ -207,6 +207,30 @@ export type Database = {
         }
         Relationships: []
       }
+      communications: {
+        Row: {
+          created_at: string
+          id: number
+          message: string | null
+          meta: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          message?: string | null
+          meta?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          message?: string | null
+          meta?: Json | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       conversation_summaries: {
         Row: {
           advisor_id: string
