@@ -22,6 +22,7 @@ interface ChatProps {
   recipentName: string;
   messages: Message[];
   showSuggestion?: boolean;
+  systemMessagePostfix?: string;
 }
 
 export default function Chat({
@@ -30,6 +31,7 @@ export default function Chat({
   recipentName,
   messages,
   showSuggestion = false,
+  systemMessagePostfix = "",
 }: ChatProps) {
   const [streamingMessages, setStreamingMessages] = useState(messages);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -132,6 +134,7 @@ export default function Chat({
               key={message.id}
               message={message}
               ismine={message.sender !== recipentId}
+              systemMessagePostfix={systemMessagePostfix}
               senderName={recipentName}
             />
           ))}

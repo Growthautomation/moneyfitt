@@ -33,6 +33,7 @@ export default async function ClientDashboard({ client }) {
           userId={user.id}
           recipentId={client.id}
           recipentName={client.shared_details ? client.name : `Client`}
+          systemMessagePostfix="You might need to reload the page to view the details"
         />
       </div>
     </div>
