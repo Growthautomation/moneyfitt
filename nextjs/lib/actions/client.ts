@@ -236,15 +236,31 @@ export async function shareContact(data: FormData) {
   const { error: msgErr } = await supabase.from("messages").insert({
     message: "[SYSTEM]User shared contact info with advisor",
     sender: user.id,
-    recipient: data.get("advisorId") as string || "",
-    files: []
-  })
+    recipient: (data.get("advisorId") as string) || "",
+    files: [],
+  });
 
   if (msgErr) {
     console.error(msgErr);
     return {
       success: false,
       error: "Error sending message",
+    };
+  }
+
+  const { error: actErr } = await supabase.from("activities").insert({
+    client_id: user.id,
+    advisor_id: (data.get("advisorId") as string) || "",
+    prompt: "",
+    output: `scope: ${sharedScope}, payload: ${JSON.stringify(payload)}`,
+    message: "User shared contact info with advisor",
+  });
+
+  if (actErr) {
+    console.error(actErr);
+    return {
+      success: false,
+      error: "Error inserting activity",
     };
   }
 
