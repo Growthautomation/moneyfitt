@@ -9,10 +9,12 @@ export default function Message({
   message,
   ismine,
   senderName,
+  systemMessagePostfix,
 }: {
   message: MsgT;
   ismine: boolean;
   senderName: string;
+  systemMessagePostfix?: string;
 }) {
   const isSystemMsg = message.message.startsWith("[SYSTEM]");
   if (isSystemMsg) {
@@ -26,7 +28,7 @@ export default function Message({
           </span>
         </div>
         <div className="bg-secondary text-center rounded p-1 text-sm">
-          {message.message.replace("[SYSTEM]", "")}
+          {`${message.message.replace("[SYSTEM]", "")}. ${systemMessagePostfix}`}
         </div>
       </div>
     );
