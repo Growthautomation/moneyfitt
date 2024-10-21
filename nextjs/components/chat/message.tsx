@@ -27,8 +27,8 @@ export default function Message({
             {new Date(message.created_at!).toLocaleTimeString()}
           </span>
         </div>
-        <div className="bg-secondary text-center rounded p-1 text-sm">
-          {`${message.message.replace("[SYSTEM]", "")}. ${systemMessagePostfix}`}
+        <div className="bg-secondary whitespace-pre-wrap text-center rounded p-1 text-sm">
+          {`${message.message.replace("[SYSTEM]", "")}. \n${systemMessagePostfix}`}
         </div>
       </div>
     );
