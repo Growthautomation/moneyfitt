@@ -9,7 +9,6 @@ import { QNode } from "@/resources/questions";
 import { getQuestions } from "@/resources/onboarding-question-v2";
 import renderQuestions from "./renderer";
 import { getRemaining } from "@/lib/utils/questions";
-import { createClient } from "@/lib/supabase/client";
 
 interface OnboardingQuestionsProps {
   onComplete: (values: Record<string, string[]>) => void;
@@ -35,9 +34,10 @@ export function OnboardingFormComponent({
     }
   };
 
-  const handleNext = () => {
-    setAnswers({ ...answers, ...currentQuestion?.answerModifier(answers) });
-    const val = currentQuestion?.next(answers);
+  const handleNext = (answers) => {
+    const newAns = { ...answers, ...currentQuestion?.answerModifier(answers) };
+    const val = currentQuestion?.next(newAns);
+    setAnswers(newAns);
     if (val) {
       setCurrentQuestion(val || null);
       setNumAnswers(numAnswers + 1);
@@ -50,53 +50,6 @@ export function OnboardingFormComponent({
     return numAnswers + getRemaining(currentQuestion, answers);
   }, [answers, numAnswers, currentQuestion]);
 
-  const handleComplete = async () => {
-    // ... existing code to process answers
-
-    // Add this section to save content IDs
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (user) {
-      // Determine which content IDs to add based on user answers
-      const contentIds = determineContentIds(answers);
-
-      // Update the client record with the new content IDs
-      const { error } = await supabase
-        .from('client')
-        .update({ contents: contentIds })
-        .eq('id', user.id);
-
-      if (error) {
-        console.error("Error updating client with content IDs:", error);
-      }
-    }
-
-    onComplete(answers);
-  };
-
-  // Helper function to determine which content IDs to add based on user answers
-  function determineContentIds(answers: Record<string, string[]>): string[] {
-    const contentIds: string[] = [];
-
-    // Example logic - adjust based on your specific requirements
-    if (answers.lagacyPlanning && answers.lagacyPlanning[0] === "RESOURCE") {
-      contentIds.push("760", "761", "763", "683");
-    }
-
-    // Add more conditions here based on other questions and answers
-
-    // Remove duplicates using a simple loop
-    const uniqueContentIds: string[] = [];
-    for (let i = 0; i < contentIds.length; i++) {
-      if (uniqueContentIds.indexOf(contentIds[i]) === -1) {
-        uniqueContentIds.push(contentIds[i]);
-      }
-    }
-
-    return uniqueContentIds;
-  }
-
   if (currentQuestion?.type === "cover") {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -106,7 +59,7 @@ export function OnboardingFormComponent({
           </div>
           <div className="flex flex-row gap-2 justify-center">
             <Button onClick={handleBack}>Back</Button>
-            <Button onClick={handleNext}>Next</Button>
+            <Button onClick={() => handleNext(answers)}>Next</Button>
           </div>
         </Card>
       </div>
@@ -115,20 +68,26 @@ export function OnboardingFormComponent({
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      {currentQuestion?.title && (
-        <div className="text-3xl my-8 max-w-4xl text-center">
-          {currentQuestion.title}
-        </div>
-      )}
       <Card className="w-full max-w-4xl p-6 space-y-6">
-        <h2 className="text-2xl font-bold">{currentQuestion?.category}</h2>
-        <p className="text-lg whitespace-normal break-words">{currentQuestion?.question}</p>
-        {currentQuestion?.description && (
-          <p className="text-sm whitespace-normal break-words">{currentQuestion?.description}</p>
-        )}
-        <div className="space-y-4">
-          {renderQuestions(currentQuestion, answers, setAnswers)}
+        <div>
+          {currentQuestion?.title && (
+            <div className="text-2xl font-bold">{currentQuestion.title}</div>
+          )}
+          <h2 className="text-2xl font-bold mt-2">
+            {currentQuestion?.category}
+          </h2>
         </div>
+        <p className="text-lg whitespace-normal break-words">
+          {currentQuestion?.question}
+        </p>
+        <div className="space-y-4">
+          {renderQuestions(currentQuestion, answers, setAnswers, handleNext)}
+        </div>
+        {currentQuestion?.description && (
+          <p className="text-sm whitespace-normal break-words">
+            {currentQuestion?.description}
+          </p>
+        )}
         {error && <Alert variant="destructive">{error}</Alert>}
         <div className="flex justify-between items-center space-x-4">
           <Button
@@ -147,7 +106,7 @@ export function OnboardingFormComponent({
             />
           </div>
           <Button
-            onClick={handleNext}
+            onClick={() => handleNext(answers)}
             disabled={currentQuestion?.required(answers)}
             className="flex-shrink-0"
           >
