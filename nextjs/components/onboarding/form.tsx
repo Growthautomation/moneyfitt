@@ -74,13 +74,17 @@ export function OnboardingFormComponent({
       )}
       <Card className="w-full max-w-4xl p-6 space-y-6">
         <h2 className="text-2xl font-bold">{currentQuestion?.category}</h2>
-        <p className="text-lg whitespace-normal break-words">{currentQuestion?.question}</p>
-        {currentQuestion?.description && (
-          <p className="text-sm whitespace-normal break-words">{currentQuestion?.description}</p>
-        )}
+        <p className="text-lg whitespace-normal break-words">
+          {currentQuestion?.question}
+        </p>
         <div className="space-y-4">
           {renderQuestions(currentQuestion, answers, setAnswers, handleNext)}
         </div>
+        {currentQuestion?.description && (
+          <p className="text-sm whitespace-normal break-words">
+            {currentQuestion?.description}
+          </p>
+        )}
         {error && <Alert variant="destructive">{error}</Alert>}
         <div className="flex justify-between items-center space-x-4">
           <Button
