@@ -11,7 +11,8 @@ export default function renderQuestions(
   answer: Record<string, string | string[]>,
   setAnswer: React.Dispatch<
     React.SetStateAction<Record<string, string | string[]>>
-  >
+  >,
+  next: () => void = () => null
 ) {
   switch (question?.type) {
     case "single":
@@ -19,7 +20,10 @@ export default function renderQuestions(
         <Select
           options={question.options}
           value={answer[question.key]}
-          onSelect={(val) => setAnswer({ ...answer, [question.key]: val })}
+          onSelect={(val) => {
+            setAnswer({ ...answer, [question.key]: val });
+            next();
+          }}
         />
       );
     case "multiple":

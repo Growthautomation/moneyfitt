@@ -9,7 +9,6 @@ import { QNode } from "@/resources/questions";
 import { getQuestions } from "@/resources/onboarding-question-v2";
 import renderQuestions from "./renderer";
 import { getRemaining } from "@/lib/utils/questions";
-import { createClient } from "@/lib/supabase/client";
 
 interface OnboardingQuestionsProps {
   onComplete: (values: Record<string, string[]>) => void;
@@ -50,53 +49,6 @@ export function OnboardingFormComponent({
     return numAnswers + getRemaining(currentQuestion, answers);
   }, [answers, numAnswers, currentQuestion]);
 
-  const handleComplete = async () => {
-    // ... existing code to process answers
-
-    // Add this section to save content IDs
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (user) {
-      // Determine which content IDs to add based on user answers
-      const contentIds = determineContentIds(answers);
-
-      // Update the client record with the new content IDs
-      const { error } = await supabase
-        .from('client')
-        .update({ contents: contentIds })
-        .eq('id', user.id);
-
-      if (error) {
-        console.error("Error updating client with content IDs:", error);
-      }
-    }
-
-    onComplete(answers);
-  };
-
-  // Helper function to determine which content IDs to add based on user answers
-  function determineContentIds(answers: Record<string, string[]>): string[] {
-    const contentIds: string[] = [];
-
-    // Example logic - adjust based on your specific requirements
-    if (answers.lagacyPlanning && answers.lagacyPlanning[0] === "RESOURCE") {
-      contentIds.push("760", "761", "763", "683");
-    }
-
-    // Add more conditions here based on other questions and answers
-
-    // Remove duplicates using a simple loop
-    const uniqueContentIds: string[] = [];
-    for (let i = 0; i < contentIds.length; i++) {
-      if (uniqueContentIds.indexOf(contentIds[i]) === -1) {
-        uniqueContentIds.push(contentIds[i]);
-      }
-    }
-
-    return uniqueContentIds;
-  }
-
   if (currentQuestion?.type === "cover") {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -127,7 +79,7 @@ export function OnboardingFormComponent({
           <p className="text-sm whitespace-normal break-words">{currentQuestion?.description}</p>
         )}
         <div className="space-y-4">
-          {renderQuestions(currentQuestion, answers, setAnswers)}
+          {renderQuestions(currentQuestion, answers, setAnswers, handleNext)}
         </div>
         {error && <Alert variant="destructive">{error}</Alert>}
         <div className="flex justify-between items-center space-x-4">
