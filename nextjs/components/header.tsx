@@ -2,6 +2,7 @@ import { signOutAction } from "@/lib/actions/auth";
 import { SubmitButton } from "./submit-btn";
 import { createClient } from "@/lib/supabase/server";
 import { RedirectButton } from "./utils/redirect-btn";
+import ChangePassword from "./utils/change-password";
 
 export default async function Header() {
   const supabase = createClient();
@@ -12,7 +13,8 @@ export default async function Header() {
     <header className="border-b">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {user ? (
-          <div className="flex items-center justify-end h-16">
+          <div className="flex items-center gap-2 justify-end h-16">
+            {user.user_metadata["userType"] === "advisor" && <ChangePassword />}
             <form>
               <SubmitButton
                 pendingText="Signing out..."
@@ -26,7 +28,11 @@ export default async function Header() {
           </div>
         ) : (
           <div className="flex items-center justify-end h-16">
-            <RedirectButton className="" href="/advisor/sign-in" variant="outline">
+            <RedirectButton
+              className=""
+              href="/advisor/sign-in"
+              variant="outline"
+            >
               Advisor Sign In
             </RedirectButton>
           </div>
