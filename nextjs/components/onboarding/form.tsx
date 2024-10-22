@@ -34,9 +34,10 @@ export function OnboardingFormComponent({
     }
   };
 
-  const handleNext = () => {
-    setAnswers({ ...answers, ...currentQuestion?.answerModifier(answers) });
-    const val = currentQuestion?.next(answers);
+  const handleNext = (answers) => {
+    const newAns = { ...answers, ...currentQuestion?.answerModifier(answers) };
+    const val = currentQuestion?.next(newAns);
+    setAnswers(newAns);
     if (val) {
       setCurrentQuestion(val || null);
       setNumAnswers(numAnswers + 1);
@@ -58,7 +59,7 @@ export function OnboardingFormComponent({
           </div>
           <div className="flex flex-row gap-2 justify-center">
             <Button onClick={handleBack}>Back</Button>
-            <Button onClick={handleNext}>Next</Button>
+            <Button onClick={() => handleNext(answers)}>Next</Button>
           </div>
         </Card>
       </div>
@@ -67,13 +68,15 @@ export function OnboardingFormComponent({
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      {currentQuestion?.title && (
-        <div className="text-3xl my-8 max-w-4xl text-center">
-          {currentQuestion.title}
-        </div>
-      )}
       <Card className="w-full max-w-4xl p-6 space-y-6">
-        <h2 className="text-2xl font-bold">{currentQuestion?.category}</h2>
+        <div>
+          {currentQuestion?.title && (
+            <div className="text-2xl font-bold">{currentQuestion.title}</div>
+          )}
+          <h2 className="text-2xl font-bold mt-2">
+            {currentQuestion?.category}
+          </h2>
+        </div>
         <p className="text-lg whitespace-normal break-words">
           {currentQuestion?.question}
         </p>
@@ -103,7 +106,7 @@ export function OnboardingFormComponent({
             />
           </div>
           <Button
-            onClick={handleNext}
+            onClick={() => handleNext(answers)}
             disabled={currentQuestion?.required(answers)}
             className="flex-shrink-0"
           >
