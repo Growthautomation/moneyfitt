@@ -4,10 +4,13 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { Database } from "../database.types.ts";
+import { getUnreadEmail } from "../templates/unread.ts";
+import { searchAdvisorAndClient } from "./search.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+const FE_HOST = "https://moneyfitt.vercel.app"; // Deno.env.get("FE_HOST");
 
 const handler = async (_request: Request): Promise<Response> => {
   const supabase = createClient<Database>(
@@ -69,13 +72,23 @@ const handler = async (_request: Request): Promise<Response> => {
     ) {
       continue;
     }
-    const message = `<p>You have ${grouped[recipient].length} unread messages</p>`;
+    const sender = await searchAdvisorAndClient(
+      supabase,
+      grouped[recipient][0].sender
+    );
+    const message = getUnreadEmail(
+      sender?.full_name || "unknown",
+      sender?.source === "client"
+        ? `${FE_HOST}/advisor/chat/${recipient}`
+        : `${FE_HOST}/chat/${sender?.id}`
+    );
+
     const {
       data: { user },
     } = await supabase.auth.admin.getUserById(recipient);
     if(!user) {
-        console.error("User not found");
-        continue;
+      console.error("User not found");
+      continue;
     }
 
     console.log("sending email to", user?.email);
