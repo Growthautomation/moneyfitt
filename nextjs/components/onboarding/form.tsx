@@ -61,6 +61,7 @@ export function OnboardingFormComponent({
             <Button onClick={handleBack}>Back</Button>
             <Button onClick={() => handleNext(answers)}>Next</Button>
           </div>
+          <div className="text-xs text-gray-400 text-center">You&apos;re using the beta version of our financial matching platform. For any issues, contact <a href="mailto:hello@moneyfitt.co" className="hover:underline text-blue-500">hello@moneyfitt.co</a></div>
         </Card>
       </div>
     );
@@ -130,6 +131,7 @@ export function OnboardingFormComponent({
             I have an account
           </span>
         </div>
+        <div className="text-xs text-gray-400 text-center">You&apos;re using the beta version of our financial matching platform. For any issues, contact <a href="mailto:hello@moneyfitt.co" className="hover:underline text-blue-500">hello@moneyfitt.co</a></div>
       </Card>
     </div>
   );
