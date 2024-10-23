@@ -25,10 +25,12 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { assert } from "https://deno.land/std@0.224.0/assert/mod.ts";
 import { Database } from "../database.types.ts";
+import { newMatchTemplate } from "../templates/new-match.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+const FE_HOST = "https://moneyfitt.vercel.app"; // Deno.env.get("FE_HOST");
 
 const handler = async (_request: Request): Promise<Response> => {
   const payload = await _request.json();
@@ -75,7 +77,7 @@ const handler = async (_request: Request): Promise<Response> => {
       from: "match@moneyfitt.co",
       to: user?.email,
       subject: "New match",
-      html: "<p>Dear advisor, you have a new match</p>",
+      html: newMatchTemplate(FE_HOST),
     }),
   });
 
