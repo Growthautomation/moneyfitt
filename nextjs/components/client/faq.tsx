@@ -20,8 +20,8 @@ export function Faq() {
   // FAQ data
   const faqs: FAQItem[] = [
     {
-      question: "Do agents/advisors on the platform belong to MoneyFitt?",
-      answer: "The insurance agents and financial advisors on this platform are not employed by MoneyFitt or belong to it. All agents and advisors apply to be on the platform, with no preferred advisor or agency. They are either captive insurance agents (belonging to one insurance company), independent insurance agents, or financial advisors (including independent financial advisors)."
+      question: "Are the Agents/Advisors on the platform affiliated with MoneyFitt in any way?",
+      answer: "The insurance agents and financial advisors on this platform are not employed by MoneyFitt or affiliated with it in any way. All agents and advisors apply to be on the platform. They are either captive insurance agents (belonging to one insurance company), independent insurance agents, or financial advisors (including independent financial advisors)."
     },
     {
       question: "Does MoneyFitt make a commission if I buy a product with a listed advisor?",
