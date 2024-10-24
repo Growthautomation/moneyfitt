@@ -94,7 +94,7 @@ export const planningArea = () =>
     null,
     broadScope,
     () => ({}),
-    ({ broadScope }) => !Boolean(broadScope)
+    ({ broadScope }) => !broadScope?.length
   );
 
 export const specializationNodes = {
@@ -347,7 +347,7 @@ export const advisorReligionNode = () =>
     "Do you request a faith-aligned service? if so, please select by religion.",
     "multiple",
     null,
-    religion
+    [...religion, { code: undefined as never, name: "No preference" }]
   );
 
 export const advisorGenderNode = () =>
@@ -357,7 +357,7 @@ export const advisorGenderNode = () =>
     "By gender:",
     "single",
     null,
-    gender
+    [...gender, { code: undefined as never, name: "No preference" }]
   );
 
 export const advisorLanguageNode = () =>
@@ -367,7 +367,7 @@ export const advisorLanguageNode = () =>
     "By languages spoken:",
     "multiple",
     null,
-    languages
+    [...languages, { code: undefined as never, name: "No preference" }]
   );
 
 export const ageNode = () =>
@@ -383,14 +383,10 @@ export const ageNode = () =>
   );
 
 export const advisorAgeNode = () =>
-  createNode(
-    "preferAge",
-    "Advisor Preferences",
-    "By age:",
-    "multiple",
-    null,
-    ageGroups
-  );
+  createNode("preferAge", "Advisor Preferences", "By age:", "multiple", null, [
+    ...ageGroups,
+    { code: undefined as never, name: "No preference" },
+  ]);
 
 export const preferredCompanyNode = () =>
   createNode(
@@ -614,9 +610,7 @@ export const investmentAdvise = (percent, skipBusy = false) =>
       },
       ...(skipBusy
         ? []
-        : [
-            { code: "BUSY", name: "I am too busy building my emergency fund" },
-          ]),
+        : [{ code: "BUSY", name: "I am too busy building my emergency fund" }]),
       { code: "DEBT", name: "I am prioritising debt management" },
     ],
     (answers) => {
