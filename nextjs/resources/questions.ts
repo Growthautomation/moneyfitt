@@ -363,7 +363,7 @@ export const advisorLanguageNode = () =>
   createNode(
     "preferLanguage",
     "Advisor Preferences",
-    "By language spoken:",
+    "By languages spoken:",
     "multiple",
     null,
     languages
