@@ -343,7 +343,7 @@ export const advisorReligionNode = () =>
   createNode(
     "preferReligion",
     "Advisor Preferences",
-    "By religion:",
+    "Do you request a faith-aligned service? if so, please select by religion.",
     "multiple",
     null,
     religion
