@@ -9,6 +9,7 @@ import { QNode } from "@/resources/questions";
 import { getQuestions } from "@/resources/onboarding-question-v2";
 import renderQuestions from "./renderer";
 import { getRemaining } from "@/lib/utils/questions";
+import { isEmpty } from "lodash";
 
 interface OnboardingQuestionsProps {
   onComplete: (values: Record<string, string[]>) => void;
@@ -49,6 +50,8 @@ export function OnboardingFormComponent({
   const totalQuestions = useMemo(() => {
     return numAnswers + getRemaining(currentQuestion, answers);
   }, [answers, numAnswers, currentQuestion]);
+
+  console.log(answers)
 
   if (currentQuestion?.type === "cover") {
     return (
@@ -112,7 +115,7 @@ export function OnboardingFormComponent({
             className="flex-shrink-0"
           >
             {currentQuestion?.next(answers)
-              ? !answers[currentQuestion.key] &&
+              ? isEmpty(answers[currentQuestion.key]) &&
                 !currentQuestion.required(answers)
                 ? "Skip"
                 : "Next"

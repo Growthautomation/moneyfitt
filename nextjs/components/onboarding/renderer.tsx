@@ -21,6 +21,11 @@ export default function renderQuestions(
           options={question.options}
           value={answer[question.key]}
           onSelect={(val) => {
+            if (!val) {
+              setAnswer({ ...answer, [question.key]: undefined as never });
+              next(answer);
+              return
+            }
             const newAns = { ...answer, [question.key]: val };
             setAnswer(newAns);
             next(newAns);
@@ -32,7 +37,12 @@ export default function renderQuestions(
         <Select
           options={question.options}
           value={answer[question.key]}
-          onSelect={(val) =>
+          onSelect={(val) => {
+            if(!val) {
+              setAnswer({ ...answer, [question.key]: [] });
+              next({...answer, [question.key] : []});
+              return
+            }
             setAnswer({
               ...answer,
               [question.key]: answer[question.key]?.includes(val)
@@ -42,8 +52,8 @@ export default function renderQuestions(
                     ),
                   ]
                 : [...((answer[question.key] || []) as string[]), val],
-            })
-          }
+            });
+          }}
           multiple
         />
       );
