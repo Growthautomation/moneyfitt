@@ -25,7 +25,7 @@ export function Faq() {
     },
     {
       question: "Does MoneyFitt make a commission if I buy a product with a listed advisor?",
-      answer: "No. MoneyFitt does not take any commission from action taken through experts, ensuring a transparent and hassle-free experience."
+      answer: "No. MoneyFitt does not take any commission or a fee from actions taken through experts, ensuring a transparent and hassle-free experience."
     },
     {
       question: "Why did MoneyFitt build this platform?",
