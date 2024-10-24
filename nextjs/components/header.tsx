@@ -3,6 +3,7 @@ import { SubmitButton } from "./submit-btn";
 import { createClient } from "@/lib/supabase/server";
 import { RedirectButton } from "./utils/redirect-btn";
 import ChangePassword from "./utils/change-password";
+import Link from "next/link";
 
 export default async function Header() {
   const supabase = createClient();
@@ -14,6 +15,7 @@ export default async function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {user ? (
           <div className="flex items-center gap-2 justify-end h-16">
+            {user.user_metadata["userType"] === "advisor" && <Link className="hover:bg-gray-100 border px-4 py-[.3rem] rounded" href="/advisor/profile">Profile</Link>}
             {user.user_metadata["userType"] === "advisor" && <ChangePassword />}
             <form>
               <SubmitButton
