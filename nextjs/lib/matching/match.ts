@@ -87,5 +87,13 @@ function personalScore(advisor: Advisor, client: Client) {
   ) {
     score += 2;
   }
+  if (
+    client.preferred_advisor &&
+    (client.preferred_advisor as string[]).includes(
+      advisor.current_company as string
+    )
+  ) {
+    score += 2;
+  }
   return score;
 }

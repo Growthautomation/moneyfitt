@@ -5,6 +5,7 @@ import {
   languages,
   ageGroups,
   narrowScope,
+  companies,
 } from "@/lib/constants";
 import { intersection } from "lodash";
 
@@ -398,13 +399,7 @@ export const preferredCompanyNode = () =>
     "By company or agency:",
     "multipleDropdown",
     null,
-    [
-      { code: "bank", name: "Bank" },
-      { code: "independentFirmLarge", name: "Independent Firm (Large)" },
-      { code: "independentFirmSmall", name: "Independent Firm (Small)" },
-      { code: "insuranceCompany", name: "Insurance Company" },
-      { code: "other", name: "Other" },
-    ]
+    companies
   );
 
 export const additionalSpecification = () =>

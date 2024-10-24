@@ -130,6 +130,17 @@ const religion = [
   { code: "ATH", name: "Atheism" },
 ];
 
+export const companies = [
+  { code: 'AWM', name: 'Ascendance Wealth Management(AWM)' },
+  { code: 'HSBC', name: 'HSBC Life' },
+  { code: "II", name: "Income Insurance" },
+  { code: "PRU", name: "Prudential" },
+  { code: "GE", name: "Great Eastern (Advisors’ Clique Collective)"},
+  { code: "PIAS", name: "Professional Investment Advisory Services"},
+  { code: "FA", name: "Financial Alliance Pte Ltd"},
+  { code: "PS", name: "Phillip Securities Pte Ltd"}
+]
+
 export function encodeLanguage(lang: string) {
   const obj = languages.find((l) => l.name === lang);
   if (!obj) throw new Error("Language not found: " + lang);
@@ -178,5 +189,11 @@ export function encodeBroadScope(scope: string){
 export function encodeNarrowScope(scope: string){
     const obj = narrowScope.find((l) => l.name === scope);
     if (!obj) throw new Error('Narrow scope not found: ' + scope);
+    return obj.code;
+}
+
+export function encodeCompany(comp: string){
+    const obj =  companies.find((l) => l.name === comp);
+    if (!obj) throw new Error('Company not found: ' + comp);
     return obj.code;
 }
