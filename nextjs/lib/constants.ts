@@ -129,3 +129,14 @@ export const religion = [
   {code: "JUD", name: "Judaism"},
   {code: "ATH", name: "Atheism"},
 ];
+
+export const companies = [
+  { code: 'AWM', name: 'Ascendance Wealth Management(AWM)' },
+  { code: 'HSBC', name: 'HSBC Life' },
+  { code: "II", name: "Income Insurance" },
+  { code: "PRU", name: "Prudential" },
+  { code: "GE", name: "Great Eastern (Advisors’ Clique Collective)"},
+  { code: "PIAS", name: "Professional Investment Advisory Services"},
+  { code: "FA", name: "Financial Alliance Pte Ltd"},
+  { code: "PS", name: "Phillip Securities Pte Ltd"}
+]

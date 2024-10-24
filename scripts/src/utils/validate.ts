@@ -1,6 +1,7 @@
 import {
   encodeAgeGroup,
   encodeBroadScope,
+  encodeCompany,
   encodeGender,
   encodeLanguage,
   encodeNarrowScope,
@@ -67,7 +68,7 @@ export function validate(raw: any) {
           .map((x: string) => x.trim())
           .filter((x: string) => !!x)
       : [],
-    current_company: raw["Current Company"],
+    current_company: encodeCompany(raw["Current Company"]),
     personal_website: raw["Personal Website"],
     mas: raw["MAS Register of Representatives Number"],
     testinomial: [
