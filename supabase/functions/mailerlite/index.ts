@@ -61,6 +61,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { assert } from "https://deno.land/std@0.224.0/assert/mod.ts";
 
 const MAILERLITE_API_KEY = Deno.env.get("MAILERLITE_API_KEY");
+const PLATFORM_SIGNUP_GROUPID = "135887753665578487"
 
 const handler = async (_request: Request): Promise<Response> => {
   const payload = await _request.json();
@@ -79,6 +80,7 @@ const handler = async (_request: Request): Promise<Response> => {
         fields: {
             name: payload.record.raw_user_meta_data.full_name,
         },
+        groups: [PLATFORM_SIGNUP_GROUPID]
     }),
   });
 
