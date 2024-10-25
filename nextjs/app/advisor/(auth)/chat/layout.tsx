@@ -13,7 +13,7 @@ export default async function Layout({ children }) {
   } = await supabase.auth.getUser();
   if (!user) {
     console.error("advisor/chat/layout: Error fetching user:", error);
-    return redirect("/agent/sign-in");
+    return redirect("/advisor/sign-in");
   }
 
   // Fetch matchings for the current advisor
@@ -31,7 +31,6 @@ export default async function Layout({ children }) {
     return "Error fetching clients";
   }
   return (
-    <ChatContextProvider userId={user?.id}>
       <div className="min-h-screen bg-gray-50">
         <main className="container mx-auto px-4 py-8">
           <section className="mb-12">
@@ -43,6 +42,5 @@ export default async function Layout({ children }) {
           </section>
         </main>
       </div>
-    </ChatContextProvider>
   );
 }

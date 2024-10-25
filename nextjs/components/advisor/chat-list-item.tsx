@@ -1,12 +1,11 @@
 "use client";
-
-import { getUnread } from "@/lib/actions/chat";
 import { clsx } from "clsx";
 import { User } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useChatContext } from "../chat/chat-context";
-import { filter } from "rxjs";
+import { revalidate } from "@/lib/actions/cache";
+import useSWR from "swr";
 
 export default function ListItem({
   href,
@@ -16,25 +15,26 @@ export default function ListItem({
 }) {
   const [unreadCount, setUnreadCount] = useState(0);
   const { obs } = useChatContext();
-  useEffect(() => {
-    getUnread(clientId).then((unread) => {
-      setUnreadCount(unread);
-    });
-    // eslint-disable-next-line
-  }, [clientId, selectedClientId]);
+  const data = useSWR(`/api/unread/?recipient=${clientId}`, (url) =>
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => setUnreadCount(data.unread))
+  );
 
   useEffect(() => {
     if (obs) {
-      const subscription = obs
-        .pipe(filter((msg) => msg.sender === clientId))
-        .subscribe({
-          next: (payload) => {
+      const subscription = obs.subscribe({
+        next: (payload) => {
+          if (payload.sender === clientId) {
             setUnreadCount((prev) => prev + 1);
-          },
-          error: (error) => {
-            console.error("Error in chat context subscription:", error);
-          },
-        });
+          }
+          // Revalidate for all messages
+          revalidate("/advisor/chat/[id]");
+        },
+        error: (error) => {
+          console.error("Error in chat context subscription:", error);
+        },
+      });
 
       return () => {
         subscription.unsubscribe();

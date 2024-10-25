@@ -41,6 +41,10 @@ export const updateSession = async (request: NextRequest) => {
     // https://supabase.com/docs/guides/auth/server-side/nextjs
     const user = await supabase.auth.getUser();
 
+    if(request.nextUrl.pathname.includes('api')){
+      return response;
+    }
+
     // redirect to home if user is authenticated
     if (authRoutes.includes(request.nextUrl.pathname) && !user.error) {
       return NextResponse.redirect(new URL("/home", request.url));
