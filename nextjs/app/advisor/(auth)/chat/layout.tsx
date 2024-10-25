@@ -31,7 +31,6 @@ export default async function Layout({ children }) {
     return "Error fetching clients";
   }
   return (
-    <ChatContextProvider userId={user?.id}>
       <div className="min-h-screen bg-gray-50">
         <main className="container mx-auto px-4 py-8">
           <section className="mb-12">
@@ -43,6 +42,5 @@ export default async function Layout({ children }) {
           </section>
         </main>
       </div>
-    </ChatContextProvider>
   );
 }
