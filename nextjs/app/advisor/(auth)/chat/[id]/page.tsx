@@ -35,7 +35,6 @@ export default async function Chat({ params }) {
   return (
     <div>
       <ClientDashboard client={annonomiseMatching(match)} />;
-      <Revalidate path="/advisor/chat/[id]" />
     </div>
   );
 }

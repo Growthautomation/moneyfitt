@@ -6,7 +6,7 @@ import { User } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useChatContext } from "../chat/chat-context";
-import { filter } from "rxjs";
+import { revalidate } from "@/lib/actions/cache";
 
 export default function ListItem({
   href,
@@ -26,10 +26,13 @@ export default function ListItem({
   useEffect(() => {
     if (obs) {
       const subscription = obs
-        .pipe(filter((msg) => msg.sender === clientId))
         .subscribe({
           next: (payload) => {
-            setUnreadCount((prev) => prev + 1);
+            if (payload.sender === clientId) {
+              setUnreadCount((prev) => prev + 1);
+            }
+            // Revalidate for all messages
+            revalidate('/advisor/chat/[id]');
           },
           error: (error) => {
             console.error("Error in chat context subscription:", error);
