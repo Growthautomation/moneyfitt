@@ -2,7 +2,6 @@
 
 import { useChatContext } from "@/components/chat/chat-context";
 import { Badge } from "@/components/ui/badge";
-import { getUnread } from "@/lib/actions/chat";
 import { useEffect, useState } from "react";
 import { filter } from "rxjs";
 
@@ -11,9 +10,11 @@ export default function Unread({ sender }) {
   const { obs } = useChatContext();
 
   useEffect(() => {
-    getUnread(sender).then((unread) => {
-      setUnread(unread);
-    });
+    fetch(`/api/unread?recipient=${sender}`)
+      .then((d) => d.json())
+      .then((d) => {
+        setUnread(d.unread);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sender]);
 
