@@ -2,18 +2,76 @@
 
 import { OnboardingFormComponent } from "@/components/onboarding/form";
 import Welcome from "@/components/onboarding/welcome";
+import { SubmitButton } from "@/components/submit-btn";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import Spinner from "@/components/utils/spinner";
 import { createClient } from "@/lib/supabase/client";
+import { useFormik } from "formik";
 import { CircleCheckBig } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
+import { object, string } from "yup";
 
 const Auth = () => {
-  const superbase = createClient();
+  const supabase = createClient();
+  const router = useRouter();
+
+  const [_, setAnswers] = useLocalStorage("answers", {});
+
+  const [step, setStep] = useState<"login" | "onboarding" | "welcome">(
+    "welcome"
+  );
+  const [isOnboardingComplete, setIsOnboardingComplete] = useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: object({
+      email: string()
+        .email("Invalid email address")
+        .required("Email is required"),
+      password: string().required("Password is required"),
+    }),
+    onSubmit: async (values, { setStatus }) => {
+      try {
+        if(isOnboardingComplete) {
+          const { error } = await supabase.auth.signUp({
+            email: values.email,
+            password: values.password,
+          });
+          if (error) {
+            setStatus(error.message);
+            return;
+          }
+          router.push("/callback")
+          return;
+        }
+
+        const { error } = await supabase.auth.signInWithPassword({
+          email: values.email,
+          password: values.password,
+        });
+        if (error) {
+          setStatus(error.message);
+          return;
+        }
+        router.push("/callback");
+      } catch (error) {
+        setStatus(error.message);
+      }
+    },
+  });
+
   const handleGoogleSignIn = () => {
-    superbase.auth.signInWithOAuth({
+    supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback`,
@@ -21,17 +79,13 @@ const Auth = () => {
     });
   };
   const handleFacebookSignIn = () => {
-    superbase.auth.signInWithOAuth({
+    supabase.auth.signInWithOAuth({
       provider: "facebook",
       options: {
         redirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback`,
       },
     });
   };
-  const [_, setAnswers] = useLocalStorage("answers", {});
-
-  const [step, setStep] = useState<"login" | "onboarding" | "welcome">("welcome");
-  const [isOnboardingComplete, setIsOnboardingComplete] = useState(false);
 
   if (step === "login") {
     return (
@@ -42,7 +96,9 @@ const Auth = () => {
               {isOnboardingComplete ? (
                 <>
                   <CircleCheckBig className="text-green-500" />
-                  <span className="text-2xl font-bold text-center">Onboarding Complete</span>
+                  <span className="text-2xl font-bold text-center">
+                    Onboarding Complete
+                  </span>
                 </>
               ) : (
                 <span className="text-2xl font-bold text-center">Log in</span>
@@ -54,6 +110,51 @@ const Auth = () => {
               {isOnboardingComplete
                 ? "Sign in to your account or register with MoneyFitt to view your matches."
                 : "Sign in to your account or register with MoneyFitt."}
+            </div>
+            <form onSubmit={formik.handleSubmit}>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                placeholder="you@example.com"
+                {...formik.getFieldProps("email")}
+              />
+              {formik.touched.email && formik.errors.email && (
+                <div className="text-sm text-red-500 mt-1">
+                  {formik.errors.email}
+                </div>
+              )}
+
+              <Label htmlFor="password">Password</Label>
+              <Input
+                placeholder="Your password"
+                type="password"
+                {...formik.getFieldProps("password")}
+              />
+              {formik.touched.password && formik.errors.password && (
+                <div className="text-sm text-red-500 mt-1">
+                  {formik.errors.password}
+                </div>
+              )}
+              <div className="text-center my-3">
+                <Button className="w-full" disabled={formik.isSubmitting}>
+                  {formik.isSubmitting ? (
+                    <Spinner className="w-7 h-7" />
+                  ) : isOnboardingComplete ? (
+                    "Register"
+                  ) : (
+                    "Sign in"
+                  )}
+                </Button>
+                {formik.status && (
+                  <div className="text-sm text-red-500 mt-1 bg-red-200 rounded">
+                    {formik.status}
+                  </div>
+                )}
+              </div>
+            </form>
+            <div className="flex items-center">
+              <Separator className="shrink" />
+              <span className="text-sm text-gray-400 px-4">Or</span>
+              <Separator className="shrink" />
             </div>
             <Button
               onClick={handleGoogleSignIn}
