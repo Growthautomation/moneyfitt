@@ -13,7 +13,7 @@ export default async function Layout({ children }) {
   } = await supabase.auth.getUser();
   if (!user) {
     console.error("advisor/chat/layout: Error fetching user:", error);
-    return redirect("/agent/sign-in");
+    return redirect("/advisor/sign-in");
   }
 
   // Fetch matchings for the current advisor

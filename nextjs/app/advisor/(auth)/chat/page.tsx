@@ -9,7 +9,7 @@ export default async function Redirect() {
   } = await supabase.auth.getUser();
   if (!user) {
     console.error("advisor/chat/page: Error fetching user:", error);
-    return redirect("/agent/sign-in");
+    return redirect("/advisor/sign-in");
   }
 
   const { data: match, error: matchError } = await supabase
