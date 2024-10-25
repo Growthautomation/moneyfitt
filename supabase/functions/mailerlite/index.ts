@@ -1,5 +1,4 @@
-// Trigger: Database Webhook - matching-notification
-
+// Trigger: Database Webhook - user-insert
 /* Example payload
 request: {
   type: "INSERT",

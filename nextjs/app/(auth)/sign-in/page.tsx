@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import Spinner from "@/components/utils/spinner";
+import { useToast } from "@/hooks/use-toast";
 import { createClient } from "@/lib/supabase/client";
 import { useFormik } from "formik";
 import { CircleCheckBig } from "lucide-react";
@@ -21,6 +22,7 @@ import { object, string } from "yup";
 const Auth = () => {
   const supabase = createClient();
   const router = useRouter();
+  const { toast } = useToast();
 
   const [_, setAnswers] = useLocalStorage("answers", {});
 
@@ -46,12 +48,18 @@ const Auth = () => {
           const { error } = await supabase.auth.signUp({
             email: values.email,
             password: values.password,
+            options: {
+              emailRedirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback`,
+            }
           });
           if (error) {
             setStatus(error.message);
             return;
           }
-          router.push("/callback")
+          toast({
+            title: "Account created",
+            description: "Please check your email for a verification link.",
+          })
           return;
         }
 
