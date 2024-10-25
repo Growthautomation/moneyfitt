@@ -22,7 +22,7 @@ export default function RootLayout({
         <div className="absolute left-4 z-50 flex items-center h-[64px]"> {/* Adjusted positioning */}
           <Link href="/">
             <Image 
-              src="https://xpjrqmknieuxbnpilskz.supabase.co/storage/v1/object/public/public-files/Full_colored@2x.webp" 
+              src="/moneyfitt-logo.webp" 
               alt="Logo" 
               width={200} 
               height={80} 
