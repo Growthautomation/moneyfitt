@@ -22,7 +22,8 @@ export default async function ChatSummaryContainer() {
       )
     `
     )
-    .eq("client_id", user.id);
+    .eq("client_id", user.id)
+    .eq("enabled", true);
 
   if (!advisors) {
     console.error(

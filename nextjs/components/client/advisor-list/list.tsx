@@ -15,7 +15,8 @@ export default async function AdvisorList({ user }: { user: User }) {
         )
       `
     )
-    .eq("client_id", user.id);
+    .eq("client_id", user.id)
+    .eq("enabled", true);
 
   if (!advisors) {
     console.error("client/advisor-list/list: Error fetching advisors", error);

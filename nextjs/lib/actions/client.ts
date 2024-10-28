@@ -298,10 +298,56 @@ export async function updatePreferenceAndMatch(data: FormData) {
       preferred_language: languages,
     })
     .eq("id", user.id)
+    .select()
     .single();
 
-  if(clientErr){
+  if (clientErr) {
     console.error("updatePreferenceAndMatch", clientErr);
     throw new Error("Failed to update client");
   }
+
+  console.log(    `(${(await supabase
+    .from("matchings")
+    .select("advisor_id")
+    .eq("client_id", user.id)
+    .eq("enabled", true))
+    .data?.map(m => `"${m.advisor_id}"`).join(',')}
+  )`)
+
+  const { data: advisors, error: advisorErr } = await supabase
+  .from("advisor")
+  .select("*")
+  .not(
+    "id",
+    "in",
+    `(${(await supabase
+      .from("matchings")
+      .select("advisor_id")
+      .eq("client_id", user.id)
+      .eq("enabled", true))
+      .data?.map(m => `"${m.advisor_id}"`).join(',')})`
+  );
+  if (!advisors) {
+    console.error("updatePreferenceAndMatch", advisorErr);
+    throw new Error("No advisors found");
+  }
+
+  const matches = matchAdvisors(advisors, client);
+
+  await supabase
+    .from("matchings")
+    .update({ enabled: false })
+    .eq("client_id", user.id);
+
+  for (const match of matches) {
+    const { error } = await supabase.from("matchings").insert({
+      advisor_id: match.id,
+      client_id: user.id,
+      need_score: match.needScore,
+      personal_score: match.personalScore,
+      total_score: match.totalScore,
+      enabled: true,
+    });
+  }
+  return redirect("/home");
 }
