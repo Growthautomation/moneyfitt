@@ -15,7 +15,7 @@ export default function ChatList({ clients }) {
               (a, b) => Number(b["name"] != null) - Number(a["name"] != null)
             )
             .map((client, index) => {
-              const displayName = client?.name ? client.name : `anonymous`;
+              const displayName = client?.name ? client.name : `Anonymous`;
               return (
                 <ListItem
                   key={client.id}

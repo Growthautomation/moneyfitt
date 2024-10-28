@@ -24,7 +24,6 @@ export default async function Greeting() {
           clientData?.name || user?.email
         }`}</h1>
       </header>
-      <h2 className="text-xl font-semibold mb-4">Your Matched Advisors</h2>
     </>
   );
 }

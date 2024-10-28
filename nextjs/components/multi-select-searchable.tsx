@@ -1,56 +1,75 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
+import * as React from "react";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 type Option = {
   code: string;
   name: string;
-}
+};
 
 type MultiSelectSearchableProps = {
+  name?: string;
   options: Option[];
   placeholder: string;
   selected: string[];
-  onChange: (selected: Option[]) => void;
-}
+  onChange?: (selected: Option[]) => void;
+};
 
 export function MultiSelectSearchableComponent({
+  name,
   options,
   placeholder,
   selected,
-  onChange
+  onChange,
 }: MultiSelectSearchableProps) {
-  const [open, setOpen] = React.useState(false)
-  const [search, setSearch] = React.useState("")
+  const [open, setOpen] = React.useState(false);
+  const [search, setSearch] = React.useState("");
+  const [selectedUncontrol, setSelectedUncontrol] = React.useState<Option[]>(
+    options.filter((option) => selected.includes(option.code))
+  );
 
-  const selectedOptions = options.filter(option => selected.includes(option.code))
+  const selectedOptions = onChange
+    ? options.filter((option) => selected.includes(option.code))
+    : selectedUncontrol;
 
   const filteredOptions = options.filter((option) =>
     option.name.toLowerCase().includes(search.toLowerCase())
-  )
+  );
 
   const handleSelect = (option: Option) => {
-    const newSelected = selected.includes(option.code)
-      ? selectedOptions.filter(item => item.code !== option.code)
-      : [...selectedOptions, option]
-    onChange(newSelected)
-  }
+    const newSelected = selectedOptions.map(x => x.code).includes(option.code)
+      ? selectedOptions.filter((item) => item.code !== option.code)
+      : [...selectedOptions, option];
+    onChange ? onChange(newSelected) : setSelectedUncontrol(newSelected);
+  };
 
   const handleRemove = (option: Option) => {
-    onChange(selectedOptions.filter(item => item.code !== option.code))
-  }
+    onChange
+      ? onChange(selectedOptions.filter((item) => item.code !== option.code))
+      : setSelectedUncontrol(
+          selectedOptions.filter((item) => item.code !== option.code)
+        );
+  };
 
   return (
     <div className="w-full">
+      {selectedOptions.map((option) => (
+        <input
+          key={option.code}
+          type="hidden"
+          name={name}
+          value={option.code}
+        />
+      ))}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -59,11 +78,16 @@ export function MultiSelectSearchableComponent({
             aria-expanded={open}
             className="w-full justify-between"
           >
-            {selectedOptions.length > 0 ? `${selectedOptions.length} selected` : placeholder}
+            {selectedOptions.length > 0
+              ? `${selectedOptions.length} selected`
+              : placeholder}
             <span className="ml-2">▼</span>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full p-0" style={{ width: 'var(--radix-popover-trigger-width)' }}>
+        <PopoverContent
+          className="w-full p-0"
+          style={{ width: "var(--radix-popover-trigger-width)" }}
+        >
           <div className="p-2">
             <Input
               placeholder={`Search ${placeholder.toLowerCase()}...`}
@@ -80,7 +104,7 @@ export function MultiSelectSearchableComponent({
                 >
                   <input
                     type="checkbox"
-                    checked={selected.includes(option.code)}
+                    checked={selectedOptions.map((x) => x.code).includes(option.code)}
                     readOnly
                     className="mr-2"
                   />
@@ -110,5 +134,5 @@ export function MultiSelectSearchableComponent({
         ))}
       </div>
     </div>
-  )
+  );
 }
