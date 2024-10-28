@@ -270,6 +270,38 @@ export async function shareContact(data: FormData) {
   };
 }
 
-export async function updatePreferenceAndMatch(data: FormData){
-  console.log(data.getAll('specializedArea'));
+export async function updatePreferenceAndMatch(data: FormData) {
+  const broadScopes = (data.getAll("broadScope") as string[]) || [];
+  const narrowScopes = (data.getAll("narrowScope") as string[]) || [];
+  const religions = (data.getAll("religions") as string[]) || [];
+  const gender = data.get("gender") as string;
+  const languages = (data.getAll("languages") as string[]) || [];
+  const age = (data.getAll("age") as string[]) || [];
+
+  const supabase = createClient();
+  const {
+    data: { user },
+    error: usrErr,
+  } = await supabase.auth.getUser();
+  if (!user) {
+    console.error("updatePreferenceAndMatch", usrErr);
+    return redirect("/sign-in");
+  }
+  const { data: client, error: clientErr } = await supabase
+    .from("client")
+    .update({
+      broad_scope: broadScopes,
+      narrow_scope: narrowScopes,
+      preferred_religion: religions,
+      preferred_age_group: age,
+      preferred_sex: gender,
+      preferred_language: languages,
+    })
+    .eq("id", user.id)
+    .single();
+
+  if(clientErr){
+    console.error("updatePreferenceAndMatch", clientErr);
+    throw new Error("Failed to update client");
+  }
 }
