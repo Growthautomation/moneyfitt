@@ -13,6 +13,8 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
+import { createMatching } from "@/lib/actions/client";
+import { SubmitButton } from "@/components/submit-btn";
 
 export default function Rematch() {
   const [open, setOpen] = useState(false);
@@ -36,15 +38,14 @@ export default function Rematch() {
           </DialogHeader>
           <DialogFooter className="gap-2">
             <DialogClose asChild>
-              <Button
-                onClick={() => console.log("Finding new match")}
-              >
-                No
-              </Button>
+              <form action={createMatching}>
+                <SubmitButton pendingText="Matching...">
+                  No
+                </SubmitButton>
+              </form>
             </DialogClose>
             <Button
               onClick={() => {
-                console.log('w')
                 router.push("/preference");
                 setOpen(false);
               }}

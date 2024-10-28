@@ -76,31 +76,41 @@ export async function createMatching() {
   if (!user) {
     return redirect("/sign-in");
   }
-  const { data: advisors } = await supabase.from("advisor").select();
-  if (!advisors) {
-    return {
-      success: false,
-      error: "No advisors found",
-    };
-  }
+
   const { data: client } = await supabase
     .from("client")
     .select()
     .eq("id", user.id)
     .single();
   if (!client) {
-    return {
-      success: false,
-      error: "No client found",
-    };
+    console.error("createMatching", "Client not found");
+    throw new Error("Client not found");
   }
+
+  const { data: advisors, error: advisorErr } = await supabase
+  .from("advisor")
+  .select("*")
+  .not(
+    "id",
+    "in",
+    `(${(await supabase
+      .from("matchings")
+      .select("advisor_id")
+      .eq("client_id", user.id)
+      .eq("enabled", true))
+      .data?.map(m => `"${m.advisor_id}"`).join(',')})`
+  );
+  if (!advisors) {
+    console.error("updatePreferenceAndMatch", advisorErr);
+    throw new Error("No advisors found");
+  }
+
+  const matches = matchAdvisors(advisors, client);
 
   await supabase
     .from("matchings")
     .update({ enabled: false })
     .eq("client_id", user.id);
-
-  const matches = matchAdvisors(advisors, client);
 
   for (const match of matches) {
     const { error } = await supabase.from("matchings").insert({
@@ -112,10 +122,7 @@ export async function createMatching() {
       enabled: true,
     });
   }
-
-  return {
-    success: true,
-  };
+  return redirect("/home");
 }
 
 export async function shareContact(data: FormData) {
