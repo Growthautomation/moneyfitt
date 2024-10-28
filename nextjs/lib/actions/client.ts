@@ -269,3 +269,7 @@ export async function shareContact(data: FormData) {
     error: null,
   };
 }
+
+export async function updatePreferenceAndMatch(data: FormData){
+  console.log(data.getAll('specializedArea'));
+}
