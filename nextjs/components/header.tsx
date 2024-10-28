@@ -16,7 +16,7 @@ export default async function Header() {
         {user ? (
           <div className="flex items-center gap-2 justify-end h-16">
             {user.user_metadata["userType"] === "advisor" && <Link className="hover:bg-gray-100 border px-4 py-[.3rem] rounded" href="/advisor/profile">Profile</Link>}
-            {user.user_metadata["userType"] === "advisor" && <ChangePassword />}
+            <ChangePassword />
             <form>
               <SubmitButton
                 pendingText="Signing out..."
