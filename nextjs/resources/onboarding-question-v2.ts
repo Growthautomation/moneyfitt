@@ -427,7 +427,6 @@ function getAdvisorPreferenceQuestions() {
   const genderN = advisorGenderNode();
   const languageN = advisorLanguageNode();
   const ageN = advisorAgeNode();
-  const preferredCompanyN = preferredCompanyNode();
   const userNameN = userNameNode();
   const additionalScope = additionalSpecification();
   cover.next = function (answer) {
@@ -458,18 +457,11 @@ function getAdvisorPreferenceQuestions() {
     return languageN;
   };
   ageN.next = function (answer) {
-    return preferredCompanyN;
-  };
-
-  preferredCompanyN.prev = function (answer) {
-    return ageN;
-  };
-  preferredCompanyN.next = function (answer) {
     return additionalScope;
   };
   
   additionalScope.prev = function (answer) {
-    return preferredCompanyN;
+    return ageN;
   };
   additionalScope.next = function (answer) {
     return userNameN;
