@@ -306,14 +306,6 @@ export async function updatePreferenceAndMatch(data: FormData) {
     throw new Error("Failed to update client");
   }
 
-  console.log(    `(${(await supabase
-    .from("matchings")
-    .select("advisor_id")
-    .eq("client_id", user.id)
-    .eq("enabled", true))
-    .data?.map(m => `"${m.advisor_id}"`).join(',')}
-  )`)
-
   const { data: advisors, error: advisorErr } = await supabase
   .from("advisor")
   .select("*")

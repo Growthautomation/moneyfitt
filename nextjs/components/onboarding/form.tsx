@@ -51,8 +51,6 @@ export function OnboardingFormComponent({
     return numAnswers + getRemaining(currentQuestion, answers);
   }, [answers, numAnswers, currentQuestion]);
 
-  console.log(answers)
-
   if (currentQuestion?.type === "cover") {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
