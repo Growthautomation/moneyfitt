@@ -278,6 +278,7 @@ export async function shareContact(data: FormData) {
 }
 
 export async function updatePreferenceAndMatch(data: FormData) {
+  const matchId = parseInt(data.get("matchId") as string);
   const broadScopes = (data.getAll("broadScope") as string[]) || [];
   const narrowScopes = (data.getAll("narrowScope") as string[]) || [];
   const religions = (data.getAll("religions") as string[]) || [];
@@ -313,6 +314,39 @@ export async function updatePreferenceAndMatch(data: FormData) {
     throw new Error("Failed to update client");
   }
 
+  await rematch(supabase, matchId, client);
+
+  return redirect("/home");
+}
+
+export async function singleRematch(data: FormData){
+  const matchId = parseInt(data.get("matchId") as string);
+  if(!matchId){
+    throw new Error("Match ID is required");
+  }
+  const supabase = createClient();
+  const {
+    data: { user },
+    error: usrErr,
+  } = await supabase.auth.getUser();
+  if (!user) {
+    console.error("singleRematch", usrErr);
+    return redirect("/sign-in");
+  }
+  const { data: client, error: clientErr } = await supabase
+    .from("client")
+    .select()
+    .eq("id", user.id)
+    .single();
+  if (!client) {
+    console.error("singleRematch", clientErr);
+    throw new Error("Client not found");
+  }
+  await rematch(supabase, matchId, client);
+  return redirect("/home");
+}
+
+export async function rematch(supabase, matchId, client){
   const { data: advisors, error: advisorErr } = await supabase
   .from("advisor")
   .select("*")
@@ -322,7 +356,7 @@ export async function updatePreferenceAndMatch(data: FormData) {
     `(${(await supabase
       .from("matchings")
       .select("advisor_id")
-      .eq("client_id", user.id)
+      .eq("client_id", client.id)
       .eq("enabled", true))
       .data?.map(m => `"${m.advisor_id}"`).join(',')})`
   );
@@ -333,20 +367,22 @@ export async function updatePreferenceAndMatch(data: FormData) {
 
   const matches = matchAdvisors(advisors, client);
 
-  await supabase
+  const {data, error} = await supabase
     .from("matchings")
     .update({ enabled: false })
-    .eq("client_id", user.id);
+    .eq("id", matchId);
 
   for (const match of matches) {
     const { error } = await supabase.from("matchings").insert({
       advisor_id: match.id,
-      client_id: user.id,
+      client_id: client.id,
       need_score: match.needScore,
       personal_score: match.personalScore,
       total_score: match.totalScore,
       enabled: true,
     });
+    if(!error){
+      break
+    }
   }
-  return redirect("/home");
 }

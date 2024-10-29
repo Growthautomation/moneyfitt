@@ -16,7 +16,7 @@ import { updatePreferenceAndMatch } from "@/lib/actions/client";
 import { MultiSelectSearchableComponent } from "@/components/multi-select-searchable";
 import { createClient } from "@/lib/supabase/server";
 
-export default async function AdvisorPreference() {
+export default async function AdvisorPreference({ searchParams }) {
   const supabase = createClient();
   const {
     data: { user },
@@ -54,6 +54,7 @@ export default async function AdvisorPreference() {
         </CardHeader>
         <CardContent>
           <form className="space-y-8" action={updatePreferenceAndMatch}>
+            <input hidden name="matchId" value={searchParams.matchId} />
             {/* Key Area */}
             <div className="space-y-2">
               <Label htmlFor="broadScope" className="font-bold text-lg">
@@ -135,9 +136,9 @@ export default async function AdvisorPreference() {
                       id={`language-${language.code}`}
                       name="languages"
                       value={language.code}
-                      defaultChecked={(client.preferred_language as string[])?.includes(
-                        language.code
-                      )}
+                      defaultChecked={(
+                        client.preferred_language as string[]
+                      )?.includes(language.code)}
                     />
                     <Label htmlFor={`language-${language.code}`}>
                       {language.name}
@@ -164,6 +165,12 @@ export default async function AdvisorPreference() {
                 </div>
               ))}
             </div>
+
+            <p className="text-sm text-gray-400">
+              When you match with a new advisor, your existing matches will
+              remain unchanged, and the criteria for these matches will not be
+              affected.
+            </p>
 
             <SubmitButton className="w-full" pendingText="Updating...">
               Submit Preferences
