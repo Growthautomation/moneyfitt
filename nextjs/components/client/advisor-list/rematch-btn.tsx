@@ -28,7 +28,7 @@ export default function RematchBtn({ matchId }) {
         className="w-full"
         onClick={() => setOpen(true)}
       >
-        <RefreshCw className="h-4 w-4" /> Match again
+        <RefreshCw className="h-4 w-4" /> Match Refresh
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
