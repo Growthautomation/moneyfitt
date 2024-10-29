@@ -177,7 +177,7 @@ const Auth = () => {
               />
               <span>Sign in with Google</span>
             </Button>
-            <Button
+            {/* <Button
               onClick={handleFacebookSignIn}
               variant="outline"
               className="w-full flex items-center justify-center space-x-2"
@@ -189,7 +189,7 @@ const Auth = () => {
                 height={15}
               />
               <span>Sign in with Facebook</span>
-            </Button>
+            </Button> */}
             {/* Add more SSO buttons here */}
           </CardContent>
         </Card>
