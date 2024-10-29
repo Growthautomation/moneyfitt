@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { User } from "@supabase/supabase-js";
 import { AdvisorProfileCard } from "@/components/client/advisor-list/profile-card";
 import ComponentError from "@/components/utils/component-error";
+import Rematch from "./rematch";
 
 export default async function AdvisorList({ user }: { user: User }) {
   const supabase = createClient();
@@ -9,7 +10,7 @@ export default async function AdvisorList({ user }: { user: User }) {
     .from("matchings")
     .select(
       `
-        advisor_id,
+        *,
         advisor (
           *
         )
@@ -25,11 +26,12 @@ export default async function AdvisorList({ user }: { user: User }) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {advisors.map(({ advisor_id, advisor }) => (
-        <div key={advisor_id}>
+      {advisors.map((m) => (
+        <div key={m.advisor_id}>
           <AdvisorProfileCard
-            advisor={advisor as never}
-            redirectTo={`/chat/${advisor_id}`}
+            advisor={m.advisor as never}
+            redirectTo={`/chat/${m.advisor_id}`}
+            footer={<Rematch matching={m} />}
           />
         </div>
       ))}

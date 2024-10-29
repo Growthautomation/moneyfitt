@@ -13,15 +13,18 @@ import { languages, narrowScope } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 import { Advisor } from "@/types/advisor";
 import Unread from "./unread";
+import React from "react";
 
 interface AdvisorProfileCardProps {
   advisor: Advisor;
   redirectTo: string;
+  footer?: React.ReactNode;
 }
 
 export async function AdvisorProfileCard({
   advisor,
   redirectTo,
+  footer
 }: AdvisorProfileCardProps) {
   const supabase = createClient();
   const { data } = await supabase.storage
@@ -94,13 +97,14 @@ export async function AdvisorProfileCard({
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex-shrink-0">
+      <CardFooter className="flex-shrink-0 flex-col gap-2">
         <RedirectButton
           className="w-full bg-[#5C59E4] hover:bg-[#4543AB] text-white font-semibold py-2 px-4 rounded transition-colors duration-300"
           href={redirectTo}
         >
           View Profile
         </RedirectButton>
+        {footer}
       </CardFooter>
     </Card>
   );
