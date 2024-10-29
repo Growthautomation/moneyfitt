@@ -15,8 +15,8 @@ export default async function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {user ? (
           <div className="flex items-center gap-2 justify-end h-16">
-            {user.user_metadata["userType"] === "advisor" && <Link className="hover:bg-gray-100 border px-4 py-[.3rem] rounded" href="/advisor/profile">Profile</Link>}
-            {user.user_metadata["userType"] !== "advisor" && <Link className="hover:bg-gray-100 border px-4 py-[.3rem] rounded" href="/history">Match History</Link>}
+            {user.user_metadata["userType"] === "advisor" && <Link className="hover:bg-gray-100 border px-4 py-[.5rem] rounded text-sm" href="/advisor/profile">Profile</Link>}
+            {user.user_metadata["userType"] !== "advisor" && <Link className="hover:bg-gray-100 border px-4 py-[.5rem] rounded text-sm" href="/history">Match History</Link>}
             <ChangePassword />
             <form>
               <SubmitButton
