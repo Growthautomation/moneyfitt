@@ -2,7 +2,6 @@
 
 import { OnboardingFormComponent } from "@/components/onboarding/form";
 import Welcome from "@/components/onboarding/welcome";
-import { SubmitButton } from "@/components/submit-btn";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,6 +13,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useFormik } from "formik";
 import { CircleCheckBig } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
@@ -44,13 +44,13 @@ const Auth = () => {
     }),
     onSubmit: async (values, { setStatus }) => {
       try {
-        if(isOnboardingComplete) {
+        if (isOnboardingComplete) {
           const { error } = await supabase.auth.signUp({
             email: values.email,
             password: values.password,
             options: {
               emailRedirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback`,
-            }
+            },
           });
           if (error) {
             setStatus(error.message);
@@ -59,7 +59,7 @@ const Auth = () => {
           toast({
             title: "Account created",
             description: "Please check your email for a verification link.",
-          })
+          });
           return;
         }
 
@@ -157,6 +157,14 @@ const Auth = () => {
                     {formik.status}
                   </div>
                 )}
+              </div>
+              <div className="text-right">
+                <Link
+                  href="/forget-password"
+                  className="text-sm text-blue-500 hover:underline cursor-pointer"
+                >
+                  Forget password?
+                </Link>
               </div>
             </form>
             <div className="flex items-center">
