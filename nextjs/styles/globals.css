@@ -10,8 +10,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: 'Fira Sans', sans-serif;
 }
 
 a {
@@ -78,6 +77,9 @@ a {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+  * {
+    font-family: 'Fira Sans', sans-serif;
+  }
 }
 
 @layer base {
@@ -87,10 +89,6 @@ a {
   body {
     @apply bg-background text-foreground;
   }
-}
-
-body {
-  font-family: 'Fira Sans', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
