@@ -14,7 +14,7 @@ import {
   Wallet,
   LucideIcon 
 } from "lucide-react"
-import { getUrlForContentId } from "@/resources/contentid-url"
+import { getUrlForContentId, getTitleForContentId } from "@/resources/contentid-url"
 
 interface ResourceCardProps {
   contentId: string;
@@ -34,29 +34,14 @@ const iconMap: { [key: string]: LucideIcon } = {
   ChevronRight, // Adding this as the 10th icon, though it's already used elsewhere
 };
 
-function extractTitleFromUrl(url: string): string {
-  // Remove the base URL and file extension
-  const path = url.split('/').pop()?.split('.')[0] || '';
-  
-  // Remove the ID at the end (assuming it's always numeric)
-  const titleWithoutId = path.replace(/-\d+$/, '');
-  
-  // Replace hyphens with spaces and capitalize each word
-  return titleWithoutId
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
-
 export default function ResourceCard({ contentId, iconName }: ResourceCardProps) {
   const url = getUrlForContentId(contentId);
+  const title = getTitleForContentId(contentId);
   const Icon = iconMap[iconName] || BarChart2; // Fallback to BarChart2 if icon not found
 
-  if (!url) {
+  if (!url || !title) {
     return null;
   }
-
-  const title = extractTitleFromUrl(url);
 
   const handleClick = () => {
     window.open(url, '_blank');
