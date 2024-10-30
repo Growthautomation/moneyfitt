@@ -10,7 +10,7 @@ import { searchAdvisorAndClient } from "./search.ts";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-const FE_HOST = "https://moneyfitt.vercel.app"; // Deno.env.get("FE_HOST");
+const FE_HOST = Deno.env.get("FE_HOST");
 
 const handler = async (_request: Request): Promise<Response> => {
   const supabase = createClient<Database>(
