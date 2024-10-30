@@ -16,10 +16,9 @@ export default function InfoDialog() {
           <p>🔒 Your data is secure and encrypted.</p>
           <p>🕵️ Your identity remains anonymous to the advisor.</p>
           <p>🌟 Take the first step towards your financial goals today!</p>
-          <p>
-            💡 Please note: MoneyFitt facilitates conversations with independent,
-            third-party advisors and does not provide financial advice.
-          </p>
+          
+          <p>Please note: MoneyFitt facilitates conversations with</p>
+          <p>independent, third-party advisors and does not provide financial advice.</p>
         </div>
       ),
       duration: 10000, // 10 seconds

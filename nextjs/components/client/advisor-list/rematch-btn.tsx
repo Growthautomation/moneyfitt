@@ -36,8 +36,7 @@ export default function RematchBtn({ matchId }) {
           <DialogHeader>
             <DialogTitle>Find New Match</DialogTitle>
             <DialogDescription>
-              Do you want to edit your advisor preference or your matching needs
-              questions?
+              Would you like to edit your answers to the onboarding quiz?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2">
