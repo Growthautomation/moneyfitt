@@ -162,12 +162,14 @@ const Auth = () => {
                 )}
               </div>
               <div className="text-center">
-                <Link
-                  href="/forget-password"
-                  className="text-sm text-blue-500 hover:underline cursor-pointer"
-                >
-                  Forgot password
-                </Link>
+                {!isOnboardingComplete && (
+                  <Link
+                    href="/forget-password"
+                    className="text-sm text-blue-500 hover:underline cursor-pointer"
+                  >
+                    Forgot password
+                  </Link>
+                )}
               </div>
             </form>
             <div className="flex items-center">

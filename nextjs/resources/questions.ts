@@ -405,7 +405,7 @@ export const additionalSpecification = () =>
     "Please select any additional specialisations that you need help with:",
     "multipleDropdown",
     null,
-    narrowScope
+    [...narrowScope].sort((a, b) => a.name.localeCompare(b.name))
   );
 
 export const userNameNode = () =>
