@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Dialog,
+  DialogContent,
+} from "@/components/ui/dialog";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -30,7 +34,12 @@ const passwordSchema = z
     path: ["confirmPassword"],
   });
 
-export default function ChangePassword() {
+// Add onClose prop to the component's props
+interface ChangePasswordProps {
+  onClose?: () => void;
+}
+
+export default function ChangePassword({ onClose }: ChangePasswordProps) {
   const supabase = createClient();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -63,11 +72,8 @@ export default function ChangePassword() {
   };
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline">Change Password</Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80">
+    <Dialog open={true} onOpenChange={() => onClose?.()}>
+      <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-4">
             <h4 className="font-medium leading-none">Change Password</h4>
@@ -103,7 +109,7 @@ export default function ChangePassword() {
             {error && <p className="text-red-500 text-sm">{error}</p>}
           </div>
         </form>
-      </PopoverContent>
-    </Popover>
+      </DialogContent>
+    </Dialog>
   );
 }
