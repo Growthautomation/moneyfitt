@@ -167,7 +167,7 @@ const Auth = () => {
                     href="/forget-password"
                     className="text-sm text-blue-500 hover:underline cursor-pointer"
                   >
-                    Forgot password
+                    Forgot password?
                   </Link>
                 )}
               </div>

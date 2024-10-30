@@ -4,6 +4,13 @@ import { Toaster } from "@/components/ui/toaster";
 import Image from "next/image";
 import Link from "next/link";
 import { HotJar } from "@/components/utils/hotjar";
+import { Fira_Sans } from 'next/font/google'
+
+const firaSans = Fira_Sans({ 
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  display: 'swap',
+})
 
 // TODO: add suspense for every page and high latency component so only that component show loading while the rest is visible
 
@@ -18,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={firaSans.className}>
       <head>
         <HotJar />
       </head>
