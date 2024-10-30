@@ -70,8 +70,7 @@ export function OnboardingFormComponent({
               className="hover:underline text-blue-500"
             >
               feedback@moneyfitt.co
-            </a> {". "}
-            MoneyFitt (ProConnect Technologies Pte Ltd) is not responsible for
+            </a>. MoneyFitt (ProConnect Technologies Pte Ltd) is not responsible for
             any errors, omissions, or outcomes from using the platform,
             including reliance on matches with third-party financial
             professionals. All information is provided &quot;as is,&quot;
@@ -155,8 +154,7 @@ export function OnboardingFormComponent({
             className="hover:underline text-blue-500"
           >
             feedback@moneyfitt.co
-          </a>{". "}
-          MoneyFitt (ProConnect Technologies Pte Ltd) is not responsible for any
+          </a>. MoneyFitt (ProConnect Technologies Pte Ltd) is not responsible for any
           errors, omissions, or outcomes from using the platform, including
           reliance on matches with third-party financial professionals. All
           information is provided &quot;as is,&quot; without guarantees of accuracy,
