@@ -98,7 +98,7 @@ const Auth = () => {
   if (step === "login") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <Card className="w-auto px-16 py-10">
+        <Card className="w-[480px] px-16 py-10">
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               {isOnboardingComplete ? (
@@ -116,32 +116,35 @@ const Auth = () => {
           <CardContent className="space-y-4">
             <div>
               {isOnboardingComplete
-                ? "Sign in to your account or register with MoneyFitt to view your matches."
-                : "Sign in to your account or register with MoneyFitt."}
+                ? "Register with MoneyFitt to view your matches."
+                : "Sign in to your account."}
             </div>
             <form onSubmit={formik.handleSubmit}>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                placeholder="you@example.com"
-                {...formik.getFieldProps("email")}
-              />
-              {formik.touched.email && formik.errors.email && (
-                <div className="text-sm text-red-500 mt-1">
-                  {formik.errors.email}
-                </div>
-              )}
-
-              <Label htmlFor="password">Password</Label>
-              <Input
-                placeholder="Your password"
-                type="password"
-                {...formik.getFieldProps("password")}
-              />
-              {formik.touched.password && formik.errors.password && (
-                <div className="text-sm text-red-500 mt-1">
-                  {formik.errors.password}
-                </div>
-              )}
+              <div className="mb-6">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  placeholder="you@example.com"
+                  {...formik.getFieldProps("email")}
+                />
+                {formik.touched.email && formik.errors.email && (
+                  <div className="text-sm text-red-500 mt-1">
+                    {formik.errors.email}
+                  </div>
+                )}
+              </div>
+              <div className="mb-4">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  placeholder="Your password"
+                  type="password"
+                  {...formik.getFieldProps("password")}
+                />
+                {formik.touched.password && formik.errors.password && (
+                  <div className="text-sm text-red-500 mt-1">
+                    {formik.errors.password}
+                  </div>
+                )}
+              </div>
               <div className="text-center my-3">
                 <Button className="w-full" disabled={formik.isSubmitting}>
                   {formik.isSubmitting ? (
@@ -158,12 +161,12 @@ const Auth = () => {
                   </div>
                 )}
               </div>
-              <div className="text-right">
+              <div className="text-center">
                 <Link
                   href="/forget-password"
                   className="text-sm text-blue-500 hover:underline cursor-pointer"
                 >
-                  Forget password?
+                  Forgot password
                 </Link>
               </div>
             </form>
