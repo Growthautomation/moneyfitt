@@ -100,9 +100,9 @@ const Footer = () => {
           </div>
 
           {/* Menu Column */}
-          <div className="text-center md:text-left">
-            <h3 className="font-['Fira_Sans'] font-bold text-xl mb-6">Menu</h3>
-            <ul className="space-y-3 font-['Fira_Sans']">
+          <div className="text-center md:text-left md:ml-12">
+            <h3 className="font-['Fira_Sans'] font-bold text-2xl mb-8">Menu</h3>
+            <ul className="space-y-4 font-['Fira_Sans']">
               <li><Link href="https://moneyfitt.co" className="hover:text-[#8583EB]">Home</Link></li>
               <li><Link href="https://moneyfitt.co/advisors" className="hover:text-[#8583EB]">For Professionals</Link></li>
               <li><Link href="https://app.moneyfitt.co/sign-in" className="hover:text-[#8583EB]">Sign In</Link></li>
@@ -111,8 +111,8 @@ const Footer = () => {
 
           {/* Company Column */}
           <div className="text-center md:text-left">
-            <h3 className="font-['Fira_Sans'] font-bold text-xl mb-6">Company</h3>
-            <ul className="space-y-3 font-['Fira_Sans']">
+            <h3 className="font-['Fira_Sans'] font-bold text-2xl mb-8">Company</h3>
+            <ul className="space-y-4 font-['Fira_Sans']">
               <li><Link href="https://moneyfitt.co/about" className="hover:text-[#8583EB]">About</Link></li>
               <li><Link href="mailto:hello@moneyfitt.co" className="hover:text-[#8583EB]">Contact Us</Link></li>
               <li><Link href="https://www.linkedin.com/company/moneyfitt/jobs/" target="_blank" className="hover:text-[#8583EB]">Careers</Link></li>
@@ -123,7 +123,7 @@ const Footer = () => {
 
           {/* Contact Column */}
           <div className="text-center md:text-left">
-            <h3 className="font-['Fira_Sans'] font-bold text-xl mb-6">Contact us</h3>
+            <h3 className="font-['Fira_Sans'] font-bold text-2xl mb-8">Contact us</h3>
             <div className="bg-white rounded-lg p-4 flex items-start space-x-3 mx-auto md:mx-0 inline-flex">
               <Image
                 src="https://cdn.prod.website-files.com/6704f4a2c1011ee49a3d8393/6714d85cfc0f1a701a157a0b_icon-brix-template-Email.svg"
