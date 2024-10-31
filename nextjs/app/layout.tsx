@@ -6,10 +6,12 @@ import Link from "next/link";
 import { HotJar } from "@/components/utils/hotjar";
 import { Fira_Sans } from 'next/font/google'
 
-const firaSans = Fira_Sans({ 
+// Define the font with its variations
+const firaSans = Fira_Sans({
+  weight: ['400', '700'],  // 400 for regular, 700 for bold
+  style: ['normal', 'italic'],
   subsets: ['latin'],
-  weight: ['400', '700'],
-  display: 'swap',
+  variable: '--font-fira-sans',
 })
 
 // TODO: add suspense for every page and high latency component so only that component show loading while the rest is visible
@@ -25,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={firaSans.className}>
+    <html lang="en" className={`${firaSans.variable}`}>
       <head>
         <HotJar />
       </head>

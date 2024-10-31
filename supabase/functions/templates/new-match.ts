@@ -44,6 +44,7 @@ export function newMatchTemplate(link: string) {
         }
         .button:hover {
             background-color: #4543AB;
+            color: #FFFFFF;
         }
         .footer {
             padding: 20px;
@@ -59,7 +60,7 @@ export function newMatchTemplate(link: string) {
             <h1>You Have a New Match!</h1>
         </div>
         <div class="content">
-            <p>Good news! You have a new match. Click the button below to view your match and start a conversation.</p>
+            <p>You have a new match. Click the button below to view your match and start a conversation.</p>
             <a href="${link}" class="button">View Match</a>
         </div>
         <div class="footer">

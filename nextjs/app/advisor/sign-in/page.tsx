@@ -19,12 +19,12 @@ export default function Login() {
           placeholder="Your password"
           required
         />
-        <div className="text-right">
+        <div className="text-center">
           <Link
             href="/forget-password"
             className="text-sm text-blue-500 hover:underline cursor-pointer"
           >
-            Forget password?
+            Forgot password?
           </Link>
         </div>
         <SubmitButton

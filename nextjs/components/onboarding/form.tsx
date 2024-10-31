@@ -134,7 +134,7 @@ export function OnboardingFormComponent({
               : "Complete"}
           </Button>
         </div>
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
           <p className="text-sm text-gray-500">
             Progress: {((numAnswers / totalQuestions) * 100).toFixed()}%
             (Question {numAnswers} of {totalQuestions})

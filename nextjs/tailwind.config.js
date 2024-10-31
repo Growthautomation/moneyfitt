@@ -53,10 +53,16 @@ module.exports = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+  			
+  			
   		},
   		fontFamily: {
-  			sans: ['Fira Sans', 'sans-serif'],
+  			// Define Fira Sans font variations
+  			sans: ["var(--font-fira-sans)"],
+  			"fira-sans": ["var(--font-fira-sans)"],
+  			"fira-sans-bold": ["var(--font-fira-sans-bold)"],
+  			"fira-sans-italic": ["var(--font-fira-sans-italic)"],
   		}
   	}
   },

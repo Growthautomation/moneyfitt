@@ -43,6 +43,7 @@ export const getUnreadEmail = (sender: string, link: string) => `
         }
         .button:hover {
             background-color: #4543AB;
+            color: #FFFFFF;
         }
         .footer {
             padding: 20px;
