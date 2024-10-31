@@ -23,6 +23,7 @@ Format your output as follows:
 - Do not number the questions.
 - Separate each question with a double pipe (||).
 - Do not include any other text or explanations besides the questions themselves.
+- Do not create questions asking about an emergancy fund.
 
 Here are additional guidelines:
 
@@ -107,6 +108,7 @@ Format your output as follows:
 - Do not number the questions.
 - Separate each question with a double pipe (||).
 - Do not include any other text or explanations besides the questions themselves.
+- Do not create questions asking about an emergancy fund.
 
 Remember, you are on the user's side. Your goal is to help them start a productive conversation with their financial advisor and gather all necessary information. Always respect what the user is looking for and take a best guess at their needs based on the provided information.
 
