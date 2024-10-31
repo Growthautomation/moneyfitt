@@ -188,7 +188,7 @@ const Auth = () => {
                 width={20}
                 height={20}
               />
-              <span>Sign in with Google</span>
+              <span>{isOnboardingComplete ? "Sign up with Google" : "Sign in with Google"}</span>
             </Button>
             {/* <Button
               onClick={handleFacebookSignIn}
