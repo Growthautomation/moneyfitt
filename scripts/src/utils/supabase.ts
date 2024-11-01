@@ -9,6 +9,7 @@ export async function createUser(email: string, password: string) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
+    options: { data: { userType: "advisor" } },
   });
 
   if (error) {
@@ -26,9 +27,9 @@ export async function createAdvisor(id: string, attributes: any) {
   );
 
   const { data, error } = await supabase
-  .from("advisor")
-  .insert({ id, ...attributes })
-  .single();
+    .from("advisor")
+    .insert({ id, ...attributes })
+    .single();
 
   if (error) {
     throw error.message;
@@ -36,4 +37,3 @@ export async function createAdvisor(id: string, attributes: any) {
 
   return data;
 }
-
