@@ -18,7 +18,7 @@ export default function InfoDialog() {
           <p>🌟 Take the first step towards your financial goals today!</p>
           
           <p>⚠️ Please note: MoneyFitt facilitates conversations with</p>
-          <p className="ml-7">independent, third-party advisors and does not provide financial advice.</p>
+          <p className="ml-6">independent, third-party advisors and does not provide financial advice.</p>
         </div>
       ),
       duration: 10000, // 10 seconds
