@@ -484,7 +484,7 @@ export const DTPDcoverageNode = () =>
   createNode(
     "DTPDCoverage",
     "Protection",
-    "Do you have Death and Total Permanent Disability coverage worth 9x annual income?",
+    "Do you have Death and Total Permanent Disability coverage worth 9x+ annual income?",
     "single",
     "Death and Total Permanent Disability (TPD) coverage is typically included in life insurance policies like whole life, term life, and investment-linked plans, either as a standard feature or optional rider.",
     [
@@ -508,7 +508,7 @@ export const illnessCoverageNode = () =>
   createNode(
     "illnessCoverage",
     "Protection",
-    "Do you have Critical Illness coverage worth 4x annual income?",
+    "Do you have Critical Illness coverage worth 4x+ annual income?",
     "single",
     null,
     [
@@ -532,7 +532,7 @@ export const insuranceCoverageNode = () =>
   createNode(
     "insuranceCoverage",
     "Protection",
-    "Are you allocating 15% of your take-home income (after CPF contributions) to insurance?",
+    "Are you allocating 15%+ of your take-home income (after CPF contributions) to insurance?",
     "single",
     null,
     [
@@ -556,7 +556,7 @@ export const investingNode = (investmentPercent: string) =>
   createNode(
     "investing",
     "Investing",
-    `Are you investing ${investmentPercent} of your take-home income (after CPF contributions) towards financial goals?`,
+    `Are you investing ${investmentPercent}+ of your take-home income (after CPF contributions)?`,
     "single",
     null,
     [
