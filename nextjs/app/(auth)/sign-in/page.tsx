@@ -19,7 +19,7 @@ import { useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { object, string } from "yup";
 
-const Auth = () => {
+const Auth = ({ searchParams }) => {
   const supabase = createClient();
   const router = useRouter();
   const { toast } = useToast();
@@ -27,7 +27,7 @@ const Auth = () => {
   const [_, setAnswers] = useLocalStorage("answers", {});
 
   const [step, setStep] = useState<"login" | "onboarding" | "welcome">(
-    "welcome"
+    searchParams?.state === "login" ? "login" : "welcome"
   );
   const [isOnboardingComplete, setIsOnboardingComplete] = useState(false);
 
@@ -188,7 +188,11 @@ const Auth = () => {
                 width={20}
                 height={20}
               />
-              <span>{isOnboardingComplete ? "Sign up with Google" : "Sign in with Google"}</span>
+              <span>
+                {isOnboardingComplete
+                  ? "Sign up with Google"
+                  : "Sign in with Google"}
+              </span>
             </Button>
             {/* <Button
               onClick={handleFacebookSignIn}
