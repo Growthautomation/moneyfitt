@@ -143,6 +143,11 @@ const Footer = () => {
             </div>
           </div>
         </div>
+
+        {/* Copyright text - added below the grid */}
+        <div className="text-center mt-16 text-sm text-[#D6D5F8]">
+          © Copyright ProConnect Technologies Pte Ltd {new Date().getFullYear()}
+        </div>
       </div>
     </footer>
   )
