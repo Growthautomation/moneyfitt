@@ -63,20 +63,20 @@ export function OnboardingFormComponent({
             <Button onClick={() => handleNext(answers)}>Next</Button>
           </div>
           <div className="text-xs text-gray-400 text-center">
-            You&apos;re using the beta version of our financial matching
-            platform. For any issues, contact{" "}
-            <a
-              href="mailto:feedback@moneyfitt.co"
-              className="hover:underline text-blue-500"
-            >
-              feedback@moneyfitt.co
-            </a>. MoneyFitt (ProConnect Technologies Pte Ltd) is not responsible for
-            any errors, omissions, or outcomes from using the platform,
-            including reliance on matches with third-party financial
-            professionals. All information is provided &quot;as is,&quot;
-            without guarantees of accuracy, completeness, or results. MoneyFitt
-            does not provide financial advice, nor are we licensed to do so.
-          </div>
+          You&apos;re using the beta version of our financial matching platform.
+          For any issues, contact{" "}
+          <a
+            href="mailto:feedback@moneyfitt.co"
+            className="hover:underline text-blue-500"
+          >
+            feedback@moneyfitt.co
+          </a>. MoneyFitt (ProConnect Technologies Pte Ltd) is not responsible for any
+          errors, omissions, or outcomes from using the platform, including
+          reliance on matches with third-party financial professionals. All
+          information is provided &quot;as is,&quot; without guarantees of accuracy,
+          completeness, or results. MoneyFitt does not provide financial advice,
+          nor are we licensed to do so.
+        </div>
         </Card>
       </div>
     );
