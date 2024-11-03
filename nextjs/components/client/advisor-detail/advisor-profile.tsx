@@ -44,6 +44,11 @@ const parseImagePaths = (images: Json | null): string[] => {
   return [];
 };
 
+// Helper function to check if array-like JSON field has items
+const hasItems = (field: any): boolean => {
+  return Array.isArray(field) && field.length > 0;
+}
+
 // Modify the props interface to include editing capability
 interface AdvisorProfileProps {
   advisor: Advisor;
@@ -194,7 +199,7 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
           </CardHeader>
           <CardContent className="p-6">
             <div className="space-y-6 w-full">
-              {localAdvisor.bio && localAdvisor.bio.trim() && (
+              {localAdvisor.bio && (
                 <section className="space-y-2 w-full">
                   <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
                     <User className="mr-2 flex-shrink-0 text-[#5C59E4]" /> Bio
@@ -207,13 +212,13 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                 </section>
               )}
 
-              {(localAdvisor.broad_scope?.length > 0 || localAdvisor.narrow_scope?.length > 0) && (
+              {(hasItems(localAdvisor.broad_scope) || hasItems(localAdvisor.narrow_scope)) && (
                 <section className="space-y-2 w-full">
                   <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
                     <Star className="mr-2 flex-shrink-0 text-[#5C59E4]" /> Specialisations
                   </h2>
                   <div className="flex flex-wrap gap-2">
-                    {(localAdvisor.broad_scope as string[])?.map((spec: string) => (
+                    {hasItems(localAdvisor.broad_scope) && (localAdvisor.broad_scope as string[]).map((spec: string) => (
                       <Badge
                         key={spec}
                         variant="secondary"
@@ -222,7 +227,7 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                         {broadScope.find((s) => s.code === spec)?.name || spec}
                       </Badge>
                     ))}
-                    {(localAdvisor.narrow_scope as string[])?.map((spec: string) => (
+                    {hasItems(localAdvisor.narrow_scope) && (localAdvisor.narrow_scope as string[]).map((spec: string) => (
                       <Badge
                         key={spec}
                         variant="secondary"
@@ -235,13 +240,13 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                 </section>
               )}
 
-              {localAdvisor.professional_background?.length > 0 && (
+              {hasItems(localAdvisor.professional_background) && (
                 <section className="space-y-2 w-full">
                   <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
                     <Briefcase className="mr-2 flex-shrink-0 text-[#5C59E4]" /> Professional Background
                   </h2>
                   <ul className="space-y-2 text-[#222222] w-full">
-                    {(localAdvisor.professional_background as string[])?.map(
+                    {hasItems(localAdvisor.professional_background) && (localAdvisor.professional_background as string[]).map(
                       (exp: string, index: number) => (
                         <li key={index} className="flex items-start w-full">
                           <span className="mr-2 text-[#5C59E4] flex-shrink-0">•</span>
@@ -255,13 +260,13 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                 </section>
               )}
 
-              {localAdvisor.awards?.length > 0 && (
+              {hasItems(localAdvisor.awards) && (
                 <section className="space-y-2 w-full">
                   <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
                     <Award className="mr-2 text-[#5C59E4]" /> Awards
                   </h2>
                   <ul className="space-y-2 text-[#222222] w-full">
-                    {(localAdvisor.awards as string[])?.map(
+                    {hasItems(localAdvisor.awards) && (localAdvisor.awards as string[]).map(
                       (award: string, index: number) => (
                         <li key={index} className="flex items-start w-full">
                           <span className="mr-2 text-[#5C59E4]">•</span>
@@ -273,13 +278,13 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                 </section>
               )}
 
-              {localAdvisor.certifications?.length > 0 && (
+              {hasItems(localAdvisor.certifications) && (
                 <section className="space-y-2 w-full">
                   <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
                     <FileCheck className="mr-2 text-[#5C59E4]" /> Certifications
                   </h2>
                   <ul className="space-y-2 text-[#222222] w-full">
-                    {(localAdvisor.certifications as string[])?.map(
+                    {hasItems(localAdvisor.certifications) && (localAdvisor.certifications as string[]).map(
                       (cert: string, index: number) => (
                         <li key={index} className="flex items-start w-full">
                           <span className="mr-2 text-[#5C59E4]">•</span>
@@ -291,13 +296,13 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                 </section>
               )}
 
-              {localAdvisor.languages?.length > 0 && (
+              {hasItems(localAdvisor.languages) && (
                 <section className="space-y-2 w-full">
                   <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
                     <Languages className="mr-2 text-[#5C59E4]" /> Languages
                   </h2>
                   <div className="flex flex-wrap gap-2">
-                    {(localAdvisor.languages as string[])?.map((lang: string) => (
+                    {hasItems(localAdvisor.languages) && (localAdvisor.languages as string[]).map((lang: string) => (
                       <Badge
                         key={lang}
                         variant="outline"
@@ -310,13 +315,13 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                 </section>
               )}
 
-              {localAdvisor.education?.length > 0 && (
+              {hasItems(localAdvisor.education) && (
                 <section className="space-y-2 w-full">
                   <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
                     <GraduationCap className="mr-2 text-[#5C59E4]" /> Education
                   </h2>
                   <ul className="space-y-2 text-[#222222] w-full">
-                    {(localAdvisor.education as string[])?.map(
+                    {hasItems(localAdvisor.education) && (localAdvisor.education as string[]).map(
                       (edu: string, index: number) => (
                         <li key={index} className="flex items-start w-full">
                           <span className="mr-2 text-[#5C59E4]">•</span>
@@ -328,7 +333,7 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                 </section>
               )}
 
-              {localAdvisor.religion && (
+              {hasItems(localAdvisor.religion) && (
                 <section className="space-y-2 w-full">
                   <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
                     <ChurchIcon className="mr-2 text-[#5C59E4]" /> Religion
@@ -345,13 +350,13 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                 </section>
               )}
 
-              {localAdvisor.testinomial?.length > 0 && (
+              {hasItems(localAdvisor.testinomial) && (
                 <section className="space-y-2 w-full">
                   <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
                     <Star className="mr-2 text-[#5C59E4]" /> Testimonials
                   </h2>
                   <ul className="space-y-2 text-[#222222] w-full">
-                    {(localAdvisor.testinomial as string[])?.map(
+                    {hasItems(localAdvisor.testinomial) && (localAdvisor.testinomial as string[]).map(
                       (testimonial: string, index: number) => (
                         <li key={index}>
                           <blockquote className="border-l-4 border-[#5C59E4] pl-4 italic text-[#222222] bg-[#ECF0F3] p-3 rounded">
@@ -364,11 +369,11 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                 </section>
               )}
 
-              {localAdvisor.personal_interests?.length > 0 && (
+              {hasItems(localAdvisor.personal_interests) && (
                 <section className="space-y-2 w-full">
                   <h2 className="text-xl font-semibold text-[#2E2C72]">Personal Interests</h2>
                   <ul className="text-[#222222] flex flex-wrap gap-2 my-2">
-                    {(localAdvisor.personal_interests as string[])?.map(
+                    {hasItems(localAdvisor.personal_interests) && (localAdvisor.personal_interests as string[]).map(
                       (interest: string, index: number) => (
                         <li
                           key={index}
@@ -382,13 +387,13 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                 </section>
               )}
 
-              {localAdvisor.secondary_images?.length > 0 && (
+              {hasItems(localAdvisor.secondary_images) && (
                 <section className="space-y-4">
                   <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
                     <ImageIcon className="mr-2 text-[#5C59E4]" /> Gallery
                   </h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-auto">
-                    {(localAdvisor.secondary_images as string[]).map((image, index) => (
+                    {hasItems(localAdvisor.secondary_images) && (localAdvisor.secondary_images as string[]).map((image, index) => (
                       <motion.div
                         key={index}
                         initial={{ opacity: 0, y: 20 }}
