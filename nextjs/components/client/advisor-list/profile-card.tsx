@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RedirectButton } from "@/components/utils/redirect-btn";
 import { languages, narrowScope } from "@/lib/constants";
-import { createClient } from "@/lib/supabase/server";
 import { Advisor } from "@/types/advisor";
 import Unread from "./unread";
 import React from "react";
@@ -26,21 +25,22 @@ export async function AdvisorProfileCard({
   redirectTo,
   footer
 }: AdvisorProfileCardProps) {
-  const supabase = createClient();
-  const { data } = await supabase.storage
-    .from("public-files")
-    .getPublicUrl(advisor.profile_img ?? "");
-
   return (
     <Card className="w-full h-full flex flex-col bg-white shadow-lg border-t-4 border-[#5C59E4]">
       <Unread sender={advisor.id} />
       <CardHeader className="text-center flex-shrink-0 flex flex-col justify-between">
-        <Avatar className="w-24 h-24 mx-auto border-4 border-[#D6D5F8]">
-          <AvatarImage src={data.publicUrl || ""} alt="advisor-profile-pic" />
-          <AvatarFallback className="bg-[#8583EB] text-white text-xl font-semibold">
-            {`${advisor?.first_name?.[0]}${advisor?.last_name?.[0]}`}
-          </AvatarFallback>
-        </Avatar>
+        <div className="relative w-32 h-32 mx-auto">
+          <Avatar className="w-full h-full border-4 border-[#D6D5F8]">
+            <AvatarImage 
+              src={advisor.profile_img || ''} 
+              alt={`${advisor.first_name} ${advisor.last_name}'s profile picture`}
+              className="object-cover"
+            />
+            <AvatarFallback className="bg-[#8583EB] text-white text-2xl font-semibold">
+              {`${advisor?.first_name?.[0]}${advisor?.last_name?.[0]}`}
+            </AvatarFallback>
+          </Avatar>
+        </div>
         <div>
           <CardTitle className="mt-4 text-xl font-bold text-[#222222]">
             {`${advisor.first_name} ${advisor.last_name}`}
