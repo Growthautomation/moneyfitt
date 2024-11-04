@@ -41,7 +41,6 @@ export type Database = {
       }
       advisor: {
         Row: {
-          active: boolean | null
           age_group: string | null
           agency_website: string | null
           awards: Json | null
@@ -70,7 +69,6 @@ export type Database = {
           title: string | null
         }
         Insert: {
-          active?: boolean | null
           age_group?: string | null
           agency_website?: string | null
           awards?: Json | null
@@ -99,7 +97,6 @@ export type Database = {
           title?: string | null
         }
         Update: {
-          active?: boolean | null
           age_group?: string | null
           agency_website?: string | null
           awards?: Json | null
@@ -163,7 +160,6 @@ export type Database = {
           contents: Json[] | null
           created_at: string
           id: string
-          is_admin: boolean | null
           name: string | null
           narrow_scope: Json | null
           phone_number: string | null
@@ -181,7 +177,6 @@ export type Database = {
           contents?: Json[] | null
           created_at?: string
           id?: string
-          is_admin?: boolean | null
           name?: string | null
           narrow_scope?: Json | null
           phone_number?: string | null
@@ -199,7 +194,6 @@ export type Database = {
           contents?: Json[] | null
           created_at?: string
           id?: string
-          is_admin?: boolean | null
           name?: string | null
           narrow_scope?: Json | null
           phone_number?: string | null
