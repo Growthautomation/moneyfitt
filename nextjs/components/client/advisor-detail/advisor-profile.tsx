@@ -121,9 +121,9 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
   }
 
   return (
-    <div className="h-full w-full mx-auto px-2 sm:px-4" id="advisor-profile">
+    <div className="h-full w-full mx-auto px-2 sm:px-4 max-w-screen-2xl" id="advisor-profile">
       {editable && (
-        <div className="max-w-[90rem] mx-auto mt-4 flex justify-between items-center">
+        <div className="w-full max-w-[1200px] mx-auto mt-4 flex justify-between items-center">
           <Link className="hover:bg-gray-100 p-2 sm:p-3 border rounded text-sm sm:text-base" href="/advisor/chat">
             Back
           </Link>
@@ -136,8 +136,8 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
         </div>
       )}
       
-      <div className={`flex flex-col ${isEditing ? 'lg:flex-row lg:gap-6' : ''} justify-center max-w-[90rem] mx-auto mt-6`}>
-        <Card className={`${isEditing ? 'lg:w-[45rem]' : 'w-full'} bg-[#FFFFFF] shadow-lg border-[#5C59E4] border-t-4 flex-shrink-0`}>
+      <div className={`flex flex-col ${isEditing ? 'lg:flex-row lg:gap-6' : ''} justify-center w-full max-w-[1200px] mx-auto mt-6`}>
+        <Card className={`${isEditing ? 'lg:w-[800px]' : 'w-full max-w-[800px]'} bg-[#FFFFFF] shadow-lg border-[#5C59E4] border-t-4 flex-shrink-0 mx-auto`}>
           <CardHeader className="flex flex-col items-center space-y-4 bg-gradient-to-r from-[#D6D5F8] to-[#FFFFFF] p-4 sm:p-6">
             <div className="relative flex-shrink-0">
               <Image
@@ -420,9 +420,9 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
           </CardContent>
         </Card>
 
-        {/* Edit Form - Stack below on mobile */}
+        {/* Edit Form - Adjust width */}
         {isEditing && (
-          <div className="w-full lg:w-[35rem] mt-4 lg:mt-0 flex-shrink-0">
+          <div className="w-full lg:w-[360px] mt-4 lg:mt-0 flex-shrink-0">
             <div className="lg:sticky lg:top-4">
               <EditProfileForm 
                 advisor={localAdvisor} 
