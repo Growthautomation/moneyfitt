@@ -1,0 +1,43 @@
+{
+    "first_name": "Amira",
+    "last_name": " ",
+    "title": "Insurance Agent",
+    "bio": "I am a insurance estate agent. I have been in the business for 10 years. I specialize in residential properties. I am a member of the National Association of Realtors.",
+    "broad_scope": [
+        "FPP"
+    ],
+    "narrow_scope": [
+        "LI"
+    ],
+    "languages": [
+        "ENG",
+        "CHI"
+    ],
+    "education": [
+        "Bachelors in Business Administration"
+    ],
+    "professional_background": [
+        "Real Estate Agent",
+        "Insurance Agent"
+    ],
+    "certifications": [
+        "Financial Advisors: Certified Financial Planner (CFP)",
+        "Chartered Financial Consultant (ChFC)",
+        "Chartered Financial Analyst (CFA)",
+        "Associate Financial Planner (AFP)",
+        "Certified Trust and Fiduciary Advisor (CTFA)",
+        "Certified Investment Management Analyst (CIMA)"
+    ],
+    "awards": [],
+    "religion": "CHR",
+    "social_profiles": [],
+    "current_company": "Amira Insurance",
+    "personal_website": "www.amirainsurance.com",
+    "agency_website": "www.amirainsurance.com",
+    "mas": "12345",
+    "testinomial": ["John is a great agent. He helped me find my dream home. He was very professional and knowledgeable. I would highly recommend him to anyone looking to buy or sell a home."],
+    "personal_interests": ["Traveling", "Reading", "Cooking"],
+    "gender": "F",
+    "age_group": "A2",
+    "tagline": "Your trusted insurance agent"
+}
