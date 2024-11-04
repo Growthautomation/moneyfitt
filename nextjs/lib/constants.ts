@@ -131,7 +131,7 @@ export const religion = [
 ];
 
 export const companies = [
-  { code: 'AWM', name: 'Ascendance Wealth Management(AWM)' },
+  { code: 'AWM', name: 'Ascendance Wealth Management (AWM)' },
   { code: 'HSBC', name: 'HSBC Life' },
   { code: "II", name: "Income Insurance" },
   { code: "PRU", name: "Prudential" },
