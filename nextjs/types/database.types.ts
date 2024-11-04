@@ -170,6 +170,7 @@ export type Database = {
           preferred_religion: Json | null
           preferred_sex: Json | null
           telegram: string | null
+          is_admin: boolean | null
         }
         Insert: {
           all_answers?: Json | null
@@ -187,6 +188,7 @@ export type Database = {
           preferred_religion?: Json | null
           preferred_sex?: Json | null
           telegram?: string | null
+          is_admin?: boolean | null
         }
         Update: {
           all_answers?: Json | null
@@ -204,6 +206,7 @@ export type Database = {
           preferred_religion?: Json | null
           preferred_sex?: Json | null
           telegram?: string | null
+          is_admin?: boolean | null
         }
         Relationships: []
       }

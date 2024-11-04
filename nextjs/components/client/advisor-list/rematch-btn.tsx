@@ -36,7 +36,10 @@ export default function RematchBtn({ matchId }) {
           <DialogHeader>
             <DialogTitle>Find New Match</DialogTitle>
             <DialogDescription>
-              Would you like to edit your answers to the onboarding quiz?
+            <DialogDescription>
+  <p className="mb-2">Would you like to edit your answers to the onboarding quiz?</p>
+  <p className="text-[#EB5853]">Warning: Selecting "No" will refresh your match with your current answers and you will not be able to message this advisor again. If you do not wish to rematch please close this popup</p>
+</DialogDescription>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2">

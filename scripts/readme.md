@@ -5,6 +5,18 @@
 The csv should hav same structure as template provided in `advisors.csv`
 `yarn import-advisor -- --file=advisors.csv`
 
+
+Or windows use `npx ts-node src/import.ts`, need to change package.json to use `ts-node` instead of `ts-node-dev`.
+`{
+  "name": "scripts",
+  "version": "1.0.0",
+  "description": "Utility scripts",
+  "scripts": {
+    "import-advisor": "npx ts-node src/import.ts"
+  },
+  // ... rest of your package.json
+}`
+
 # getting the output
 The output_{timestampt}.csv will contain username, and password.
 

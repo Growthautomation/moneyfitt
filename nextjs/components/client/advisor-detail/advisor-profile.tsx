@@ -124,7 +124,7 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
     <div className="h-full w-full max-w-[100vw] mx-auto px-4" id="advisor-profile">
       {editable && (
         <div className="max-w-[90rem] mx-auto mt-4 flex justify-between items-center">
-          <Link className="hover:bg-gray-100 p-3 border rounded" href="javascript:history.back()">
+          <Link className="hover:bg-gray-100 p-3 border rounded" href="/advisor/chat">
             Back
           </Link>
           <Button 
