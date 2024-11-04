@@ -12,24 +12,27 @@ export function validateAgent(attributes: object) {
     return "Attributes are required";
   }
   if (!isValidGender(attributes["gender"])) {
-    return "Invalid gender";
+    return "Invalid gender" + attributes["gender"];
   }
   if (!isValidAgeGroup(attributes["ageGroup"])) {
-    return "Invalid age group";
+    return "Invalid age group" + attributes["ageGroup"];
   }
   if (
     attributes["broadScope"].map((s) => isValidBroadScope(s)).includes(false)
   ) {
-    return "Invalid broad scope";
+    const invalidScope = attributes["broadScope"].find(scope => !isValidBroadScope(scope));
+    return `Invalid broad scope: ${invalidScope}`;
   }
   if (attributes["narrowScope"].map((s) => isValidNarrowScope(s))) {
-    return "Invalid narrow scope";
+    const invalidScope = attributes["narrowScope"].find(scope => !isValidNarrowScope(scope));
+    return `Invalid narrow scope: ${invalidScope}`;
   }
   if (attributes["languages"].map((l) => isValidLanguage(l)).includes(false)) {
-    return "Languages are required";
+    const invalidLanguage = attributes["languages"].find(language => !isValidLanguage(language));
+    return `Invalid language: ${invalidLanguage}`;
   }
   if (!isValidReligion(attributes["religion"])) {
-    return "Invalid religion";
+    return "Invalid religion" + attributes["religion"];
   }
   return null;
 }
