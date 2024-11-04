@@ -38,12 +38,20 @@ export const createAgent = async (form: FormData) => {
     };
   }
 
-  const { data: profileUploaded } = await supabase.storage
+  const { data: profileUploaded, error: uploadError } = await supabase.storage
     .from("public-files")
     .upload(`${user?.id}/${profile.name}`, profile, {
       cacheControl: "3600",
       upsert: true,
     });
+
+  if (uploadError) {
+    console.error("profile image upload", uploadError);
+    return {
+      success: false,
+      error: uploadError.message,
+    };
+  }
 
   const { data, error: insertError } = await supabase
     .from("advisor")
