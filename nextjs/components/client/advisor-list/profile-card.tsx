@@ -13,6 +13,7 @@ import { languages, narrowScope } from "@/lib/constants";
 import { Advisor } from "@/types/advisor";
 import Unread from "./unread";
 import React from "react";
+import { createClient } from "@/lib/supabase/server";
 
 interface AdvisorProfileCardProps {
   advisor: Advisor;
@@ -25,6 +26,10 @@ export async function AdvisorProfileCard({
   redirectTo,
   footer
 }: AdvisorProfileCardProps) {
+  const supabase = createClient();
+  const { data } = await supabase.storage
+    .from("public-files")
+    .getPublicUrl(advisor.profile_img ?? "");
   return (
     <Card className="w-full h-full flex flex-col bg-white shadow-lg border-t-4 border-[#5C59E4]">
       <Unread sender={advisor.id} />
@@ -32,7 +37,7 @@ export async function AdvisorProfileCard({
         <div className="relative w-32 h-32 mx-auto">
           <Avatar className="w-full h-full border-4 border-[#D6D5F8]">
             <AvatarImage 
-              src={advisor.profile_img || ''} 
+              src={data.publicUrl || ''} 
               alt={`${advisor.first_name} ${advisor.last_name}'s profile picture`}
               className="object-cover"
             />

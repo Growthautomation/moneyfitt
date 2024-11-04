@@ -18,7 +18,7 @@ import {
   FileCheck,
 } from "lucide-react";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Advisor, Json } from "@/types/advisor";
 import { createClient } from "@/lib/supabase/client";
 import { languages, narrowScope, broadScope, religion, companies } from "@/lib/constants";
@@ -26,6 +26,7 @@ import Link from "next/link";
 import { EditProfileForm } from "@/components/advisor/edit-profile-form"
 import { updateAdvisorProfile } from "@/lib/actions/agent"
 import { motion } from "framer-motion"
+
 
 // Helper function to ensure URL has a protocol
 const ensureHttps = (url: string): string => {
@@ -56,10 +57,18 @@ interface AdvisorProfileProps {
 }
 
 export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: AdvisorProfileProps) {
+  const supabase =createClient();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [secondaryImages, setSecondaryImages] = useState<string[]>([]);
   const [isEditing, setIsEditing] = useState(false)
   const [localAdvisor, setLocalAdvisor] = useState(initialAdvisor)
+
+  const { data } = useMemo(() => {
+    return supabase.storage
+      .from("public-files")
+      .getPublicUrl(initialAdvisor.profile_img ?? "");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialAdvisor.profile_img]);
 
   useEffect(() => {
     const fetchSecondaryImages = async () => {
@@ -141,7 +150,7 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
           <CardHeader className="flex flex-col items-center space-y-4 bg-gradient-to-r from-[#D6D5F8] to-[#FFFFFF] p-4 sm:p-6">
             <div className="relative flex-shrink-0">
               <Image
-                src={localAdvisor.profile_img || "/default-profile.png"}
+                src={data.publicUrl || "/default-profile.png"}
                 alt={`${localAdvisor.first_name} ${localAdvisor.last_name}`}
                 width={120}
                 height={120}
