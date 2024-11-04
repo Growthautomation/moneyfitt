@@ -8,7 +8,7 @@ export default async function Contents({ user }) {
   const { data: client, error } = await supabase
     .from("client")
     .select()
-    .eq("id", user.id)
+    .eq("id", user?.id || '')
     .single();
   if (error) {
     console.error("components/client/contents/main:", error);
