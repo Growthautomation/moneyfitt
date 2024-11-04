@@ -90,6 +90,7 @@ export async function createMatching() {
   const { data: advisors, error: advisorErr } = await supabase
   .from("advisor")
   .select("*")
+  .eq('active', true)
   .not(
     "id",
     "in",
@@ -350,6 +351,7 @@ export async function rematch(supabase, matchId, client){
   const { data: advisors, error: advisorErr } = await supabase
   .from("advisor")
   .select("*")
+  .eq('active', true)
   .not(
     "id",
     "in",
