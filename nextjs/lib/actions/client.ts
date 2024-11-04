@@ -44,7 +44,11 @@ export async function createUserClient(
     };
   }
 
-  const { data: advisors } = await supabase.from("advisor").select();
+  const { data: advisors } = await supabase
+    .from("advisor")
+    .select()
+    .eq("active", true);
+
   if (!advisors) {
     return {
       success: false,
@@ -88,18 +92,22 @@ export async function createMatching() {
   }
 
   const { data: advisors, error: advisorErr } = await supabase
-  .from("advisor")
-  .select("*")
-  .not(
-    "id",
-    "in",
-    `(${(await supabase
-      .from("matchings")
-      .select("advisor_id")
-      .eq("client_id", user.id)
-      .eq("enabled", true))
-      .data?.map(m => `"${m.advisor_id}"`).join(',')})`
-  );
+    .from("advisor")
+    .select("*")
+    .eq("active", true)
+    .not(
+      "id",
+      "in",
+      `(${(
+        await supabase
+          .from("matchings")
+          .select("advisor_id")
+          .eq("client_id", user.id)
+          .eq("enabled", true)
+      ).data
+        ?.map((m) => `"${m.advisor_id}"`)
+        .join(",")})`
+    );
   if (!advisors) {
     console.error("updatePreferenceAndMatch", advisorErr);
     throw new Error("No advisors found");
@@ -319,9 +327,9 @@ export async function updatePreferenceAndMatch(data: FormData) {
   return redirect("/home");
 }
 
-export async function singleRematch(data: FormData){
+export async function singleRematch(data: FormData) {
   const matchId = parseInt(data.get("matchId") as string);
-  if(!matchId){
+  if (!matchId) {
     throw new Error("Match ID is required");
   }
   const supabase = createClient();
@@ -346,20 +354,24 @@ export async function singleRematch(data: FormData){
   return redirect("/home");
 }
 
-export async function rematch(supabase, matchId, client){
+export async function rematch(supabase, matchId, client) {
   const { data: advisors, error: advisorErr } = await supabase
-  .from("advisor")
-  .select("*")
-  .not(
-    "id",
-    "in",
-    `(${(await supabase
-      .from("matchings")
-      .select("advisor_id")
-      .eq("client_id", client.id)
-      .eq("enabled", true))
-      .data?.map(m => `"${m.advisor_id}"`).join(',')})`
-  );
+    .from("advisor")
+    .select("*")
+    .eq("active", true)
+    .not(
+      "id",
+      "in",
+      `(${(
+        await supabase
+          .from("matchings")
+          .select("advisor_id")
+          .eq("client_id", client.id)
+          .eq("enabled", true)
+      ).data
+        ?.map((m) => `"${m.advisor_id}"`)
+        .join(",")})`
+    );
   if (!advisors) {
     console.error("updatePreferenceAndMatch", advisorErr);
     throw new Error("No advisors found");
@@ -367,7 +379,7 @@ export async function rematch(supabase, matchId, client){
 
   const matches = matchAdvisors(advisors, client);
 
-  const {data, error} = await supabase
+  const { data, error } = await supabase
     .from("matchings")
     .update({ enabled: false })
     .eq("id", matchId);
@@ -381,8 +393,8 @@ export async function rematch(supabase, matchId, client){
       total_score: match.totalScore,
       enabled: true,
     });
-    if(!error){
-      break
+    if (!error) {
+      break;
     }
   }
 }
