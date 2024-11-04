@@ -21,6 +21,7 @@ export default function CreateClient() {
       preferred_sex: answers["preferGender"],
       all_answers: answers,
       contents: answers["contents"] as string[],
+      is_admin: false,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
