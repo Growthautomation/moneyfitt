@@ -138,15 +138,17 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
       
       <div className={`flex flex-col ${isEditing ? 'lg:flex-row lg:gap-6' : ''} justify-center w-full max-w-[1200px] mx-auto mt-6`}>
         <Card className={`${isEditing ? 'lg:w-[800px]' : 'w-full max-w-[800px]'} bg-[#FFFFFF] shadow-lg border-[#5C59E4] border-t-4 flex-shrink-0 mx-auto`}>
-          <CardHeader className="flex flex-col items-center space-y-4 bg-gradient-to-r from-[#D6D5F8] to-[#FFFFFF] p-4 sm:p-6">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-start items-center space-y-4 sm:space-y-0 sm:space-x-4 bg-gradient-to-r from-[#D6D5F8] to-[#FFFFFF] p-4 sm:p-6">
             <div className="relative flex-shrink-0">
-              <Image
-                src={localAdvisor.profile_img || "/default-profile.png"}
-                alt={`${localAdvisor.first_name} ${localAdvisor.last_name}`}
-                width={120}
-                height={120}
-                className="rounded-full border-4 border-[#FFFFFF] shadow-lg sm:w-[150px] sm:h-[150px]"
-              />
+              <div className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] relative">
+                <Image
+                  src={localAdvisor.profile_img || "/default-profile.png"}
+                  alt={`${localAdvisor.first_name} ${localAdvisor.last_name}`}
+                  fill
+                  className="rounded-full border-4 border-[#FFFFFF] shadow-lg object-cover"
+                  style={{ objectPosition: 'center' }}
+                />
+              </div>
               <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
                 {localAdvisor.personal_website && (
                   <Button
@@ -178,14 +180,14 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                 )}
               </div>
             </div>
-            <div className="text-center w-full">
-              <CardTitle className="text-2xl sm:text-3xl font-bold break-words text-[#222222]">{`${localAdvisor.first_name} ${localAdvisor.last_name}`}</CardTitle>
+            <div className="text-left w-full">
+              <CardTitle className="text-2xl sm:text-3xl font-bold break-words text-[#222222] text-center sm:text-left">{`${localAdvisor.first_name} ${localAdvisor.last_name}`}</CardTitle>
               {localAdvisor.title && (
-                <p className="text-sm text-[#4543AB] font-medium break-words mt-1">
+                <p className="text-sm text-[#4543AB] font-medium break-words mt-1 text-center sm:text-left">
                   {localAdvisor.title}
                 </p>
               )}
-              <div className="mt-2 flex flex-wrap gap-2">
+              <div className="mt-2 flex flex-wrap gap-2 justify-center sm:justify-start">
                 {localAdvisor.current_company && (
                   <Badge
                     variant="secondary"
