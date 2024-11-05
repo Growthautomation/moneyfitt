@@ -123,7 +123,7 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
   return (
     <div className="h-full w-full mx-auto px-2 sm:px-4 max-w-screen-2xl" id="advisor-profile">
       {editable && (
-        <div className="w-full max-w-[1200px] mx-auto mt-4 flex justify-between items-center">
+        <div className="w-full ml-4 lg:pr-24 sm:pr-8 pr-4 mt-4 flex justify-between items-center">
           <Link className="hover:bg-gray-100 p-2 sm:p-3 border rounded text-sm sm:text-base" href="/advisor/chat">
             Back
           </Link>
