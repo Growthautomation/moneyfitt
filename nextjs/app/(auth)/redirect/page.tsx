@@ -8,7 +8,7 @@ export default async function Callback() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return "An error occurred";
+    return redirect("/sign-in");
   }
 
   const { data: client, error } = await supabase
