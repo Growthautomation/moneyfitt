@@ -28,7 +28,7 @@ export default async function Redirect() {
   if (!match) {
     return (
       <div className="flex justify-center items-center grow h-1/4">
-        We will email when we find client for you
+        We&apos;ll notify you by email as soon as we match you with a client.
       </div>
     );
   }
