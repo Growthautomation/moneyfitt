@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Contents from "@/components/client/contents/main";
 import { Faq } from "@/components/client/faq";
+import ScrollToTop from "@/components/utils/scroll-to-top";
 
 export default async function Page() {
   const supabase = createClient();
@@ -16,6 +17,7 @@ export default async function Page() {
         </h2>
         <Faq />
       </div>
+      <ScrollToTop />
     </div>
   );
 }
