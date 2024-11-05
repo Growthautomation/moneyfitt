@@ -68,6 +68,7 @@ export default function ChangePassword({ onClose }: ChangePasswordProps) {
       setError(e);
     } finally {
       setLoading(false);
+      onClose?.();
     }
   };
 
