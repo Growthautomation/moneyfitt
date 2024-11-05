@@ -46,7 +46,7 @@ export default async function AdvisorPreference({ searchParams }) {
           Back
         </Link>
       </div>
-      <Card className="max-w-2xl mx-auto">
+      <Card className="max-w-2xl mx-auto mb-8">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
             Advisor Preference
@@ -71,7 +71,7 @@ export default async function AdvisorPreference({ searchParams }) {
             {/* Specialized Area */}
             <div className="space-y-2">
               <Label htmlFor="narrowScope" className="font-bold text-lg">
-                Specialized Area
+                Specialisations
               </Label>
               <MultiSelectSearchableComponent
                 name="narrowScope"
