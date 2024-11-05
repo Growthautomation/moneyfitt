@@ -93,7 +93,7 @@ export function OnboardingFormComponent({
             {currentQuestion?.category}
           </h2>
         </div>
-        <p className="text-lg whitespace-normal break-words">
+        <p className="text-lg whitespace-pre break-words">
           {currentQuestion?.question}
         </p>
         <div className="space-y-4">
