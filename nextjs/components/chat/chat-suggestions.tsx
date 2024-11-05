@@ -39,7 +39,7 @@ export default function Suggestions({
             onClick={() => onClick(bubble)}
           >
             <span className="text-xs break-words whitespace-pre-wrap">
-              {bubble}
+              {bubble.trim()}
             </span>
           </Button>
         </div>
