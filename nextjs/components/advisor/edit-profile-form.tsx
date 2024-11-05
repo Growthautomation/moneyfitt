@@ -1,20 +1,26 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Plus, X } from "lucide-react"
-import { Advisor } from "@/types/advisor"
-import { MultiSelectSearchableComponent } from "@/components/multi-select-searchable"
-import { broadScope, narrowScope, religion, companies, languages } from "@/lib/constants"
-import { ImageManager } from "@/components/advisor/image-manager"
-import { SliderImageManager } from "@/components/advisor/slider-image-manager"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Plus, X } from "lucide-react";
+import { Advisor } from "@/types/advisor";
+import { MultiSelectSearchableComponent } from "@/components/multi-select-searchable";
+import {
+  broadScope,
+  narrowScope,
+  religion,
+  companies,
+  languages,
+} from "@/lib/constants";
+import { ImageManager } from "@/components/advisor/image-manager";
+import { SliderImageManager } from "@/components/advisor/slider-image-manager";
 
 interface EditProfileFormProps {
-  advisor: Advisor
-  onUpdate: (field: string, value: any) => void
+  advisor: Advisor;
+  onUpdate: (field: string, value: any) => void;
 }
 
 // Add constants for limits
@@ -25,84 +31,97 @@ const LIMITS = {
   awards: 6,
   professional_background: 6,
   personal_interests: 6,
-  testinomial: 3
-}
+  testinomial: 3,
+};
 
 export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
   // Helper function to handle list items
   const handleListChange = (field: string, index: number, value: string) => {
-    const currentList = advisor[field] as string[] || []
-    const newList = [...currentList]
-    newList[index] = value
-    onUpdate(field, newList)
-  }
+    const currentList = (advisor[field] as string[]) || [];
+    const newList = [...currentList];
+    newList[index] = value;
+    onUpdate(field, newList);
+  };
 
   const addListItem = (field: string) => {
-    const currentList = advisor[field] as string[] || []
+    const currentList = (advisor[field] as string[]) || [];
     if (currentList.length >= LIMITS[field as keyof typeof LIMITS]) {
       // You might want to show a toast or alert here
-      console.warn(`Maximum ${LIMITS[field as keyof typeof LIMITS]} items allowed`)
-      return
+      console.warn(
+        `Maximum ${LIMITS[field as keyof typeof LIMITS]} items allowed`
+      );
+      return;
     }
-    onUpdate(field, [...currentList, ''])
-  }
+    onUpdate(field, [...currentList, ""]);
+  };
 
   const removeListItem = (field: string, index: number) => {
-    const currentList = advisor[field] as string[] || []
-    onUpdate(field, currentList.filter((_, i) => i !== index))
-  }
+    const currentList = (advisor[field] as string[]) || [];
+    onUpdate(
+      field,
+      currentList.filter((_, i) => i !== index)
+    );
+  };
 
   // Add handlers for multi-select
   const handleBroadScopeChange = (selected: { code: string }[]) => {
-    if (selected.length > LIMITS.broad_scope) return
-    onUpdate('broad_scope', selected.map(item => item.code))
-  }
+    if (selected.length > LIMITS.broad_scope) return;
+    onUpdate(
+      "broad_scope",
+      selected.map((item) => item.code)
+    );
+  };
 
   const handleNarrowScopeChange = (selected: { code: string }[]) => {
-    if (selected.length > LIMITS.narrow_scope) return
-    onUpdate('narrow_scope', selected.map(item => item.code))
-  }
+    if (selected.length > LIMITS.narrow_scope) return;
+    onUpdate(
+      "narrow_scope",
+      selected.map((item) => item.code)
+    );
+  };
 
   const handleReligionChange = (selected: { code: string }[]) => {
     // Religion should only allow one selection
     if (selected.length > 0) {
-      onUpdate('religion', selected[selected.length - 1].code)
+      onUpdate("religion", selected[selected.length - 1].code);
     } else {
-      onUpdate('religion', null)
+      onUpdate("religion", null);
     }
-  }
+  };
 
   const handleCompanyChange = (selected: { code: string }[]) => {
     // Company should only allow one selection
     if (selected.length > 0) {
-      onUpdate('current_company', selected[selected.length - 1].code)
+      onUpdate("current_company", selected[selected.length - 1].code);
     } else {
-      onUpdate('current_company', null)
+      onUpdate("current_company", null);
     }
-  }
+  };
 
   return (
     <div className="space-y-8 p-6 bg-white rounded-lg border border-[#D6D5F8]">
       {/* Basic Info */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-[#2E2C72]">Basic Information</h3>
-        
+        <h3 className="text-lg font-semibold text-[#2E2C72]">
+          Basic Information
+        </h3>
+
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="first_name">First Name</Label>
             <Input
               id="first_name"
-              value={advisor.first_name || ''}
-              onChange={(e) => onUpdate('first_name', e.target.value)}
+              value={advisor.first_name || ""}
+              onChange={(e) => onUpdate("first_name", e.target.value)}
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="last_name">Last Name</Label>
             <Input
               id="last_name"
-              value={advisor.last_name || ''}
-              onChange={(e) => onUpdate('last_name', e.target.value)}
+              value={advisor.last_name || ""}
+              onChange={(e) => onUpdate("last_name", e.target.value)}
             />
           </div>
         </div>
@@ -111,8 +130,8 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
           <Label htmlFor="title">Title</Label>
           <Input
             id="title"
-            value={advisor.title || ''}
-            onChange={(e) => onUpdate('title', e.target.value)}
+            value={advisor.title || ""}
+            onChange={(e) => onUpdate("title", e.target.value)}
           />
         </div>
 
@@ -130,7 +149,7 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
       {/* Profile Image */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-[#2E2C72]">Profile Image</h3>
-        <ImageManager 
+        <ImageManager
           advisorId={advisor.id}
           currentProfileImage={advisor.profile_img}
           onUpdate={() => window.location.reload()}
@@ -140,13 +159,13 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
       {/* Websites */}
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-[#2E2C72]">Websites</h3>
-        
+
         <div className="space-y-2">
           <Label htmlFor="personal_website">Personal Website</Label>
           <Input
             id="personal_website"
-            value={advisor.personal_website || ''}
-            onChange={(e) => onUpdate('personal_website', e.target.value)}
+            value={advisor.personal_website || ""}
+            onChange={(e) => onUpdate("personal_website", e.target.value)}
             placeholder="https://..."
           />
         </div>
@@ -155,8 +174,8 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
           <Label htmlFor="agency_website">Agency Website</Label>
           <Input
             id="agency_website"
-            value={advisor.agency_website || ''}
-            onChange={(e) => onUpdate('agency_website', e.target.value)}
+            value={advisor.agency_website || ""}
+            onChange={(e) => onUpdate("agency_website", e.target.value)}
             placeholder="https://..."
           />
         </div>
@@ -167,20 +186,22 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
         <Label htmlFor="bio">Bio</Label>
         <Textarea
           id="bio"
-          value={advisor.bio || ''}
-          onChange={(e) => onUpdate('bio', e.target.value)}
+          value={advisor.bio || ""}
+          onChange={(e) => onUpdate("bio", e.target.value)}
           className="min-h-[150px]"
         />
       </div>
 
       {/* Specialisations */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-[#2E2C72]">Specialisations</h3>
-        
+        <h3 className="text-lg font-semibold text-[#2E2C72]">
+          Specialisations
+        </h3>
+
         <div className="space-y-4">
           <div className="space-y-2">
             <Label>
-              Broad Scope 
+              Broad Scope
               <span className="text-sm font-normal text-[#4543AB] ml-2">
                 (Max 2)
               </span>
@@ -188,7 +209,7 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
             <MultiSelectSearchableComponent
               options={broadScope}
               placeholder="Select broad specialisations"
-              selected={advisor.broad_scope as string[] || []}
+              selected={(advisor.broad_scope as string[]) || []}
               onChange={handleBroadScopeChange}
             />
           </div>
@@ -203,7 +224,7 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
             <MultiSelectSearchableComponent
               options={narrowScope}
               placeholder="Select narrow specialisations"
-              selected={advisor.narrow_scope as string[] || []}
+              selected={(advisor.narrow_scope as string[]) || []}
               onChange={handleNarrowScopeChange}
             />
           </div>
@@ -214,42 +235,52 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
       <div className="space-y-4">
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold text-[#2E2C72]">
-            Professional Background 
+            Professional Background
             <span className="text-sm font-normal text-[#4543AB] ml-2">
-              ({(advisor.professional_background as string[] || []).length}/{LIMITS.professional_background} max)
+              ({((advisor.professional_background as string[]) || []).length}/
+              {LIMITS.professional_background} max)
             </span>
           </h3>
-          {(advisor.professional_background as string[] || []).length < LIMITS.professional_background && (
+          {((advisor.professional_background as string[]) || []).length <
+            LIMITS.professional_background && (
             <Button
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => addListItem('professional_background')}
+              onClick={() => addListItem("professional_background")}
               className="text-[#5C59E4] border-[#5C59E4]"
             >
               <Plus className="h-4 w-4 mr-1" /> Add
             </Button>
           )}
         </div>
-        
-        {(advisor.professional_background as string[] || []).map((item, index) => (
-          <div key={index} className="flex gap-2">
-            <Input
-              value={item}
-              onChange={(e) => handleListChange('professional_background', index, e.target.value)}
-              placeholder="Enter professional background"
-            />
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={() => removeListItem('professional_background', index)}
-              className="text-red-500"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
+
+        {((advisor.professional_background as string[]) || []).map(
+          (item, index) => (
+            <div key={index} className="flex gap-2">
+              <Input
+                value={item}
+                onChange={(e) =>
+                  handleListChange(
+                    "professional_background",
+                    index,
+                    e.target.value
+                  )
+                }
+                placeholder="Enter professional background"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => removeListItem("professional_background", index)}
+                className="text-red-500"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          )
+        )}
       </div>
 
       {/* Awards */}
@@ -258,34 +289,37 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
           <h3 className="text-lg font-semibold text-[#2E2C72]">
             Awards
             <span className="text-sm font-normal text-[#4543AB] ml-2">
-              ({(advisor.awards as string[] || []).length}/{LIMITS.awards} max)
+              ({((advisor.awards as string[]) || []).length}/{LIMITS.awards}{" "}
+              max)
             </span>
           </h3>
-          {(advisor.awards as string[] || []).length < LIMITS.awards && (
+          {((advisor.awards as string[]) || []).length < LIMITS.awards && (
             <Button
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => addListItem('awards')}
+              onClick={() => addListItem("awards")}
               className="text-[#5C59E4] border-[#5C59E4]"
             >
               <Plus className="h-4 w-4 mr-1" /> Add
             </Button>
           )}
         </div>
-        
-        {(advisor.awards as string[] || []).map((item, index) => (
+
+        {((advisor.awards as string[]) || []).map((item, index) => (
           <div key={index} className="flex gap-2">
             <Input
               value={item}
-              onChange={(e) => handleListChange('awards', index, e.target.value)}
+              onChange={(e) =>
+                handleListChange("awards", index, e.target.value)
+              }
               placeholder="Enter award"
             />
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              onClick={() => removeListItem('awards', index)}
+              onClick={() => removeListItem("awards", index)}
               className="text-red-500"
             >
               <X className="h-4 w-4" />
@@ -300,34 +334,38 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
           <h3 className="text-lg font-semibold text-[#2E2C72]">
             Certifications
             <span className="text-sm font-normal text-[#4543AB] ml-2">
-              ({(advisor.certifications as string[] || []).length}/{LIMITS.certifications} max)
+              ({((advisor.certifications as string[]) || []).length}/
+              {LIMITS.certifications} max)
             </span>
           </h3>
-          {(advisor.certifications as string[] || []).length < LIMITS.certifications && (
+          {((advisor.certifications as string[]) || []).length <
+            LIMITS.certifications && (
             <Button
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => addListItem('certifications')}
+              onClick={() => addListItem("certifications")}
               className="text-[#5C59E4] border-[#5C59E4]"
             >
               <Plus className="h-4 w-4 mr-1" /> Add
             </Button>
           )}
         </div>
-        
-        {(advisor.certifications as string[] || []).map((item, index) => (
+
+        {((advisor.certifications as string[]) || []).map((item, index) => (
           <div key={index} className="flex gap-2">
             <Input
               value={item}
-              onChange={(e) => handleListChange('certifications', index, e.target.value)}
+              onChange={(e) =>
+                handleListChange("certifications", index, e.target.value)
+              }
               placeholder="Enter certification"
             />
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              onClick={() => removeListItem('certifications', index)}
+              onClick={() => removeListItem("certifications", index)}
               className="text-red-500"
             >
               <X className="h-4 w-4" />
@@ -342,8 +380,13 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
         <MultiSelectSearchableComponent
           options={languages}
           placeholder="Select languages"
-          selected={advisor.languages as string[] || []}
-          onChange={(selected) => onUpdate('languages', selected.map(item => item.code))}
+          selected={(advisor.languages as string[]) || []}
+          onChange={(selected) =>
+            onUpdate(
+              "languages",
+              selected.map((item) => item.code)
+            )
+          }
         />
       </div>
 
@@ -353,32 +396,35 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
           <h3 className="text-lg font-semibold text-[#2E2C72]">
             Education
             <span className="text-sm font-normal text-[#4543AB] ml-2">
-              ({(advisor.education as string[] || []).length}/{LIMITS.certifications} max)
+              ({((advisor.education as string[]) || []).length}/
+              {LIMITS.certifications} max)
             </span>
           </h3>
           <Button
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => addListItem('education')}
+            onClick={() => addListItem("education")}
             className="text-[#5C59E4] border-[#5C59E4]"
           >
             <Plus className="h-4 w-4 mr-1" /> Add
           </Button>
         </div>
-        
-        {(advisor.education as string[] || []).map((item, index) => (
+
+        {((advisor.education as string[]) || []).map((item, index) => (
           <div key={index} className="flex gap-2">
             <Input
               value={item}
-              onChange={(e) => handleListChange('education', index, e.target.value)}
+              onChange={(e) =>
+                handleListChange("education", index, e.target.value)
+              }
               placeholder="Enter education"
             />
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              onClick={() => removeListItem('education', index)}
+              onClick={() => removeListItem("education", index)}
               className="text-red-500"
             >
               <X className="h-4 w-4" />
@@ -404,32 +450,39 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
           <h3 className="text-lg font-semibold text-[#2E2C72]">
             Testimonials
             <span className="text-sm font-normal text-[#4543AB] ml-2">
-              ({(advisor.testinomial as string[] || []).length}/{LIMITS.testinomial} max)
+              ({((advisor.testinomial as string[]) || []).length}/
+              {LIMITS.testinomial} max)
             </span>
           </h3>
           <Button
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => addListItem('testinomial')}
+            onClick={() => addListItem("testinomial")}
             className="text-[#5C59E4] border-[#5C59E4]"
           >
             <Plus className="h-4 w-4 mr-1" /> Add
           </Button>
         </div>
-        
-        {(advisor.testinomial as string[] || []).map((item, index) => (
+
+        {((advisor.testinomial as string[]) || []).map((item, index) => (
           <div key={index} className="flex gap-2">
-            <Textarea
-              value={item}
-              onChange={(e) => handleListChange('testinomial', index, e.target.value)}
-              placeholder="Enter testimonial"
-            />
+            <div className="flex flex-col grow gap-2">
+              <Textarea
+                value={item}
+                onChange={(e) =>
+                  handleListChange("testinomial", index, e.target.value)
+                }
+                placeholder="Enter testimonial"
+              />
+              <Label htmlFor="author">Author</Label>
+              <Input name="author" />
+            </div>
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              onClick={() => removeListItem('testinomial', index)}
+              onClick={() => removeListItem("testinomial", index)}
               className="text-red-500"
             >
               <X className="h-4 w-4" />
@@ -444,32 +497,35 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
           <h3 className="text-lg font-semibold text-[#2E2C72]">
             Personal Interests
             <span className="text-sm font-normal text-[#4543AB] ml-2">
-              ({(advisor.personal_interests as string[] || []).length}/{LIMITS.personal_interests} max)
+              ({((advisor.personal_interests as string[]) || []).length}/
+              {LIMITS.personal_interests} max)
             </span>
           </h3>
           <Button
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => addListItem('personal_interests')}
+            onClick={() => addListItem("personal_interests")}
             className="text-[#5C59E4] border-[#5C59E4]"
           >
             <Plus className="h-4 w-4 mr-1" /> Add
           </Button>
         </div>
-        
-        {(advisor.personal_interests as string[] || []).map((item, index) => (
+
+        {((advisor.personal_interests as string[]) || []).map((item, index) => (
           <div key={index} className="flex gap-2">
             <Input
               value={item}
-              onChange={(e) => handleListChange('personal_interests', index, e.target.value)}
+              onChange={(e) =>
+                handleListChange("personal_interests", index, e.target.value)
+              }
               placeholder="Enter interest"
             />
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              onClick={() => removeListItem('personal_interests', index)}
+              onClick={() => removeListItem("personal_interests", index)}
               className="text-red-500"
             >
               <X className="h-4 w-4" />
@@ -477,8 +533,6 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
           </div>
         ))}
       </div>
-
-      
 
       {/* Gallery Images */}
       <div className="space-y-4">
@@ -488,13 +542,13 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
             (Max 6 images)
           </span>
         </h3>
-        <SliderImageManager 
+        <SliderImageManager
           advisorId={advisor.id}
-          selectedImages={advisor.secondary_images as string[] || []}
-          onUpdate={(paths) => onUpdate('secondary_images', paths)}
+          selectedImages={(advisor.secondary_images as string[]) || []}
+          onUpdate={(paths) => onUpdate("secondary_images", paths)}
           maxImages={6}
         />
       </div>
     </div>
-  )
-} 
+  );
+}
