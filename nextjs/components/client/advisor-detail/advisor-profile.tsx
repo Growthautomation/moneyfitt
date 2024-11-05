@@ -121,31 +121,31 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
   }
 
   return (
-    <div className="h-full w-full max-w-[100vw] mx-auto px-4" id="advisor-profile">
+    <div className="h-full w-full mx-auto px-2 sm:px-4 max-w-screen-2xl" id="advisor-profile">
       {editable && (
-        <div className="max-w-[90rem] mx-auto mt-4 flex justify-between items-center">
-          <Link className="hover:bg-gray-100 p-3 border rounded" href="/advisor/chat">
+        <div className="w-full max-w-[1200px] mx-auto mt-4 flex justify-between items-center">
+          <Link className="hover:bg-gray-100 p-2 sm:p-3 border rounded text-sm sm:text-base" href="/advisor/chat">
             Back
           </Link>
           <Button 
             onClick={() => isEditing ? handleSave() : setIsEditing(true)}
-            className="bg-[#5C59E4] hover:bg-[#4543AB] text-white"
+            className="bg-[#5C59E4] hover:bg-[#4543AB] text-white text-sm sm:text-base"
           >
             {isEditing ? 'Save Changes' : 'Edit Profile'}
           </Button>
         </div>
       )}
       
-      <div className={`flex ${isEditing ? 'gap-6 justify-center' : 'justify-center'} max-w-[90rem] mx-auto mt-6`}>
-        <Card className={`${isEditing ? 'w-[45rem]' : 'w-[50rem]'} bg-[#FFFFFF] shadow-lg border-[#5C59E4] border-t-4 flex-shrink-0`}>
-          <CardHeader className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 bg-gradient-to-r from-[#D6D5F8] to-[#FFFFFF] p-6">
+      <div className={`flex flex-col ${isEditing ? 'lg:flex-row lg:gap-6' : ''} justify-center w-full max-w-[1200px] mx-auto mt-6`}>
+        <Card className={`${isEditing ? 'lg:w-[800px]' : 'w-full max-w-[800px]'} bg-[#FFFFFF] shadow-lg border-[#5C59E4] border-t-4 flex-shrink-0 mx-auto`}>
+          <CardHeader className="flex flex-col items-center space-y-4 bg-gradient-to-r from-[#D6D5F8] to-[#FFFFFF] p-4 sm:p-6">
             <div className="relative flex-shrink-0">
               <Image
                 src={localAdvisor.profile_img || "/default-profile.png"}
                 alt={`${localAdvisor.first_name} ${localAdvisor.last_name}`}
-                width={150}
-                height={150}
-                className="rounded-full border-4 border-[#FFFFFF] shadow-lg"
+                width={120}
+                height={120}
+                className="rounded-full border-4 border-[#FFFFFF] shadow-lg sm:w-[150px] sm:h-[150px]"
               />
               <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
                 {localAdvisor.personal_website && (
@@ -178,8 +178,8 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                 )}
               </div>
             </div>
-            <div className="text-center sm:text-left flex-grow">
-              <CardTitle className="text-3xl font-bold break-words text-[#222222]">{`${localAdvisor.first_name} ${localAdvisor.last_name}`}</CardTitle>
+            <div className="text-center w-full">
+              <CardTitle className="text-2xl sm:text-3xl font-bold break-words text-[#222222]">{`${localAdvisor.first_name} ${localAdvisor.last_name}`}</CardTitle>
               {localAdvisor.title && (
                 <p className="text-sm text-[#4543AB] font-medium break-words mt-1">
                   {localAdvisor.title}
@@ -197,8 +197,8 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
               </div>
             </div>
           </CardHeader>
-          <CardContent className="p-6">
-            <div className="space-y-6 w-full">
+          <CardContent className="p-4 sm:p-6">
+            <div className="space-y-4 sm:space-y-6 w-full">
               {localAdvisor.bio && (
                 <section className="space-y-2 w-full">
                   <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
@@ -392,7 +392,7 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                   <h2 className="text-xl font-semibold text-[#2E2C72] flex items-center">
                     <ImageIcon className="mr-2 text-[#5C59E4]" /> Gallery
                   </h2>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-auto">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4 auto-rows-auto">
                     {hasItems(localAdvisor.secondary_images) && (localAdvisor.secondary_images as string[]).map((image, index) => (
                       <motion.div
                         key={index}
@@ -420,10 +420,10 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
           </CardContent>
         </Card>
 
-        {/* Edit Form */}
+        {/* Edit Form - Adjust width */}
         {isEditing && (
-          <div className="w-[35rem] flex-shrink-0">
-            <div className="sticky top-4">
+          <div className="w-full lg:w-[360px] mt-4 lg:mt-0 flex-shrink-0">
+            <div className="lg:sticky lg:top-4">
               <EditProfileForm 
                 advisor={localAdvisor} 
                 onUpdate={handleUpdate}
