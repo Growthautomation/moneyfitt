@@ -55,7 +55,7 @@ export const createAgent = async (form: FormData) => {
 
   const { data, error: insertError } = await supabase
     .from("advisor")
-    .insert({ id: user?.id, ...attributes, profile_img: profileUploaded?.fullPath })
+    .insert({ id: user?.id, ...attributes, profile_img: `https://${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${profileUploaded?.fullPath}` })
     .single();
 
   if (insertError) {
