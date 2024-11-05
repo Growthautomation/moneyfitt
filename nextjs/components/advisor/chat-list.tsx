@@ -7,7 +7,7 @@ export default function ChatList({ clients }) {
   return (
     <div className="bg-gray-100 flex-shrink-0 w-64 overflow-y-auto rounded p-2">
       {!clients.length && (
-        <div className="mt-10">You have no client at the moment</div>
+        <div className="mt-10">You have no matches.</div>
       )}
       {clients.length
         ? clients
