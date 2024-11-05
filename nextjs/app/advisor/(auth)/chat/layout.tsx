@@ -1,5 +1,6 @@
 import ChatList from "@/components/advisor/chat-list";
 import ChatContextProvider from "@/components/chat/chat-context";
+import { Faq } from "@/components/client/faq";
 import { createClient } from "@/lib/supabase/server";
 import { annonomiseMatching } from "@/lib/utils/annonomize";
 import Link from "next/link";
@@ -31,16 +32,19 @@ export default async function Layout({ children }) {
     return "Error fetching clients";
   }
   return (
-      <div className="min-h-screen bg-gray-50">
-        <main className="container mx-auto px-4 py-8">
-          <section className="mb-12">
-            <h2 className="text-xl font-semibold mb-4">Your Clients</h2>
-            <div className="flex min-h-[100vh] flex-nowrap gap-4 pb-4">
-              <ChatList clients={matchings.map((m) => annonomiseMatching(m))} />
+    <div className="min-h-screen bg-gray-50">
+      <main className="container mx-auto px-4 py-8">
+        <section className="mb-12">
+          <h2 className="text-xl font-semibold mb-4">Your Clients</h2>
+          <div className="flex min-h-[100vh] flex-nowrap gap-4 pb-4">
+            <ChatList clients={matchings.map((m) => annonomiseMatching(m))} />
+            <div>
               {children}
+              <Faq />
             </div>
-          </section>
-        </main>
-      </div>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
