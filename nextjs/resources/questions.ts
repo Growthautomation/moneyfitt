@@ -402,7 +402,7 @@ export const additionalSpecification = () =>
   createNode(
     "specification",
     "Have We Missed Anything?",
-    "Please select any additional specialisations that you need help with:",
+    "Please review your determined needs and select any additional specialisations that you need help with:",
     "multipleDropdown",
     null,
     [...narrowScope].sort((a, b) => a.name.localeCompare(b.name))
