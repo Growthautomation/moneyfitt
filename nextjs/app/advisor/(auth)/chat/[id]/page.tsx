@@ -34,7 +34,7 @@ export default async function Chat({ params }) {
 
   return (
     <div>
-      <ClientDashboard client={annonomiseMatching(match)} />;
+      <ClientDashboard client={annonomiseMatching(match)} />
     </div>
   );
 }
