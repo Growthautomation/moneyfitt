@@ -1,6 +1,6 @@
 import ChatList from "@/components/advisor/chat-list";
 import ChatContextProvider from "@/components/chat/chat-context";
-import { Faq } from "@/components/client/faq";
+import { Faq } from "@/components/client/faqadvisor";
 import { createClient } from "@/lib/supabase/server";
 import { annonomiseMatching } from "@/lib/utils/annonomize";
 import Link from "next/link";
