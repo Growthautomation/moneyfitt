@@ -28,6 +28,46 @@ interface ImageFile {
   created: string
 }
 
+const validateImage = async (file: File): Promise<{ valid: boolean; message?: string }> => {
+  // Check file size - 4.5MB in bytes
+  const maxSize = 4.5 * 1024 * 1024
+  if (file.size > maxSize) {
+    return { valid: false, message: "Image must be less than 4.5MB" }
+  }
+
+  // Check file type
+  if (!file.type.startsWith('image/')) {
+    return { valid: false, message: "File must be an image" }
+  }
+
+  // Check image dimensions
+  try {
+    const dimensions = await getImageDimensions(file)
+    if (dimensions.width > 4000 || dimensions.height > 4000) {
+      return { valid: false, message: "Image dimensions must be less than 4000x4000" }
+    }
+  } catch (error) {
+    return { valid: false, message: "Invalid image file" }
+  }
+
+  return { valid: true }
+}
+
+const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.src = URL.createObjectURL(file)
+    img.onload = () => {
+      URL.revokeObjectURL(img.src)
+      resolve({ width: img.width, height: img.height })
+    }
+    img.onerror = () => {
+      URL.revokeObjectURL(img.src)
+      reject(new Error('Failed to load image'))
+    }
+  })
+}
+
 export function ImageManager({ advisorId, currentProfileImage, onUpdate }: ImageManagerProps) {
   const [images, setImages] = useState<ImageFile[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -53,6 +93,20 @@ export function ImageManager({ advisorId, currentProfileImage, onUpdate }: Image
     const file = event.target.files?.[0]
     if (!file) return
 
+    // Check file size FIRST - 4.5MB in bytes
+    const maxSize = 4.5 * 1024 * 1024
+    if (file.size > maxSize) {
+      toast({
+        title: "File too large",
+        description: "Image must be less than 4.5MB",
+        variant: "destructive",
+      })
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+      return
+    }
+
     setIsLoading(true)
     try {
       const formData = new FormData()
@@ -75,7 +129,7 @@ export function ImageManager({ advisorId, currentProfileImage, onUpdate }: Image
     } finally {
       setIsLoading(false)
       if (fileInputRef.current) {
-        fileInputRef.current.value = '' // Reset file input
+        fileInputRef.current.value = ''
       }
     }
   }
