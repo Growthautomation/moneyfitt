@@ -10,10 +10,10 @@ import {
 import { useState } from "react";
 
 export default function SummaryDisplay({
-  services,
-  mainPoints,
-  quickSummary,
-  analysis,
+  services = [],
+  mainPoints = [],
+  quickSummary = "No analysis available yet. Start a conversation to generate insights.",
+  analysis = "No analysis available yet. Start a conversation to generate insights.",
 }) {
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
@@ -57,7 +57,9 @@ export default function SummaryDisplay({
             initial="closed"
             animate={activeSection === "summary" ? "open" : "closed"}
           >
-            <p className="mt-4 text-[#222222]">{quickSummary}</p>
+            <p className="mt-4 text-[#222222]">
+              {quickSummary}
+            </p>
           </motion.div>
         </motion.div>
 
@@ -84,12 +86,18 @@ export default function SummaryDisplay({
             animate={activeSection === "mainPoints" ? "open" : "closed"}
           >
             <ul className="mt-4 space-y-2">
-              {mainPoints.map((point, index) => (
-                <li key={index} className="flex items-start space-x-2">
-                  <span className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-[#5C59E4]"></span>
-                  <span className="text-[#222222]">{point}</span>
+              {mainPoints.length > 0 ? (
+                mainPoints.map((point, index) => (
+                  <li key={index} className="flex items-start space-x-2">
+                    <span className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-[#5C59E4]"></span>
+                    <span className="text-[#222222]">{point}</span>
+                  </li>
+                ))
+              ) : (
+                <li className="text-[#222222]">
+                  No analysis available yet. Start a conversation to generate insights.
                 </li>
-              ))}
+              )}
             </ul>
           </motion.div>
         </motion.div>
@@ -117,12 +125,18 @@ export default function SummaryDisplay({
             animate={activeSection === "offered" ? "open" : "closed"}
           >
             <ul className="mt-4 space-y-2">
-              {services.map((service, index) => (
-                <li key={index} className="flex items-start space-x-2">
-                  <span className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-[#5C59E4]"></span>
-                  <span className="text-[#222222]">{service}</span>
+              {services.length > 0 ? (
+                services.map((service, index) => (
+                  <li key={index} className="flex items-start space-x-2">
+                    <span className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-[#5C59E4]"></span>
+                    <span className="text-[#222222]">{service}</span>
+                  </li>
+                ))
+              ) : (
+                <li className="text-[#222222]">
+                  No analysis available yet. Start a conversation to generate insights.
                 </li>
-              ))}
+              )}
             </ul>
           </motion.div>
         </motion.div>
@@ -150,13 +164,17 @@ export default function SummaryDisplay({
             animate={activeSection === "analysis" ? "open" : "closed"}
           >
             <ul className="mt-4 space-y-2">
-              {(Array.isArray(analysis) ? analysis : [analysis]).map(
-                (point, index) => (
+              {Array.isArray(analysis) && analysis.length > 0 ? (
+                analysis.map((point, index) => (
                   <li key={index} className="flex items-start space-x-2">
                     <span className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-[#5C59E4]"></span>
                     <span className="text-[#222222]">{point}</span>
                   </li>
-                )
+                ))
+              ) : (
+                <li className="text-[#222222]">
+                  {typeof analysis === 'string' ? analysis : "No analysis available yet. Start a conversation to generate insights."}
+                </li>
               )}
             </ul>
           </motion.div>

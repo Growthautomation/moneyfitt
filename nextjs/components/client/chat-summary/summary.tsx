@@ -11,7 +11,12 @@ export default function Summary({ advisors }) {
     advisors?.[0]?.id
   );
   const [loading, setLoading] = useState(false);
-  const [summary, setSummary] = useState<any>({});
+  const [summary, setSummary] = useState<any>({
+    servicesOffered: [],
+    mainPoints: [],
+    quickSummary: "No analysis available yet. Start a conversation to generate insights.",
+    analysis: "No analysis available yet. Start a conversation to generate insights."
+  });
 
   const handleSelect = (selected: string) => {
     setActiveAdvisor(selected);
