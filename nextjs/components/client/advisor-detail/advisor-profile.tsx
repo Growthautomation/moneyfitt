@@ -60,6 +60,7 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
   const [secondaryImages, setSecondaryImages] = useState<string[]>([]);
   const [isEditing, setIsEditing] = useState(false)
   const [localAdvisor, setLocalAdvisor] = useState(initialAdvisor)
+  const [isEditFormExpanded, setIsEditFormExpanded] = useState(true);
 
   useEffect(() => {
     const fetchSecondaryImages = async () => {
@@ -128,7 +129,14 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
             Back
           </Link>
           <Button 
-            onClick={() => isEditing ? handleSave() : setIsEditing(true)}
+            onClick={() => {
+              if (!isEditing) {
+                setIsEditing(true);
+                setIsEditFormExpanded(true); // Ensure form is expanded when entering edit mode
+              } else {
+                handleSave();
+              }
+            }}
             className="bg-[#5C59E4] hover:bg-[#4543AB] text-white text-sm sm:text-base"
           >
             {isEditing ? 'Save Changes' : 'Edit Profile'}
@@ -137,7 +145,33 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
       )}
       
       <div className={`flex flex-col ${isEditing ? 'lg:flex-row lg:gap-6' : ''} justify-center w-full max-w-[1200px] mx-auto mt-6`}>
-        <Card className={`${isEditing ? 'lg:w-[800px]' : 'w-full max-w-[800px]'} bg-[#FFFFFF] shadow-lg border-[#5C59E4] border-t-4 flex-shrink-0 mx-auto`}>
+        {/* Edit Form - Show above profile on mobile */}
+        {isEditing && (
+          <div className="w-full lg:w-[360px] mb-6 lg:mb-0 flex-shrink-0 order-first lg:order-last">
+            <div className="lg:sticky lg:top-4">
+              {/* Mobile collapsible edit form */}
+              <div className="lg:hidden mb-4">
+                <Button
+                  onClick={() => setIsEditFormExpanded(!isEditFormExpanded)}
+                  className="w-full bg-[#5C59E4] hover:bg-[#4543AB] text-white"
+                >
+                  {isEditFormExpanded ? 'Hide Edit Form' : 'Show Edit Form'}
+                </Button>
+              </div>
+              
+              {/* Edit form visibility control */}
+              <div className={`${isEditFormExpanded ? 'block' : 'hidden'} lg:block`}>
+                <EditProfileForm 
+                  advisor={localAdvisor} 
+                  onUpdate={handleUpdate}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Profile Card */}
+        <Card className={`${isEditing ? 'lg:w-[800px]' : 'w-full max-w-[800px]'} bg-[#FFFFFF] shadow-lg border-[#5C59E4] border-t-4 flex-shrink-0 mx-auto order-last lg:order-first`}>
           <CardHeader className="flex flex-col sm:flex-row sm:items-start items-center space-y-4 sm:space-y-0 sm:space-x-4 bg-gradient-to-r from-[#D6D5F8] to-[#FFFFFF] p-4 sm:p-6">
             <div className="relative flex-shrink-0">
               <div className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] relative">
@@ -421,18 +455,6 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
             </div>
           </CardContent>
         </Card>
-
-        {/* Edit Form - Adjust width */}
-        {isEditing && (
-          <div className="w-full lg:w-[360px] mt-4 lg:mt-0 flex-shrink-0">
-            <div className="lg:sticky lg:top-4">
-              <EditProfileForm 
-                advisor={localAdvisor} 
-                onUpdate={handleUpdate}
-              />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -46,17 +46,23 @@ export default function ListItem({
   return (
     <Link
       className={clsx(
-        "flex items-center justify-between p-3 cursor-pointer hover:bg-gray-300 rounded",
-        { "bg-gray-200": clientId === selectedClientId }
+        "flex items-center justify-between p-3 rounded-lg transition-all duration-200",
+        "hover:bg-[#D6D5F8] hover:text-[#5C59E4]",
+        {
+          "bg-[#D6D5F8] text-[#5C59E4]": clientId === selectedClientId,
+          "text-[#222222]": clientId !== selectedClientId,
+        }
       )}
       href={href}
     >
-      <div className="flex items-center ">
-        <User className="w-8 h-8 mr-2 text-gray-500" />
-        <span>{displayName}</span>
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full bg-[#ECF0F3] flex items-center justify-center">
+          <User className="w-5 h-5 text-[#9CABC2]" />
+        </div>
+        <span className="font-medium">{displayName}</span>
       </div>
       {unreadCount && clientId !== selectedClientId ? (
-        <span className="flex justify-center items-center w-6 h-6 rounded-full bg-red-500 text-white">
+        <span className="flex justify-center items-center w-6 h-6 rounded-full bg-[#5C59E4] text-white text-sm font-bold">
           {unreadCount}
         </span>
       ) : null}

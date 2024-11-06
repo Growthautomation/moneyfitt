@@ -32,18 +32,27 @@ export default async function Layout({ children }) {
     return "Error fetching clients";
   }
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="container mx-auto px-4 py-8">
-        <section className="mb-12">
-          <h2 className="text-xl font-semibold mb-4">Your Clients</h2>
-          <div className="flex min-h-[100vh] flex-nowrap gap-4 pb-4">
-            <ChatList clients={matchings.map((m) => annonomiseMatching(m))} />
-            <div>
+    <div className="min-h-screen bg-[#ECF0F3]">
+      <main className="container mx-auto px-4 py-4 md:py-8">
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* Sidebar - collapsible on mobile */}
+          <div className="md:w-80 flex-shrink-0">
+            <div className="bg-white rounded-xl shadow-sm p-4">
+              <h2 className="text-xl font-bold text-[#222222] mb-4 px-2">Your Clients</h2>
+              <ChatList clients={matchings.map((m) => annonomiseMatching(m))} />
+            </div>
+          </div>
+
+          {/* Main content area */}
+          <div className="flex-1">
+            <div className="bg-white rounded-xl shadow-sm">
               {children}
+            </div>
+            <div className="mt-4">
               <Faq />
             </div>
           </div>
-        </section>
+        </div>
       </main>
     </div>
   );

@@ -21,18 +21,13 @@ export default async function Header() {
       .eq('id', user.id)
       .single();
     
-    console.log('User Profile:', profile);
-    console.log('Is Admin Value:', profile?.is_admin);
-    
     isAdmin = !!profile?.is_admin;
   }
 
-  console.log('Final isAdmin value:', isAdmin);
-
   return (
     <header className="border-b">
-      <div className="absolute left-4 z-50 flex items-center h-[64px]">
-        {" "}
+      {/* Logo container - adjusted spacing for mobile */}
+      <div className="absolute left-2 md:left-4 z-50 flex items-center h-[64px]">
         <Link href={user ? "/" : "https://moneyfitt.co"}>
           <Image
             src="/moneyfitt-logo.webp"
@@ -40,9 +35,11 @@ export default async function Header() {
             width={200}
             height={80}
             quality={100}
+            className="w-[120px] md:w-[200px]" // Even smaller on mobile
           />
         </Link>
       </div>
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {user ? (
           <div className="flex items-center gap-2 justify-end h-16">

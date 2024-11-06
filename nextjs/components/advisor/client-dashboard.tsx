@@ -23,11 +23,11 @@ export default async function ClientDashboard({ client }) {
     .order("created_at", { ascending: false });;
 
   return (
-    <div className="flex w-full gap-5">
-      <div className="grow">
+    <div className="flex flex-col lg:flex-row gap-4 p-4">
+      <div className="lg:w-1/3">
         <UserInfoCard client={client} />
       </div>
-      <div className="grow-1 min-w-[40rem]">
+      <div className="lg:w-2/3">
         <Chat
           messages={messages?.reverse() ?? []}
           userId={user.id}
