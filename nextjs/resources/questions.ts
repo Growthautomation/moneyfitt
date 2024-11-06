@@ -139,7 +139,41 @@ export const specializationNodes = {
           name: "Other",
         },
       ],
-      () => ({}),
+      (answers) => {
+        // Get current specification answers
+        const specs = answers["specification"] as string[] || [];
+        // Get current contents
+        const contents = [...((answers["contents"] as string[]) || [])];
+        
+        // Add base articles for insurance advice
+        if (specs.length > 0 && specs.some(s => ["CIIP", "HMC", "CHS", "LI", "TI", "PET", "PAP"].includes(s))) {
+          if (!contents.includes("3251")) contents.push("3251");
+          if (!contents.includes("3955")) contents.push("3955");
+        }
+
+        // Add specific articles based on selections
+        if (specs.includes("CIIP") && !contents.includes("3303")) {
+          contents.push("3303");
+        }
+        if (specs.includes("HMC") && !contents.includes("3109")) {
+          contents.push("3109");
+          if (!contents.includes("152")) contents.push("152");
+        }
+        if (specs.includes("CHS") && !contents.includes("152")) {
+          contents.push("152");
+        }
+        if (specs.includes("LI") && !contents.includes("2851")) {
+          contents.push("2851");
+        }
+        if (specs.includes("TI") && !contents.includes("1819")) {
+          contents.push("1819");
+        }
+        if (specs.includes("PET") && !contents.includes("1865")) {
+          contents.push("1865");
+        }
+
+        return { contents };
+      },
       ({ specification }) =>
         intersection(specification ?? [], [
           "CIIP",

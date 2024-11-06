@@ -17,7 +17,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
-import { object, string } from "yup";
+import { object, string, boolean } from "yup";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const Auth = ({ searchParams }) => {
   const supabase = createClient();
@@ -35,12 +36,16 @@ const Auth = ({ searchParams }) => {
     initialValues: {
       email: "",
       password: "",
+      acceptTerms: false,
     },
     validationSchema: object({
       email: string()
         .email("Invalid email address")
         .required("Email is required"),
       password: string().required("Password is required"),
+      acceptTerms: isOnboardingComplete ?
+        boolean().oneOf([true], "You must accept the terms and conditions")
+        : boolean(),
     }),
     onSubmit: async (values, { setStatus }) => {
       try {
@@ -145,8 +150,50 @@ const Auth = ({ searchParams }) => {
                   </div>
                 )}
               </div>
+              {isOnboardingComplete && (
+                <div className="flex items-start space-x-2 mb-4">
+                  <Checkbox
+                    id="acceptTerms"
+                    checked={formik.values.acceptTerms}
+                    onCheckedChange={(checked) => 
+                      formik.setFieldValue("acceptTerms", checked)
+                    }
+                  />
+                  <label 
+                    htmlFor="acceptTerms" 
+                    className="text-xs leading-tight peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    By creating this account, I confirm that I have read and agree to the{" "}
+                    <Link 
+                      href="https://www.moneyfitt.co/terms-and-conditions" 
+                      className="text-primary hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      MoneyFitt Terms & Conditions
+                    </Link>{" "}
+                    and{" "}
+                    <Link 
+                      href="https://www.moneyfitt.co/privacy-policy" 
+                      className="text-primary hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Privacy and Data Protection Policy
+                    </Link>
+                  </label>
+                </div>
+              )}
+              {formik.touched.acceptTerms && formik.errors.acceptTerms && (
+                <div className="text-sm text-red-500 mt-1">
+                  {formik.errors.acceptTerms}
+                </div>
+              )}
               <div className="text-center my-3">
-                <Button className="w-full" disabled={formik.isSubmitting}>
+                <Button 
+                  className="w-full" 
+                  disabled={formik.isSubmitting || (isOnboardingComplete && !formik.values.acceptTerms)}
+                >
                   {formik.isSubmitting ? (
                     <Spinner className="w-7 h-7" />
                   ) : isOnboardingComplete ? (

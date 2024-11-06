@@ -12,8 +12,6 @@ export const contentIdToUrl: ContentIdUrlMap = {
   "6601": "https://moneyfitt.co/articles/how-to-find-the-best-insurance-agent-for-you-in-singapore",
   "6651": "https://moneyfitt.co/articles/insurance-agent-vs-financial-advisor-which-expert-should-you-choose",
   "6701": "https://moneyfitt.co/articles/how-a-financial-consultant-can-guide-you-to-prosperity-in-singapore",
-  
-  // New entries
   "755": "https://moneyfitt.co/articles/why-you-must-have-an-emergency-fund-and-how-to-save-for-it",
   "756": "https://moneyfitt.co/articles/budgeting-101-why-a-strong-budget-is-a-catalyst-for-financial-freedom",
   "708": "https://moneyfitt.co/articles/understanding-the-basics-of-credit-debt-and-credit-cards",
@@ -25,6 +23,14 @@ export const contentIdToUrl: ContentIdUrlMap = {
   "683": "https://moneyfitt.co/articles/protect-your-family-s-future-with-lasting-power-of-attorney-lpa",
   "2851": "https://moneyfitt.co/articles/your-ultimate-guide-to-life-insurance-everything-you-need-to-know",
   "3303": "https://moneyfitt.co/articles/critical-illness-insurance-why-you-need-it-even-with-health-insurance",
+  
+  // New entries
+  "3109": "https://moneyfitt.co/articles/integrated-shield-plans-why-medishield-life-is-unfortunately-often-insufficient",
+  "152": "https://moneyfitt.co/articles/health-insurance-so-medical-woes-dont-have-to-hurt-your-wallet-too",
+  "1819": "https://moneyfitt.co/articles/travel-insurance-dont-forget-to-put-it-on-your-trip-itinerary",
+  "1865": "https://moneyfitt.co/articles/pet-insurance-for-your-furkids-coverage-and-considerations",
+  "3251": "https://moneyfitt.co/articles/5-tips-to-help-you-find-the-right-insurance-agent",
+  "3955": "https://moneyfitt.co/articles/exploring-your-financial-options-why-loyalty-to-one-adviser-may-not-be-best",
 };
 
 // Create a mapping of content IDs to their proper titles
@@ -43,6 +49,14 @@ export const contentIdToTitle: ContentIdTitleMap = {
   "683": "Protect Your Family's Future with Lasting Power of Attorney (LPA)",
   "2851": "Your Ultimate Guide to Life Insurance: Everything You Need to Know",
   "3303": "Critical Illness Insurance: Why You Need It Even with Health Insurance",
+  
+  // New entries
+  "3109": "Integrated Shield Plans: Why MediShield Life Is Unfortunately Often Insufficient",
+  "152": "Health Insurance: So Medical Woes Don't Have To Hurt Your Wallet Too",
+  "1819": "Travel Insurance: Don't Forget to Put It on Your Trip Itinerary",
+  "1865": "Pet Insurance for Your Furkids: Coverage and Considerations",
+  "3251": "5 Tips to Help You Find the Right Insurance Agent",
+  "3955": "Exploring Your Financial Options: Why Loyalty to One Adviser May Not Be Best",
 };
 
 // Function to get the URL for a given content ID

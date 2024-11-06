@@ -8,17 +8,8 @@ export const createAgent = async (form: FormData) => {
   const supabase = createClient();
   const email = form.get("email") as string;
   const password = form.get("password") as string;
-  const attributes = JSON.parse((form.get("attributes") as string) || "{}");
-  const profile = form.get("profile_img") as File;
 
-  const res = validateAgent(attributes);
-  if(!res){
-    return {
-      success: false,
-      error: res,
-    }
-  }
-  // TODO: single transaction for both user and advisor creation
+  // Create auth user
   const {
     data: { user },
     error,
@@ -30,6 +21,7 @@ export const createAgent = async (form: FormData) => {
       emailRedirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback`,
     },
   });
+
   if (error) {
     console.error("user creation", error);
     return {
@@ -38,24 +30,14 @@ export const createAgent = async (form: FormData) => {
     };
   }
 
-  const { data: profileUploaded, error: uploadError } = await supabase.storage
-    .from("public-files")
-    .upload(`${user?.id}/${profile.name}`, profile, {
-      cacheControl: "3600",
-      upsert: true,
-    });
-
-  if (uploadError) {
-    console.error("profile image upload", uploadError);
-    return {
-      success: false,
-      error: uploadError.message,
-    };
-  }
-
+  // Create advisor record with default empty values
   const { data, error: insertError } = await supabase
     .from("advisor")
-    .insert({ id: user?.id, ...attributes, profile_img: profileUploaded?.path })
+    .insert({ 
+      id: user?.id,
+      attributes: {},  // Empty object for attributes
+      profile_img: null // Null for profile image
+    })
     .single();
 
   if (insertError) {
@@ -315,4 +297,48 @@ export const deleteAdvisorImage = async (imagePath: string) => {
     console.error("Failed to delete image:", error);
     throw error;
   }
+};
+
+// New function for creating a blank agent
+export const createBlankAgent = async (form: FormData) => {
+  const supabase = createClient();
+  const email = form.get("email") as string;
+  const password = form.get("password") as string;
+
+  // Create auth user
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { userType: "advisor" },
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback`,
+    },
+  });
+
+  if (error) {
+    console.error("user creation", error);
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+
+  // Create blank advisor record with only id
+  const { data, error: insertError } = await supabase
+    .from("advisor")
+    .insert({ id: user?.id })
+    .single();
+
+  if (insertError) {
+    console.error("agent creation", insertError);
+    return {
+      success: false,
+      error: insertError.message,
+    };
+  }
+
+  return redirect("/advisor/sign-in");
 };
