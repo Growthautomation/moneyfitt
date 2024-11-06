@@ -65,7 +65,6 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
 
   // Add handlers for multi-select
   const handleBroadScopeChange = (selected: { code: string }[]) => {
-    if (selected.length > LIMITS.broad_scope) return;
     onUpdate(
       "broad_scope",
       selected.map((item) => item.code)
@@ -73,7 +72,6 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
   };
 
   const handleNarrowScopeChange = (selected: { code: string }[]) => {
-    if (selected.length > LIMITS.narrow_scope) return;
     onUpdate(
       "narrow_scope",
       selected.map((item) => item.code)
@@ -211,6 +209,7 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
               placeholder="Select broad specialisations"
               selected={(advisor.broad_scope as string[]) || []}
               onChange={handleBroadScopeChange}
+              maxSelections={LIMITS.broad_scope}
             />
           </div>
 
@@ -226,6 +225,7 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
               placeholder="Select narrow specialisations"
               selected={(advisor.narrow_scope as string[]) || []}
               onChange={handleNarrowScopeChange}
+              maxSelections={LIMITS.narrow_scope}
             />
           </div>
         </div>

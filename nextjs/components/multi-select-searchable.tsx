@@ -22,6 +22,7 @@ type MultiSelectSearchableProps = {
   placeholder: string;
   selected: string[];
   onChange?: (selected: Option[]) => void;
+  maxSelections?: number;
 };
 
 export function MultiSelectSearchableComponent({
@@ -30,34 +31,41 @@ export function MultiSelectSearchableComponent({
   placeholder,
   selected,
   onChange,
+  maxSelections,
 }: MultiSelectSearchableProps) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
-  const [selectedUncontrol, setSelectedUncontrol] = React.useState<Option[]>(
-    options.filter((option) => selected.includes(option.code))
-  );
 
-  const selectedOptions = onChange
-    ? options.filter((option) => selected.includes(option.code))
-    : selectedUncontrol;
+  // Convert selected codes to Option objects
+  const selectedOptions = options.filter((option) => selected.includes(option.code));
 
   const filteredOptions = options.filter((option) =>
     option.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleSelect = (option: Option) => {
-    const newSelected = selectedOptions.map(x => x.code).includes(option.code)
-      ? selectedOptions.filter((item) => item.code !== option.code)
-      : [...selectedOptions, option];
-    onChange ? onChange(newSelected) : setSelectedUncontrol(newSelected);
+  // Simplified update function that just emits the new codes
+  const updateSelection = (newSelectedOptions: Option[]) => {
+    console.log('Updating selection:', newSelectedOptions.map(o => o.code));
+    onChange?.(newSelectedOptions);
   };
 
-  const handleRemove = (option: Option) => {
-    onChange
-      ? onChange(selectedOptions.filter((item) => item.code !== option.code))
-      : setSelectedUncontrol(
-          selectedOptions.filter((item) => item.code !== option.code)
-        );
+  const handleRemove = (optionToRemove: Option) => {
+    console.log('Attempting to remove:', optionToRemove.code);
+    const newSelected = selectedOptions.filter(
+      (option) => option.code !== optionToRemove.code
+    );
+    console.log('New selection after remove:', newSelected.map(o => o.code));
+    updateSelection(newSelected);
+  };
+
+  const handleSelect = (option: Option) => {
+    const isCurrentlySelected = selectedOptions.map(x => x.code).includes(option.code);
+    
+    if (isCurrentlySelected) {
+      handleRemove(option);
+    } else if (!maxSelections || selectedOptions.length < maxSelections) {
+      updateSelection([...selectedOptions, option]);
+    }
   };
 
   return (
@@ -95,22 +103,34 @@ export function MultiSelectSearchableComponent({
               onChange={(e) => setSearch(e.target.value)}
               className="mb-2"
             />
+            {maxSelections && selectedOptions.length > maxSelections && (
+              <div className="px-2 py-1 text-sm text-yellow-600 bg-yellow-50 rounded mb-2">
+                {selectedOptions.length - maxSelections} selection(s) over limit. Please remove some items.
+              </div>
+            )}
             <div className="max-h-60 overflow-auto">
-              {filteredOptions.map((option) => (
-                <div
-                  key={option.code}
-                  className="flex items-center p-2 cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleSelect(option)}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedOptions.map((x) => x.code).includes(option.code)}
-                    readOnly
-                    className="mr-2"
-                  />
-                  {option.name}
-                </div>
-              ))}
+              {filteredOptions.map((option) => {
+                const isSelected = selectedOptions.map(x => x.code).includes(option.code);
+                const isDisabled = !isSelected && maxSelections && selectedOptions.length >= maxSelections;
+                
+                return (
+                  <div
+                    key={option.code}
+                    className={`flex items-center p-2 cursor-pointer ${
+                      isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'
+                    }`}
+                    onClick={() => handleSelect(option)}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      readOnly
+                      className="mr-2"
+                    />
+                    {option.name}
+                  </div>
+                );
+              })}
               {filteredOptions.length === 0 && (
                 <div className="p-2 text-gray-500">No options found.</div>
               )}
@@ -126,7 +146,12 @@ export function MultiSelectSearchableComponent({
               variant="ghost"
               size="sm"
               className="ml-2 h-4 w-4 p-0"
-              onClick={() => handleRemove(option)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Remove button clicked for:', option.code);
+                handleRemove(option);
+              }}
             >
               <X className="h-3 w-3" />
             </Button>
