@@ -3,8 +3,7 @@ import { SubmitButton } from "@/components/submit-btn";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { createAgent } from "@/lib/actions/agent";
+import { createBlankAgent } from "@/lib/actions/agent";
 import { useFormState } from "react-dom";
 
 const initialState = {
@@ -14,7 +13,7 @@ const initialState = {
 
 export default function AgentSignup() {
   const [state, formAction] = useFormState(
-    (prev, data) => createAgent(data),
+    (prev, data) => createBlankAgent(data),
     initialState
   );
   return (
@@ -33,17 +32,6 @@ export default function AgentSignup() {
           name="password"
           placeholder="Your password"
           required
-        />
-
-        <Label htmlFor="attributes">Attributes</Label>
-        <Textarea name="attributes" placeholder="User attributes" required />
-
-        <Label htmlFor="profile_img">Profile Img</Label>
-        <Input
-          name="profile_img"
-          placeholder="Profile image"
-          required
-          type="file"
         />
 
         <SubmitButton pendingText="Registering...">Register</SubmitButton>
