@@ -36,7 +36,16 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
   const handleListChange = (field: string, index: number, value: string) => {
     const currentList = (advisor[field] as string[]) || [];
     const newList = [...currentList];
-    newList[index] = value;
+    
+    if (field === "testinomial") {
+      // For testimonials, preserve any existing author part
+      const currentItem = currentList[index] || '';
+      const authorPart = currentItem.split(' - ')[1] || '';
+      newList[index] = `${value}${authorPart ? ` - ${authorPart}` : ''}`;
+    } else {
+      newList[index] = value;
+    }
+    
     onUpdate(field, newList);
   };
 
@@ -90,6 +99,16 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
     } else {
       onUpdate("current_company", null);
     }
+  };
+
+  // Add a new function to handle author changes
+  const handleTestimonialAuthorChange = (index: number, author: string) => {
+    const currentList = (advisor.testinomial as string[]) || [];
+    const newList = [...currentList];
+    const currentItem = currentList[index] || '';
+    const testimonialPart = currentItem.split(' - ')[0] || '';
+    newList[index] = `${testimonialPart} - ${author}`;
+    onUpdate("testinomial", newList);
   };
 
   return (
@@ -437,30 +456,40 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
           </Button>
         </div>
 
-        {((advisor.testinomial as string[]) || []).map((item, index) => (
-          <div key={index} className="flex gap-2">
-            <div className="flex flex-col grow gap-2">
-              <Textarea
-                value={item}
-                onChange={(e) =>
-                  handleListChange("testinomial", index, e.target.value)
-                }
-                placeholder="Enter testimonial"
-              />
-              <Label htmlFor="author">Author</Label>
-              <Input name="author" />
+        {((advisor.testinomial as string[]) || []).map((item, index) => {
+          const [testimonial, author] = item.split(' - ');
+          return (
+            <div key={index} className="flex gap-2">
+              <div className="flex flex-col grow gap-2">
+                <Textarea
+                  value={testimonial}
+                  onChange={(e) =>
+                    handleListChange("testinomial", index, e.target.value)
+                  }
+                  placeholder="Enter testimonial"
+                />
+                <div className="space-y-1">
+                  <Label htmlFor={`author-${index}`}>Author</Label>
+                  <Input 
+                    id={`author-${index}`}
+                    value={author || ''}
+                    onChange={(e) => handleTestimonialAuthorChange(index, e.target.value)}
+                    placeholder="Enter author name"
+                  />
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => removeListItem("testinomial", index)}
+                className="text-red-500"
+              >
+                <X className="h-4 w-4" />
+              </Button>
             </div>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={() => removeListItem("testinomial", index)}
-              className="text-red-500"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Personal Interests */}

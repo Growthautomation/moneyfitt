@@ -393,13 +393,21 @@ export function AdvisorProfile({ advisor: initialAdvisor, editable = false }: Ad
                   </h2>
                   <ul className="space-y-2 text-[#222222] w-full">
                     {hasItems(localAdvisor.testinomial) && (localAdvisor.testinomial as string[]).map(
-                      (testimonial: string, index: number) => (
-                        <li key={index}>
-                          <blockquote className="border-l-4 border-[#5C59E4] pl-4 italic text-[#222222] bg-[#ECF0F3] p-3 rounded">
-                            <p>&ldquo;{testimonial}&rdquo;</p>
-                          </blockquote>
-                        </li>
-                      )
+                      (testimonial: string, index: number) => {
+                        const [quote, author] = testimonial.split(' - ');
+                        return (
+                          <li key={index}>
+                            <blockquote className="border-l-4 border-[#5C59E4] pl-4 italic text-[#222222] bg-[#ECF0F3] p-3 rounded">
+                              <p>&ldquo;{quote}&rdquo;</p>
+                              {author && (
+                                <footer className="mt-2 text-sm font-bold">
+                                  - {author}
+                                </footer>
+                              )}
+                            </blockquote>
+                          </li>
+                        );
+                      }
                     )}
                   </ul>
                 </section>
