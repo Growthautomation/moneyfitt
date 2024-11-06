@@ -78,6 +78,20 @@ export function SliderImageManager({
     const file = event.target.files?.[0]
     if (!file) return
 
+    // Check file size FIRST - 4.5MB in bytes
+    const maxSize = 4.5 * 1024 * 1024
+    if (file.size > maxSize) {
+      toast({
+        title: "File too large",
+        description: "Image must be less than 4.5MB",
+        variant: "destructive",
+      })
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+      return
+    }
+
     if (selectedImages.length >= maxImages) {
       toast({
         title: "Maximum images reached",
@@ -95,7 +109,6 @@ export function SliderImageManager({
 
       const result = await uploadAdvisorImage(formData)
       await loadImages()
-      // Automatically select the newly uploaded image
       handleToggleImage(result.path)
       toast({
         title: "Success",

@@ -53,6 +53,20 @@ export function ImageManager({ advisorId, currentProfileImage, onUpdate }: Image
     const file = event.target.files?.[0]
     if (!file) return
 
+    // Check file size FIRST - 4.5MB in bytes
+    const maxSize = 4.5 * 1024 * 1024
+    if (file.size > maxSize) {
+      toast({
+        title: "File too large",
+        description: "Image must be less than 4.5MB",
+        variant: "destructive",
+      })
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+      return
+    }
+
     setIsLoading(true)
     try {
       const formData = new FormData()
@@ -75,7 +89,7 @@ export function ImageManager({ advisorId, currentProfileImage, onUpdate }: Image
     } finally {
       setIsLoading(false)
       if (fileInputRef.current) {
-        fileInputRef.current.value = '' // Reset file input
+        fileInputRef.current.value = ''
       }
     }
   }
