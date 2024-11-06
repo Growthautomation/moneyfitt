@@ -27,9 +27,6 @@ interface EditProfileFormProps {
 const LIMITS = {
   broad_scope: 2,
   narrow_scope: 6,
-  certifications: 6,
-  awards: 6,
-  professional_background: 6,
   personal_interests: 6,
   testinomial: 3,
 };
@@ -45,8 +42,7 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
 
   const addListItem = (field: string) => {
     const currentList = (advisor[field] as string[]) || [];
-    if (currentList.length >= LIMITS[field as keyof typeof LIMITS]) {
-      // You might want to show a toast or alert here
+    if (field in LIMITS && currentList.length >= LIMITS[field as keyof typeof LIMITS]) {
       console.warn(
         `Maximum ${LIMITS[field as keyof typeof LIMITS]} items allowed`
       );
@@ -236,23 +232,16 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold text-[#2E2C72]">
             Professional Background
-            <span className="text-sm font-normal text-[#4543AB] ml-2">
-              ({((advisor.professional_background as string[]) || []).length}/
-              {LIMITS.professional_background} max)
-            </span>
           </h3>
-          {((advisor.professional_background as string[]) || []).length <
-            LIMITS.professional_background && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => addListItem("professional_background")}
-              className="text-[#5C59E4] border-[#5C59E4]"
-            >
-              <Plus className="h-4 w-4 mr-1" /> Add
-            </Button>
-          )}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => addListItem("professional_background")}
+            className="text-[#5C59E4] border-[#5C59E4]"
+          >
+            <Plus className="h-4 w-4 mr-1" /> Add
+          </Button>
         </div>
 
         {((advisor.professional_background as string[]) || []).map(
@@ -288,22 +277,16 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold text-[#2E2C72]">
             Awards
-            <span className="text-sm font-normal text-[#4543AB] ml-2">
-              ({((advisor.awards as string[]) || []).length}/{LIMITS.awards}{" "}
-              max)
-            </span>
           </h3>
-          {((advisor.awards as string[]) || []).length < LIMITS.awards && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => addListItem("awards")}
-              className="text-[#5C59E4] border-[#5C59E4]"
-            >
-              <Plus className="h-4 w-4 mr-1" /> Add
-            </Button>
-          )}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => addListItem("awards")}
+            className="text-[#5C59E4] border-[#5C59E4]"
+          >
+            <Plus className="h-4 w-4 mr-1" /> Add
+          </Button>
         </div>
 
         {((advisor.awards as string[]) || []).map((item, index) => (
@@ -333,23 +316,16 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold text-[#2E2C72]">
             Certifications
-            <span className="text-sm font-normal text-[#4543AB] ml-2">
-              ({((advisor.certifications as string[]) || []).length}/
-              {LIMITS.certifications} max)
-            </span>
           </h3>
-          {((advisor.certifications as string[]) || []).length <
-            LIMITS.certifications && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => addListItem("certifications")}
-              className="text-[#5C59E4] border-[#5C59E4]"
-            >
-              <Plus className="h-4 w-4 mr-1" /> Add
-            </Button>
-          )}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => addListItem("certifications")}
+            className="text-[#5C59E4] border-[#5C59E4]"
+          >
+            <Plus className="h-4 w-4 mr-1" /> Add
+          </Button>
         </div>
 
         {((advisor.certifications as string[]) || []).map((item, index) => (
@@ -395,10 +371,6 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold text-[#2E2C72]">
             Education
-            <span className="text-sm font-normal text-[#4543AB] ml-2">
-              ({((advisor.education as string[]) || []).length}/
-              {LIMITS.certifications} max)
-            </span>
           </h3>
           <Button
             type="button"
