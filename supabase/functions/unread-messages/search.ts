@@ -1,5 +1,11 @@
+import { SupabaseClient } from '@supabase/supabase-js';
+import { Database } from "../database.types.ts";
+
 // deno-lint-ignore no-explicit-any
-export async function searchAdvisorAndClient(supabase: any, searchId: string) {
+export async function searchAdvisorAndClient(
+  supabase: SupabaseClient<Database>,
+  searchId: string
+) {
     // Query both tables separately
     const [{ data: advisorData }, { data: clientData }] = await Promise.all([
       supabase

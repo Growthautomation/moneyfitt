@@ -1,4 +1,4 @@
-export const getUnreadEmail = (sender: string, link: string) => `
+export const getUnreadEmail = (sender: string, link: string, userId: string, unsubscribeToken: string) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,6 +66,11 @@ export const getUnreadEmail = (sender: string, link: string) => `
         </div>
         <div class="footer">
             <p>If you have any questions, feel free to contact us at feedback@moneyfitt.co.</p>
+            <p style="margin-top: 20px; font-size: 11px;">
+                <a href="${link}/api/unsubscribe?userId=${userId}&token=${unsubscribeToken}" style="color: #9CABC2;">
+                    Unsubscribe from these notifications
+                </a>
+            </p>
         </div>
     </div>
 </body>
