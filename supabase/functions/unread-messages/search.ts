@@ -1,4 +1,4 @@
-import { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from "jsr:@supabase/supabase-js@2";
 import { Database } from "../database.types.ts";
 
 // deno-lint-ignore no-explicit-any
