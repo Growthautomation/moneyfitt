@@ -2,6 +2,11 @@ import { createClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
 
+interface JWTPayload {
+  userId: string;
+  exp?: number;
+}
+
 // Initialize Supabase client
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -21,7 +26,7 @@ export async function GET(request: Request) {
 
     // Verify JWT token
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as { userId: string };
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as JWTPayload;
       
       // Verify the token belongs to the correct user
       if (decoded.userId !== userId) {
@@ -40,7 +45,10 @@ export async function GET(request: Request) {
 
     if (updateError) {
       console.error('Database update failed:', updateError);
-      return new NextResponse('Failed to update preferences', { status: 500 });
+      return new NextResponse(
+        'Unable to update preferences. Please try again later or contact support.',
+        { status: 500 }
+      );
     }
 
     // Return success page HTML
