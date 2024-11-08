@@ -28,7 +28,7 @@ const LIMITS = {
   broad_scope: 2,
   narrow_scope: 6,
   personal_interests: 6,
-  testinomial: 3,
+  testinomial: 5,
 };
 
 export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
@@ -442,7 +442,7 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
             Testimonials
             <span className="text-sm font-normal text-[#4543AB] ml-2">
               ({((advisor.testinomial as string[]) || []).length}/
-              {LIMITS.testinomial} max)
+              {LIMITS.testinomial} max) (Min 2)
             </span>
           </h3>
           <Button
@@ -451,10 +451,17 @@ export function EditProfileForm({ advisor, onUpdate }: EditProfileFormProps) {
             size="sm"
             onClick={() => addListItem("testinomial")}
             className="text-[#5C59E4] border-[#5C59E4]"
+            disabled={((advisor.testinomial as string[]) || []).length >= LIMITS.testinomial}
           >
             <Plus className="h-4 w-4 mr-1" /> Add
           </Button>
         </div>
+
+        {((advisor.testinomial as string[]) || []).length < 2 && (
+          <p className="text-sm text-[#EB5853]">
+            Please add at least 2 testimonials
+          </p>
+        )}
 
         {((advisor.testinomial as string[]) || []).map((item, index) => {
           const [testimonial, author] = item.split(' - ');
