@@ -215,7 +215,33 @@ export const specializationNodes = {
           name: "Other",
         },
       ],
-      () => ({}),
+      (answers) => {
+        // Get current specification answers
+        const specs = answers["specification"] as string[] || [];
+        // Get current contents
+        const contents = [...((answers["contents"] as string[]) || [])];
+        
+        // Add base investment articles for any IWM selection
+        if (specs.length > 0 && specs.some(s => ["CPFIS", "WCI", "SII", "HNWP"].includes(s))) {
+          if (!contents.includes("930")) contents.push("930");
+          if (!contents.includes("931")) contents.push("931");
+          if (!contents.includes("1057")) contents.push("1057");
+          if (!contents.includes("968")) contents.push("968");
+        }
+
+        // Add specific articles based on selections
+        if (specs.includes("CPFIS") && !contents.includes("2505")) {
+          contents.push("2505");
+        }
+        if (specs.includes("WCI") && !contents.includes("751")) {
+          contents.push("751");
+        }
+        if (specs.includes("SII") && !contents.includes("1852")) {
+          contents.push("1852");
+        }
+
+        return { contents };
+      },
       ({ specification }) =>
         intersection(specification ?? [], [
           "CPFIS",
@@ -254,7 +280,23 @@ export const specializationNodes = {
           name: "Other",
         },
       ],
-      () => ({}),
+      (answers) => {
+        // Get current specification answers
+        const specs = answers["specification"] as string[] || [];
+        // Get current contents
+        const contents = [...((answers["contents"] as string[]) || [])];
+        
+        // Add specific articles based on selections
+        if (specs.includes("RCP")) {
+          if (!contents.includes("2503")) contents.push("2503");
+          if (!contents.includes("2505")) contents.push("2505");
+        }
+        if (specs.includes("LEP") && !contents.includes("1055")) {
+          contents.push("1055");
+        }
+
+        return { contents };
+      },
       ({ specification }) =>
         intersection(specification ?? [], ["RCP", "LEP", "PRP", "ECL", "OTHER"])
           .length === 0
@@ -296,7 +338,19 @@ export const specializationNodes = {
           name: "Other",
         },
       ],
-      () => ({}),
+      (answers) => {
+        // Get current specification answers
+        const specs = answers["specification"] as string[] || [];
+        // Get current contents
+        const contents = [...((answers["contents"] as string[]) || [])];
+        
+        // Add specific articles based on selections
+        if (specs.includes("HCH") && !contents.includes("2454")) {
+          contents.push("2454");
+        }
+
+        return { contents };
+      },
       ({ specification }) =>
         intersection(specification ?? [], [
           "HCH",
