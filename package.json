@@ -1,5 +1,9 @@
 {
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.7",
     "supabase": "^1.215.0"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
   }
 }
