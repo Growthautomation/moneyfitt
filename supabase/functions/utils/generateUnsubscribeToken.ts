@@ -1,5 +1,5 @@
 /// <reference lib="deno.ns" />
-import * as jose from "jsr:jose@v4.15.4";
+import * as jose from "https://esm.sh/jose@4.15.4";
 
 // Generate a secure token for unsubscribe links
 export async function generateUnsubscribeToken(userId: string): Promise<string> {
