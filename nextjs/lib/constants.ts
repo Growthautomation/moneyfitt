@@ -139,6 +139,6 @@ export const companies = [
   { code: "PIAS", name: "Professional Investment Advisory Services"},
   { code: "FA", name: "Financial Alliance Pte Ltd"},
   { code: "PS", name: "Phillip Securities Pte Ltd"},
-  { code: "PS", name: "Prudential Assurance Company Singapore"},
-  { code: "PS", name: "Great Eastern Financial Advisers"}
+  { code: "PSA", name: "Prudential Assurance Company Singapore"},
+  { code: "GEF", name: "Great Eastern Financial Advisers"}
 ]
