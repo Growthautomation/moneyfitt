@@ -1,9 +1,10 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
 
 const JWT_SECRET = process.env.UNSUBSCRIBE_JWT_SECRET
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 export async function GET(request: Request) {
     try {
@@ -23,7 +24,10 @@ export async function GET(request: Request) {
         const decoded = jwt.verify(token, JWT_SECRET) as { userId: string }
         
         // Initialize Supabase client
-        const supabase = createRouteHandlerClient({ cookies })
+        const supabase = createClient(
+            SUPABASE_URL!,
+            SUPABASE_ANON_KEY!
+        )
 
         // Update the client's unsubscribed status
         const { error } = await supabase
