@@ -38,22 +38,25 @@ export const getUnreadEmail = (sender: string, link: string, userId: string, uns
         }
         .button {
             background-color: #5C59E4;
-            color: #FFFFFF;
+            color: #FFFFFF !important;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
             text-decoration: none;
             font-size: 16px;
         }
-        .button:hover {
-            background-color: #4543AB;
-            color: #FFFFFF;
-        }
         .footer {
             padding: 20px;
             text-align: center;
             font-size: 12px;
             color: #9CABC2;
+        }
+        .unsubscribe-link {
+            display: block;
+            margin-top: 20px;
+            color: #9CABC2;
+            text-decoration: underline;
+            font-size: 12px;
         }
     </style>
 </head>
@@ -70,11 +73,9 @@ export const getUnreadEmail = (sender: string, link: string, userId: string, uns
         </div>
         <div class="footer">
             <p>If you have any questions, feel free to contact us at feedback@moneyfitt.co.</p>
-            <p style="margin-top: 20px; font-size: 11px;">
-                <a href="${unsubscribeUrl}" style="color: #9CABC2;">
-                    Unsubscribe from these notifications
-                </a>
-            </p>
+            <a href="${unsubscribeUrl}" class="unsubscribe-link">
+                Unsubscribe from these notifications
+            </a>
         </div>
     </div>
 </body>
