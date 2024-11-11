@@ -38,6 +38,10 @@ export function Faq() {
     {
       question: "How Many Leads Can Advisors Get and How Do You Share the Leads Amongst Different Advisors?",
       answer: "There's no cap on the number of leads an advisor can receive. We're developing a points-based system where the top three scoring advisors will receive the first matches. If multiple advisors score the same, the leads will be distributed randomly to ensure fairness. This way, every qualified advisor has an equal chance to be matched."
+    },
+    {
+      question: "How Many Advisors Will Users Be Matched With?",
+      answer: "Users will be matched with three advisors based on their financial needs and personal preferences. Users can also refresh one match every 24 hours. This feature helps users choose the advisor(s) they feel most comfortable working with. It is in the best interest of all advisors to offer transparent, honest advice and provide prompt service; otherwise, they risk losing their matched users."
     }
   ];
 
