@@ -1,3 +1,6 @@
+// Add type definition for Deno
+/// <reference lib="deno.ns" />
+
 export const getUnreadEmail = (sender: string, link: string, userId: string, unsubscribeToken: string) => {
     // Construct the unsubscribe URL using the FE_HOST and token
     const unsubscribeUrl = `${Deno.env.get("FE_HOST")}/api/unsubscribe?token=${unsubscribeToken}`;

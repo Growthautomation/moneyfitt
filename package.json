@@ -4,6 +4,8 @@
     "supabase": "^1.215.0"
   },
   "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/supabase-js": "^2.46.1",
     "jsonwebtoken": "^9.0.2"
   }
 }

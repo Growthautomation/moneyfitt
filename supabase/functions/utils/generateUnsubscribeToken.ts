@@ -1,24 +1,19 @@
-import { create, getNumericDate } from "https://deno.land/x/djwt@v2.9.1/mod.ts";
+/// <reference lib="deno.ns" />
+import * as jose from "jsr:jose@v4.15.4";
 
 // Generate a secure token for unsubscribe links
 export async function generateUnsubscribeToken(userId: string): Promise<string> {
-  const key = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(Deno.env.get('JWT_SECRET_KEY') || 'your-fallback-secret-key'),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
+  const secret = Deno.env.get('UNSUBSCRIBE_JWT_SECRET');
+  
+  if (!secret) {
+    throw new Error('Missing UNSUBSCRIBE_JWT_SECRET');
+  }
 
-  // Create JWT with 30 days expiration
-  const token = await create(
-    { alg: "HS256", typ: "JWT" },
-    { 
-      userId,
-      exp: getNumericDate(60 * 60 * 24 * 30) // 30 days
-    },
-    key
-  );
+  // Create token
+  const token = await new jose.SignJWT({ userId })
+    .setExpirationTime('180d') // Token expires in 180 days
+    .setProtectedHeader({ alg: 'HS256' })
+    .sign(new TextEncoder().encode(secret));
 
   return token;
 } 
