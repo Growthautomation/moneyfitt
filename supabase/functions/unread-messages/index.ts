@@ -6,6 +6,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 import { Database } from "../database.types.ts";
 import { getUnreadEmail } from "../templates/unread.ts";
 import { searchAdvisorAndClient } from "./search.ts";
+import { generateUnsubscribeToken } from "../utils/generateUnsubscribeToken.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
@@ -72,15 +73,39 @@ const handler = async (_request: Request): Promise<Response> => {
     ) {
       continue;
     }
+
+    // Check if user has unsubscribed using the client table
+    const { data: clientData, error: clientError } = await supabase
+      .from("client")
+      .select("unsubscribed")
+      .eq("id", recipient)
+      .single();
+
+    if (clientError) {
+      console.error("Error checking client unsubscribe status:", clientError);
+      continue;
+    }
+
+    if (clientData?.unsubscribed) {
+      console.log(`Client ${recipient} has unsubscribed. Skipping email.`);
+      continue;
+    }
+
     const sender = await searchAdvisorAndClient(
       supabase,
       grouped[recipient][0].sender
     );
+
+    // Generate unsubscribe token
+    const unsubscribeToken = await generateUnsubscribeToken(recipient);
+
     const message = getUnreadEmail(
       sender?.full_name || "unknown",
       sender?.source === "client"
         ? `${FE_HOST}/advisor/chat/${recipient}`
-        : `${FE_HOST}/chat/${sender?.id}`
+        : `${FE_HOST}/chat/${sender?.id}`,
+      recipient,
+      unsubscribeToken
     );
 
     const {

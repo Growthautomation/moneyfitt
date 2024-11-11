@@ -164,6 +164,7 @@ export type Database = {
           created_at: string
           id: string
           is_admin: boolean | null
+          unsubscribed: boolean | null
           name: string | null
           narrow_scope: Json | null
           phone_number: string | null
@@ -182,6 +183,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_admin?: boolean | null
+          unsubscribed?: boolean | null
           name?: string | null
           narrow_scope?: Json | null
           phone_number?: string | null
@@ -200,6 +202,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_admin?: boolean | null
+          unsubscribed?: boolean | null
           name?: string | null
           narrow_scope?: Json | null
           phone_number?: string | null

@@ -10,8 +10,8 @@ type ContentIdTitleMap = {
 // Create a mapping of content IDs to their corresponding URLs
 export const contentIdToUrl: ContentIdUrlMap = {
   "6601": "https://moneyfitt.co/articles/how-to-find-the-best-insurance-agent-for-you-in-singapore",
-  "6651": "https://moneyfitt.co/articles/insurance-agent-vs-financial-advisor-which-expert-should-you-choose",
-  "6701": "https://moneyfitt.co/articles/how-a-financial-consultant-can-guide-you-to-prosperity-in-singapore",
+  "6651": "https://moneyfitt.co/articles/insurance-agent-vs-financial-advisor---which-expert-should-you-choose",
+  "6701": "https://moneyfitt.co/articles/how-a-trusted-financial-consultant-can-guide-you-to-prosperity-in-singapore",
   "755": "https://moneyfitt.co/articles/why-you-must-have-an-emergency-fund-and-how-to-save-for-it",
   "756": "https://moneyfitt.co/articles/budgeting-101-why-a-strong-budget-is-a-catalyst-for-financial-freedom",
   "708": "https://moneyfitt.co/articles/understanding-the-basics-of-credit-debt-and-credit-cards",
@@ -31,6 +31,22 @@ export const contentIdToUrl: ContentIdUrlMap = {
   "1865": "https://moneyfitt.co/articles/pet-insurance-for-your-furkids-coverage-and-considerations",
   "3251": "https://moneyfitt.co/articles/5-tips-to-help-you-find-the-right-insurance-agent",
   "3955": "https://moneyfitt.co/articles/exploring-your-financial-options-why-loyalty-to-one-adviser-may-not-be-best",
+
+  // Investment related entries
+  "2505": "https://moneyfitt.co/articles/cpf-investment-scheme-cpfis-a-guide-to-investing-your-cpf-savings",
+  "751": "https://moneyfitt.co/articles/investing-basics-risk-appetite-time-horizon-asset-allocation-and-diversification",
+  "1852": "https://moneyfitt.co/articles/reasons-to-start-investing-retirement-fire-and-good-causes",
+  "930": "https://moneyfitt.co/articles/how-to-construct-a-successful-investment-portfolio",
+  "931": "https://moneyfitt.co/articles/core-satellite-investing-strategy-above-average-returns-with-below-average-risk",
+  "1057": "https://moneyfitt.co/articles/how-to-become-a-better-investor-start-by-understanding-the-psychology-of-investing",
+  "968": "https://moneyfitt.co/articles/understanding-investment-considerations-return-and-risk",
+
+  // New retirement and legacy planning entries
+  "2503": "https://moneyfitt.co/articles/cpf-singapores-mandatory-savings-for-retirement-housing-and-healthcare",
+  "1055": "https://moneyfitt.co/articles/understanding-estate-planning-wills-trusts-and-lasting-power-of-attorney",
+
+  // Housing related entry
+  "2454": "https://moneyfitt.co/articles/buying-a-house-101-one-of-lifes-most-significant-financial-goals",
 };
 
 // Create a mapping of content IDs to their proper titles
@@ -57,6 +73,22 @@ export const contentIdToTitle: ContentIdTitleMap = {
   "1865": "Pet Insurance for Your Furkids: Coverage and Considerations",
   "3251": "5 Tips to Help You Find the Right Insurance Agent",
   "3955": "Exploring Your Financial Options: Why Loyalty to One Adviser May Not Be Best",
+
+  // Investment related entries
+  "2505": "CPF Investment Scheme (CPFIS): A Guide to Investing Your CPF Savings",
+  "751": "Investing Basics: Risk Appetite, Time Horizon, Asset Allocation, and Diversification",
+  "1852": "Reasons to Start Investing: Retirement, FIRE and Good Causes",
+  "930": "How to Construct a Successful Investment Portfolio",
+  "931": "Core-Satellite Investing Strategy: Above-Average Returns with Below-Average Risk",
+  "1057": "How to Become a Better Investor: Start by Understanding the Psychology of Investing",
+  "968": "Understanding Investment Considerations: Return and Risk",
+
+  // New retirement and legacy planning entries
+  "2503": "CPF: Singapore's Mandatory Savings for Retirement, Housing, and Healthcare",
+  "1055": "Understanding Estate Planning: Wills, Trusts and Lasting Power of Attorney",
+
+  // Housing related entry
+  "2454": "Buying a House 101: One of Life's Most Significant Financial Goals",
 };
 
 // Function to get the URL for a given content ID
