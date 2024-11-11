@@ -138,5 +138,7 @@ export const companies = [
   { code: "GE", name: "Great Eastern (Advisors’ Clique Collective)"},
   { code: "PIAS", name: "Professional Investment Advisory Services"},
   { code: "FA", name: "Financial Alliance Pte Ltd"},
-  { code: "PS", name: "Phillip Securities Pte Ltd"}
+  { code: "PS", name: "Phillip Securities Pte Ltd"},
+  { code: "PS", name: "Prudential Assurance Company Singapore"},
+  { code: "PS", name: "Great Eastern Financial Advisers"}
 ]
