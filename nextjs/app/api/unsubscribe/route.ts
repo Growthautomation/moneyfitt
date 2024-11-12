@@ -76,8 +76,9 @@ export async function GET(request: Request) {
                 <body>
                     <div class="container">
                         <h1>Successfully Unsubscribed</h1>
-                        <p>You have been unsubscribed from MoneyFitt email notifications.</p>
-                        <p>You can always update your preferences in your account settings.</p>
+                        <p>You have unsubscribed from new message notifications.</p>
+                        <p>To turn back on, update your preferences in account settings.</p>
+                        <p>Team MoneyFitt</p>
                     </div>
                 </body>
             </html>`,
