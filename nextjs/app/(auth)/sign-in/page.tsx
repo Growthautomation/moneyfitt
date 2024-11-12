@@ -264,6 +264,7 @@ const Auth = ({ searchParams }) => {
               onClick={handleGoogleSignIn}
               variant="outline"
               className="w-full flex items-center justify-center space-x-2"
+              disabled={isOnboardingComplete && !formik.values.acceptTerms}
             >
               <Image
                 src="/google-logo.png"
