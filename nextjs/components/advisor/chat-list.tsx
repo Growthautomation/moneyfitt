@@ -8,6 +8,9 @@ export default function ChatList({ clients }) {
   const param = useParams<{ id?: string }>();
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Create a map to store anonymous client numbers
+  const getAnonymousClientNumber = (index: number) => `Client ${index + 1}`;
+
   return (
     <div className="relative">
       {/* Mobile toggle button */}
@@ -35,11 +38,11 @@ export default function ChatList({ clients }) {
         )}
         {clients.length > 0 && clients
           .sort((a, b) => Number(b["name"] != null) - Number(a["name"] != null))
-          .map((client) => (
+          .map((client, index) => (
             <ListItem
               key={client.id}
               href={`/advisor/chat/${client.id}`}
-              displayName={client?.name || 'Anonymous'}
+              displayName={client?.name || getAnonymousClientNumber(index)}
               selectedClientId={param?.id}
               clientId={client.id}
             />
