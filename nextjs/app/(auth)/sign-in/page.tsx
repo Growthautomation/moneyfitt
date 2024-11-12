@@ -15,7 +15,7 @@ import { CircleCheckBig } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { object, string, boolean } from "yup";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -28,7 +28,7 @@ const Auth = ({ searchParams }) => {
   const [_, setAnswers] = useLocalStorage("answers", {});
 
   const [step, setStep] = useState<"login" | "onboarding" | "welcome">(
-    searchParams?.state === "login" ? "login" : "welcome"
+    searchParams?.state === "login" || searchParams?.error ? "login" : "welcome"
   );
   const [isOnboardingComplete, setIsOnboardingComplete] = useState(false);
 
@@ -72,6 +72,14 @@ const Auth = ({ searchParams }) => {
           email: values.email,
           password: values.password,
         });
+        
+        if (error?.message === 'Invalid login credentials') {
+          setStatus(
+            'No account found with these credentials. Please complete the onboarding process to create an account.'
+          );
+          return;
+        }
+        
         if (error) {
           setStatus(error.message);
           return;
@@ -87,7 +95,10 @@ const Auth = ({ searchParams }) => {
     supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback`,
+        redirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback${isOnboardingComplete ? '' : '?checkExisting=true'}`,
+        queryParams: {
+          prompt: 'select_account',
+        }
       },
     });
   };
@@ -99,6 +110,14 @@ const Auth = ({ searchParams }) => {
       },
     });
   };
+
+  useEffect(() => {
+    if (searchParams?.error === 'no_account') {
+      formik.setStatus(
+        'No account found with these credentials. Please complete the onboarding process to create an account.'
+      );
+    }
+  }, [searchParams?.error]);
 
   if (step === "login") {
     return (
@@ -203,8 +222,25 @@ const Auth = ({ searchParams }) => {
                   )}
                 </Button>
                 {formik.status && (
-                  <div className="text-sm text-red-500 mt-1 bg-red-200 rounded">
+                  <div className={`text-sm mt-1 p-2 rounded ${
+                    formik.status.includes('No account found') 
+                      ? 'bg-[#D6D5F8] text-[#2E2C72]' 
+                      : 'bg-red-200 text-red-500'
+                  }`}>
                     {formik.status}
+                    {formik.status.includes('No account found') && (
+                      <Button
+                        type="button"
+                        variant="link"
+                        className="text-[#5C59E4] p-0 h-auto font-normal hover:text-[#4543AB]"
+                        onClick={() => {
+                          setStep('welcome');
+                          formik.resetForm();
+                        }}
+                      >
+                        Start onboarding
+                      </Button>
+                    )}
                   </div>
                 )}
               </div>
@@ -228,6 +264,7 @@ const Auth = ({ searchParams }) => {
               onClick={handleGoogleSignIn}
               variant="outline"
               className="w-full flex items-center justify-center space-x-2"
+              disabled={isOnboardingComplete && !formik.values.acceptTerms}
             >
               <Image
                 src="/google-logo.png"
