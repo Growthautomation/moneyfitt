@@ -5,9 +5,12 @@ export default function Welcome({ onNext, onSkip }) {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl space-y-6 p-6 sm:p-20">
-        <h1 className="text-3xl font-bold text-center mb-6">
-          Let&apos;s Get MoneyFitt
-        </h1>
+        <div className="text-center">
+          <h1 className="text-3xl font-bold mb-2">
+            Let&apos;s Get MoneyFitt
+          </h1>
+          <p className="text-sm text-gray-500">Beta Version</p>
+        </div>
         <p className="text-lg font-semibold">Our commitment to you:</p>
         <ul className="ml-6 list-disc space-y-2">
           <li>Expertly matched with the right professional for your needs</li>
@@ -37,7 +40,7 @@ export default function Welcome({ onNext, onSkip }) {
             className="hover:underline text-blue-500"
           >
             feedback@moneyfitt.co
-          </a>{" "}
+          </a>
           {". "}
           MoneyFitt (ProConnect Technologies Pte Ltd) is not responsible for any
           errors, omissions, or outcomes from using the platform, including
