@@ -17,8 +17,12 @@ export default function UpdatePassword() {
 
   // Verify the recovery token on mount
   useEffect(() => {
-    // Safely check if searchParams exists and has the type parameter
-    const type = searchParams?.get('type');
+    if (!searchParams) {
+      router.push('/sign-in');
+      return;
+    }
+
+    const type = searchParams.get('type');
     if (type !== 'recovery') {
       toast({
         title: "Invalid Access",
@@ -60,11 +64,11 @@ export default function UpdatePassword() {
       });
       
       router.push('/sign-in');
-    } catch (error) {
+    } catch (error: any) {
       console.error("Update password error:", error);
       toast({
         title: "Error",
-        description: error.message,
+        description: error.message || "Failed to update password",
         variant: "destructive"
       });
     } finally {
