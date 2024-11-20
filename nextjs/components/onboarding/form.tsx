@@ -11,15 +11,13 @@ import renderQuestions from "./renderer";
 import { getRemaining } from "@/lib/utils/questions";
 import { isEmpty } from "lodash";
 
-interface OnboardingQuestionsProps {
-  onComplete: (values: Record<string, string[]>) => void;
-  onSkip?: () => void;
+interface OnboardingFormComponentProps {
+  onComplete: (answers: any) => void;
+  onSkip: () => void;
+  onMidpoint: () => void;
 }
 
-export function OnboardingFormComponent({
-  onComplete,
-  onSkip,
-}: OnboardingQuestionsProps) {
+export const OnboardingFormComponent = ({ onComplete, onSkip, onMidpoint }: OnboardingFormComponentProps) => {
   const [answers, setAnswers] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState<QNode | null>(
     getQuestions()
@@ -39,6 +37,7 @@ export function OnboardingFormComponent({
     const newAns = { ...answers, ...currentQuestion?.answerModifier(answers) };
     const val = currentQuestion?.next(newAns);
     setAnswers(newAns);
+    console.log('Moving to next question:', val?.key);
     if (val) {
       setCurrentQuestion(val || null);
       setNumAnswers(numAnswers + 1);
@@ -50,6 +49,14 @@ export function OnboardingFormComponent({
   const totalQuestions = useMemo(() => {
     return numAnswers + getRemaining(currentQuestion, answers);
   }, [answers, numAnswers, currentQuestion]);
+
+  useEffect(() => {
+    console.log('Current question key:', currentQuestion?.key);
+    if (currentQuestion?.key === 'cover') {
+      console.log('Reached midpoint, triggering tracking');
+      onMidpoint();
+    }
+  }, [currentQuestion, onMidpoint]);
 
   if (currentQuestion?.type === "cover") {
     return (
