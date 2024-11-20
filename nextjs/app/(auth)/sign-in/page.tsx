@@ -19,6 +19,7 @@ import { useState, useEffect } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { object, string, boolean } from "yup";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useOnboardingAnalytics } from '@/hooks/use-onboarding-analytics';
 
 const Auth = ({ searchParams }) => {
   const supabase = createClient();
@@ -50,6 +51,8 @@ const Auth = ({ searchParams }) => {
     onSubmit: async (values, { setStatus }) => {
       try {
         if (isOnboardingComplete) {
+          await analytics.trackSignUp();
+          
           const { error } = await supabase.auth.signUp({
             email: values.email,
             password: values.password,
@@ -61,6 +64,7 @@ const Auth = ({ searchParams }) => {
             setStatus(error.message);
             return;
           }
+          
           toast({
             title: "Account created",
             description: "Please check your email for a verification link.",
@@ -92,15 +96,27 @@ const Auth = ({ searchParams }) => {
   });
 
   const handleGoogleSignIn = () => {
-    supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback${isOnboardingComplete ? '' : '?checkExisting=true'}`,
-        queryParams: {
-          prompt: 'select_account',
+    const handleSignIn = async () => {
+      if (isOnboardingComplete) {
+        try {
+          await analytics.trackSignUp();
+        } catch (error) {
+          console.error('Error tracking signup:', error);
         }
-      },
-    });
+      }
+      
+      supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback${isOnboardingComplete ? '' : '?checkExisting=true'}`,
+          queryParams: {
+            prompt: 'select_account',
+          }
+        },
+      });
+    };
+
+    handleSignIn();
   };
   const handleFacebookSignIn = () => {
     supabase.auth.signInWithOAuth({
@@ -118,6 +134,15 @@ const Auth = ({ searchParams }) => {
       );
     }
   }, [searchParams?.error]);
+
+  const analytics = useOnboardingAnalytics();
+
+  useEffect(() => {
+    if (step === 'onboarding') {
+      console.log('Starting onboarding tracking');
+      analytics.trackStart();
+    }
+  }, [step, analytics]);
 
   if (step === "login") {
     return (
@@ -301,7 +326,9 @@ const Auth = ({ searchParams }) => {
   if (step === "welcome") {
     return (
       <Welcome
-        onNext={() => setStep("onboarding")}
+        onNext={() => {
+          setStep("onboarding");
+        }}
         onSkip={() => {
           setStep("login");
           setIsOnboardingComplete(false);
@@ -316,6 +343,12 @@ const Auth = ({ searchParams }) => {
         setAnswers(answers);
         setStep("login");
         setIsOnboardingComplete(true);
+        console.log('Completing onboarding tracking');
+        analytics.trackCompletion();
+      }}
+      onMidpoint={() => {
+        console.log('Midpoint reached in onboarding');
+        analytics.trackMidpoint();
       }}
       onSkip={() => {
         setStep("login");

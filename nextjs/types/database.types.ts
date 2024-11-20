@@ -345,6 +345,36 @@ export type Database = {
         }
         Relationships: []
       }
+      onboarding_analytics: {
+        Row: {
+          id: string
+          session_id: string
+          started_at: string
+          reached_midpoint_at: string | null
+          completed_at: string | null
+          signed_up_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          session_id: string
+          started_at?: string
+          reached_midpoint_at?: string | null
+          completed_at?: string | null
+          signed_up_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          session_id?: string
+          started_at?: string
+          reached_midpoint_at?: string | null
+          completed_at?: string | null
+          signed_up_at?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
