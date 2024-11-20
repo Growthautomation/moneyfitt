@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { createClient } from "@/lib/supabase/client";
 import { Label } from "@radix-ui/react-label";
-import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function UpdatePassword() {
   const supabase = createClient();
@@ -17,12 +17,13 @@ export default function UpdatePassword() {
 
   // Verify the recovery token on mount
   useEffect(() => {
-    const type = searchParams.get('type');
+    // Safely check if searchParams exists and has the type parameter
+    const type = searchParams?.get('type');
     if (type !== 'recovery') {
       toast({
         title: "Invalid Access",
-        description: "Invalid password reset link",
-        variant: "destructive",
+        description: "This page can only be accessed through a password reset link.",
+        variant: "destructive"
       });
       router.push('/sign-in');
     }
@@ -33,49 +34,38 @@ export default function UpdatePassword() {
     setLoading(true);
 
     const formData = new FormData(event.currentTarget);
-    const password = formData.get("password") as string;
-    const confirmPassword = formData.get("confirmPassword") as string;
+    const password = formData.get('password') as string;
+    const confirmPassword = formData.get('confirmPassword') as string;
 
     if (password !== confirmPassword) {
       toast({
-        title: "Error",
-        description: "Passwords do not match",
-        variant: "destructive",
+        title: "Passwords Don't Match",
+        description: "Please ensure both passwords are identical.",
+        variant: "destructive"
       });
       setLoading(false);
       return;
     }
 
     try {
-      // First get the session
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        throw new Error("No active session found");
-      }
-
-      // Update the password
       const { error } = await supabase.auth.updateUser({
         password: password
       });
 
       if (error) throw error;
 
-      // Sign out after password update
-      await supabase.auth.signOut();
-
       toast({
-        title: "Success",
-        description: "Password updated successfully. Please sign in with your new password.",
+        title: "Password Updated",
+        description: "Your password has been successfully updated.",
       });
-
-      router.push("/sign-in");
+      
+      router.push('/sign-in');
     } catch (error) {
       console.error("Update password error:", error);
       toast({
         title: "Error",
         description: error.message,
-        variant: "destructive",
+        variant: "destructive"
       });
     } finally {
       setLoading(false);
