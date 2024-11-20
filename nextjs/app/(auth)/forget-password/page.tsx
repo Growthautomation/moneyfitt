@@ -72,7 +72,7 @@ export default function ForgetPassword() {
 
           {success && (
             <div className="border bg-[#D6D5F8] rounded text-sm p-4 text-[#2E2C72]">
-              We've sent a password reset link to your email. Please check your inbox and follow the instructions.
+              We&apos;ve sent a password reset link to your email. Please check your inbox and follow the instructions.
             </div>
           )}
 
