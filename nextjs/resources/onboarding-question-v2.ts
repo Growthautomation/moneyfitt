@@ -470,6 +470,9 @@ function getAdvisorPreferenceQuestions() {
   userNameN.prev = function (answer) {
     return additionalScope;
   };
+  userNameN.next = function (answer) {
+    return null;
+  };
 
   return cover;
 }

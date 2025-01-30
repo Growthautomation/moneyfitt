@@ -25,13 +25,19 @@ const Auth = ({ searchParams }) => {
   const supabase = createClient();
   const router = useRouter();
   const { toast } = useToast();
-
-  const [_, setAnswers] = useLocalStorage("answers", {});
+  const [answers, setAnswers] = useLocalStorage("answers", {});
 
   const [step, setStep] = useState<"login" | "onboarding" | "welcome">(
     searchParams?.state === "login" || searchParams?.error ? "login" : "welcome"
   );
   const [isOnboardingComplete, setIsOnboardingComplete] = useState(false);
+
+  const handleOnboardingComplete = (answers) => {
+    // Store answers in URL state
+    const encodedAnswers = encodeURIComponent(JSON.stringify(answers));
+    router.push(`/sign-in?state=login&answers=${encodedAnswers}`);
+    setIsOnboardingComplete(true);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -53,10 +59,12 @@ const Auth = ({ searchParams }) => {
         if (isOnboardingComplete) {
           await analytics.trackSignUp();
           
+          console.log('Signing up with answers:', answers);
           const { error } = await supabase.auth.signUp({
             email: values.email,
             password: values.password,
             options: {
+              data: { onboardingAnswers: answers },
               emailRedirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback`,
             },
           });
@@ -100,6 +108,7 @@ const Auth = ({ searchParams }) => {
       if (isOnboardingComplete) {
         try {
           await analytics.trackSignUp();
+          console.log('Google sign in with answers:', answers);
         } catch (error) {
           console.error('Error tracking signup:', error);
         }
@@ -111,7 +120,9 @@ const Auth = ({ searchParams }) => {
           redirectTo: `${process.env.NEXT_PUBLIC_ORIGIN}/callback${isOnboardingComplete ? '' : '?checkExisting=true'}`,
           queryParams: {
             prompt: 'select_account',
-          }
+            access_type: 'offline',
+            state: isOnboardingComplete ? JSON.stringify({ onboardingAnswers: answers }) : ''
+          },
         },
       });
     };

@@ -497,7 +497,16 @@ export const additionalSpecification = () =>
   );
 
 export const userNameNode = () =>
-  createNode("userName", "Personal Information", "What is your name?", "text");
+  createNode(
+    "userName",
+    "Personal Information",
+    "What is your name?\n(We do not share your name or contact details with the advisor until you choose to share)",
+    "text",
+    null,
+    [],
+    () => ({}),
+    ({ userName }) => !userName
+  );
 
 export const startingFamilyNode = () =>
   createNode(

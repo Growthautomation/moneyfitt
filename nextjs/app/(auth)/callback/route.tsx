@@ -5,6 +5,7 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
   const checkExisting = requestUrl.searchParams.get("checkExisting");
+  const answers = requestUrl.searchParams.get("answers");
   const origin = process.env.NEXT_PUBLIC_ORIGIN;
 
   if (code) {
@@ -39,5 +40,5 @@ export async function GET(request: Request) {
   // If we get here, either:
   // 1. They have a client record and are logging in
   // 2. They completed onboarding and are signing up - client will be created in redirect page
-  return NextResponse.redirect(`${origin}/redirect`);
+  return NextResponse.redirect(`${origin}/redirect${answers ? `?answers=${answers}` : ''}`);
 }
